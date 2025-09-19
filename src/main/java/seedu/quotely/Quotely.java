@@ -1,9 +1,7 @@
 package seedu.quotely;
 
-import seedu.quotely.exception.QuotelyException;
-import seedu.quotely.Parser;
 import seedu.quotely.command.Command;
-import seedu.quotely.Ui;
+import seedu.quotely.exception.QuotelyException;
 
 public class Quotely {
     private Ui ui;

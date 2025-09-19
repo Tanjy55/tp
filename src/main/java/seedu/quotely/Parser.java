@@ -53,7 +53,10 @@ public class Parser {
             String companyName = m.group(2).trim();
             return new AddQuoteCommand(quoteName, companyName);
         } else {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "quote n/QUOTE_NAME c/COMPANY_NAME");
+            throw new QuotelyException(
+                QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                "quote n/QUOTE_NAME c/COMPANY_NAME"
+            );
         }
     }
 
@@ -75,7 +78,10 @@ public class Parser {
             String companyName = m.group(1).trim();
             return new RegisterCommand(companyName);
         } else {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "register c/COMPANY_NAME");
+            throw new QuotelyException(
+                QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
+                "register c/COMPANY_NAME"
+            );
         }
     }
 
@@ -97,7 +103,10 @@ public class Parser {
             }
             return new AddItemCommand(itemName, quoteName, price, quantity);
         } else {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY");
+            throw new QuotelyException(
+                QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
+                "add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY"
+            );
         }
     }
 
@@ -109,7 +118,10 @@ public class Parser {
             String quoteName = m.group(2).trim();
             return new DeleteItemCommand(itemName, quoteName);
         } else {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "delete i/ITEM_NAME n/QUOTE_NAME");
+            throw new QuotelyException(
+                QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
+                "delete i/ITEM_NAME n/QUOTE_NAME"
+            );
         }
     }
 }

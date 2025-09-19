@@ -18,7 +18,12 @@ public class AddItemCommand extends Command {
 
     @Override
     public void execute(Ui ui) {
-        ui.showMessage("Adding an item to quote: " + itemName + " to " + quoteName + " with price " + price + " and quantity " + quantity);
+        ui.showMessage(
+            String.format(
+            "Adding item to quote %s with name %s, price %.2f, quantity %d", 
+            quoteName, itemName, price, quantity
+            )
+        );
     }
     
 }
