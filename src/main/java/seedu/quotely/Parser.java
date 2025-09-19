@@ -1,5 +1,8 @@
 package seedu.quotely;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.command.Command;
 import seedu.quotely.command.ExitCommand;
@@ -31,9 +34,9 @@ public class Parser {
             return new ShowQuotesCommand();
         case "finish":
             return new FinishQuoteCommand();
-        case "delete_item":
+        case "delete":
             return parseDeleteItemCommand(arguments);
-        case "add_item":
+        case "add":
             return parseAddItemCommand(arguments);
         case "exit":
             return new ExitCommand();
@@ -43,60 +46,70 @@ public class Parser {
     }
 
     private static Command parseAddQuoteCommand(String arguments) throws QuotelyException {
-        String[] parts = arguments.split(" n/| c/");
-        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+        Pattern p = Pattern.compile("n/(.*?)\\s+c/(.*)");
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String quoteName = m.group(1).trim();
+            String companyName = m.group(2).trim();
+            return new AddQuoteCommand(quoteName, companyName);
+        } else {
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "quote n/QUOTE_NAME c/COMPANY_NAME");
         }
-        String quoteName = parts[0].replaceFirst("^n/", "").trim();
-        String companyName = parts[1].replaceFirst("^c/", "").trim();
-        return new AddQuoteCommand(quoteName, companyName);
     }
 
     private static Command parseDeleteQuoteCommand(String arguments) throws QuotelyException {
-        String[] parts = arguments.split("n/", 2);
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+        Pattern p = Pattern.compile("n/(.*)");
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String quoteName = m.group(1).trim();
+            return new DeleteQuoteCommand(quoteName);
+        } else {
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "unquote n/QUOTE_NAME");
         }
-        String companyName = parts[1].trim();
-        return new DeleteQuoteCommand(companyName);
     }
 
     private static Command parseRegisterCommand(String arguments) throws QuotelyException {
-        String[] parts = arguments.split("c/", 2);
-        if (parts.length < 2 || parts[1].trim().isEmpty()) {
+        Pattern p = Pattern.compile("c/(.*)");
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String companyName = m.group(1).trim();
+            return new RegisterCommand(companyName);
+        } else {
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "register c/COMPANY_NAME");
         }
-        String companyName = parts[1].trim();
-        return new RegisterCommand(companyName);
     }
 
     private static Command parseAddItemCommand(String arguments) throws QuotelyException {
-        String[] parts = arguments.split(" i/| n/| p/| q/");
-        if (parts.length < 4 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty() || parts[1].trim().isEmpty() || parts[3].trim().isEmpty()) {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "add_item i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY");
+        Pattern p = Pattern.compile("i/(.*?)\\s+n/(.*)\\s+p/(.*)\\s+q/(.*)");
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String itemName = m.group(1).trim();
+            String quoteName = m.group(2).trim();
+            String priceStr = m.group(3).trim();
+            String quantityStr = m.group(4).trim();
+            double price;
+            int quantity;
+            try {
+                price = Double.parseDouble(priceStr);
+                quantity = Integer.parseInt(quantityStr);
+            } catch (NumberFormatException e) {
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+            }
+            return new AddItemCommand(itemName, quoteName, price, quantity);
+        } else {
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY");
         }
-        String itemName = parts[0].trim();
-        String quoteName = parts[1].trim();
-        String priceStr = parts[2].trim();
-        String quantityStr = parts[3].trim();
-        double price;
-        int quantity;
-        try {
-            price = Double.parseDouble(priceStr);
-            quantity = Integer.parseInt(quantityStr);
-        } catch (NumberFormatException e) {
-            throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
-        }
-        return new AddItemCommand(itemName, quoteName, price, quantity);
     }
 
     private static Command parseDeleteItemCommand(String arguments) throws QuotelyException {
-        String[] parts = arguments.split(" i/| q/");
-        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "delete_item i/ITEM_NAME q/QUOTE_NAME");
+        Pattern p = Pattern.compile("i/(.*?)\\s+n/(.*)");
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String itemName = m.group(1).trim();
+            String quoteName = m.group(2).trim();
+            return new DeleteItemCommand(itemName, quoteName);
+        } else {
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "delete i/ITEM_NAME n/QUOTE_NAME");
         }
-        String itemName = parts[0].replaceFirst("^i/", "").trim();
-        String quoteName = parts[1].replaceFirst("^q/", "").trim();
-        return new DeleteItemCommand(itemName, quoteName);
     }
 }
