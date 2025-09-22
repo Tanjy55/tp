@@ -15,6 +15,12 @@ import seedu.quotely.command.AddItemCommand;
 import seedu.quotely.command.DeleteItemCommand;
 
 public class Parser {
+    private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
+    private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
+
+    private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
+    private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)\\s+p/(.*)\\s+q/(.*)";
+    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)";
 
     public static Command parse(String fullCommand) throws QuotelyException {
         System.out.println("Parsing command: " + fullCommand);
@@ -46,7 +52,7 @@ public class Parser {
     }
 
     private static Command parseAddQuoteCommand(String arguments) throws QuotelyException {
-        Pattern p = Pattern.compile("n/(.*?)\\s+c/(.*)");
+        Pattern p = Pattern.compile(ADD_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String quoteName = m.group(1).trim();
@@ -61,7 +67,7 @@ public class Parser {
     }
 
     private static Command parseDeleteQuoteCommand(String arguments) throws QuotelyException {
-        Pattern p = Pattern.compile("n/(.*)");
+        Pattern p = Pattern.compile(DELETE_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String quoteName = m.group(1).trim();
@@ -72,7 +78,7 @@ public class Parser {
     }
 
     private static Command parseRegisterCommand(String arguments) throws QuotelyException {
-        Pattern p = Pattern.compile("c/(.*)");
+        Pattern p = Pattern.compile(REGISTER_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String companyName = m.group(1).trim();
@@ -86,7 +92,7 @@ public class Parser {
     }
 
     private static Command parseAddItemCommand(String arguments) throws QuotelyException {
-        Pattern p = Pattern.compile("i/(.*?)\\s+n/(.*)\\s+p/(.*)\\s+q/(.*)");
+        Pattern p = Pattern.compile(ADD_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String itemName = m.group(1).trim();
@@ -111,7 +117,7 @@ public class Parser {
     }
 
     private static Command parseDeleteItemCommand(String arguments) throws QuotelyException {
-        Pattern p = Pattern.compile("i/(.*?)\\s+n/(.*)");
+        Pattern p = Pattern.compile(DELETE_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String itemName = m.group(1).trim();
