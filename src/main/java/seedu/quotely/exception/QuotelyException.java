@@ -1,0 +1,53 @@
+package seedu.quotely.exception;
+
+public class QuotelyException extends Exception {
+    public enum ErrorType {
+        INVALID_COMMAND,
+        WRONG_COMMAND_FORMAT,
+        INVALID_NUMBER_FORMAT,
+        FILE_ERROR,
+        INVALID_TASK_NUMBER,
+        EMPTY_DESCRIPTION,
+        EMPTY_TASK_LIST,
+        INVALID_DATE_TIME,
+        DUPLICATE_TASK
+    }
+
+    private final ErrorType errorType;
+    private String message;
+
+    public QuotelyException(ErrorType errorType) {
+        this.errorType = errorType;
+    }
+
+    public QuotelyException(ErrorType errorType, String message) {
+        this.errorType = errorType;
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage() {
+        switch (errorType) {
+        case FILE_ERROR:
+            return "There was an error loading the file.";
+        case INVALID_COMMAND:
+            return "I'm sorry, but I don't know what that means.";
+        case WRONG_COMMAND_FORMAT:
+            return "The command format is incorrect. \nHere is the correct format: \n" + message;
+        case INVALID_TASK_NUMBER:
+            return "The task number provided is invalid.";
+        case EMPTY_DESCRIPTION:
+            return "The description of a task cannot be empty.";
+        case EMPTY_TASK_LIST:
+            return "The task list is currently empty.";
+        case INVALID_DATE_TIME:
+            return "The date/time format is invalid. Please use YYYY-MM-DD HH:MM.";
+        case DUPLICATE_TASK:
+            return "This task already exists in your list.";
+        case INVALID_NUMBER_FORMAT:
+            return "The number format is invalid. Please enter a valid number.";
+        default:
+            return "An unknown error occurred.";
+        }
+    }
+}
