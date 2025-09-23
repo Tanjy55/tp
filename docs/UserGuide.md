@@ -1,5 +1,23 @@
 # User Guide
 
+## Table of Content
+
+- [User Guide](#user-guide)
+  - [Table of Content](#table-of-content)
+  - [Introduction](#introduction)
+  - [Quick Start](#quick-start)
+  - [Features](#features)
+    - [Register Company Name: `register`](#register-company-name-register)
+    - [Creating a Quote: `quote`](#creating-a-quote-quote)
+    - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
+    - [Adding an item: `add`](#adding-an-item-add)
+    - [Delete an item `delete`](#delete-an-item-delete)
+    - [Finish the Quote `finish`](#finish-the-quote-finish)
+    - [Show all Quotes: `show`](#show-all-quotes-show)
+    - [Exit `exit`](#exit-exit)
+  - [FAQ](#faq)
+  - [Command Summary](#command-summary)
+
 ## Introduction
 
 {Give a product intro}
@@ -9,25 +27,102 @@
 {Give steps to get started quickly}
 
 1. Ensure that you have Java 17 or above installed.
-1. Down the latest version of `Duke` from [here](http://link.to/duke).
+1. Down the latest version of `Quotely` from [here](http://link.to/Quotely).
+
 
 ## Features 
 
 {Give detailed description of each feature}
 
-### Adding a todo: `todo`
-Adds a new item to the list of todo items.
+### Register Company Name: `register`
+Register company name.
+Format: `register c/CUSTOMER_NAME`
 
-Format: `todo n/TODO_NAME d/DEADLINE`
-
-* The `DEADLINE` can be in a natural language format.
-* The `TODO_NAME` cannot contain punctuation.  
+* The `CUSTOMER_NAME` can be in a natural language format.
 
 Example of usage: 
 
-`todo n/Write the rest of the User Guide d/next week`
+`register c/NTU`
 
-`todo n/Refactor the User Guide to remove passive voice d/13/04/2020`
+`register c/NUS`
+
+### Creating a Quote: `quote`
+Create a new quote for a customer.
+
+Format: `quote n/QUOTE_NAME c/CUSTOMER_NAME`
+
+* The `QUOTE_NAME` and `CUSTOMER_NAME` can be in a natural language format.
+
+Example of usage: 
+
+`quote n/007 c/NTU`
+
+`quote n/new quote c/NUS`
+
+
+### Deleting a Quote: `unquote`
+Delete Quote and all items inside for a given quote name
+
+Format: `unquote n/QUOTE_NAME`
+
+* The `QUOTE_NAME` can be in a natural language format.
+
+Example of usage: 
+
+`unquote n/007`
+
+`unquote n/new quote`
+
+### Adding an item: `add`
+Add item to the quote with the unit cost and quantity.
+
+Format: `add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY`
+
+* The `ITEM_NAME` and `QUOTE_NAME` can be in a natural language format.
+* The `PRICE` should be decimal.
+* The `QUANTITY` should be integer.
+
+Example of usage: 
+
+`add i/apple n/quote_1 p/20.3 q/20`
+
+`add i/book n/quote_100 p/10.5 q/3`
+
+### Delete an item `delete`
+Deletes an item of matching name completely from the list of items in the quote, regardless of quantity.
+
+Format:
+
+`delete i/ITEM_NAME n/QUOTE_NAME`
+
+Example of usage: 
+
+`delete i/apple n/quote_1`
+
+`delete i/book n/quote_2`
+
+
+### Finish the Quote `finish`
+Finalise the current quote that the user is working on.
+
+Example of usage: 
+
+`finish`
+
+### Show all Quotes: `show`
+Show the current state of all quotes.
+
+Example of usage: 
+
+`show`
+
+### Exit `exit`
+Exit the program.
+
+Example of usage: 
+
+`exit`
+
 
 ## FAQ
 
@@ -37,6 +132,11 @@ Example of usage:
 
 ## Command Summary
 
-{Give a 'cheat sheet' of commands here}
-
-* Add todo `todo n/TODO_NAME d/DEADLINE`
+* Register company name `register c/CUSTOMER_NAME`
+* Create a quote `quote n/QUOTE_NAME c/CUSTOMER_NAME`
+* Delete a quote `unquote n/QUOTE_NAME`
+* Add an item `add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY`
+* Delete an item `delete i/ITEM_NAME n/QUOTE_NAME`
+* Finish the Quote `finish`
+* Show all quotes `show`
+* Exit the program `exit`
