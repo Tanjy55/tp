@@ -20,7 +20,7 @@
 
 ## Introduction
 
-{Give a product intro}
+This user guide provides step-by-step instructions with examples on how to use Quotely.
 
 ## Quick Start
 
@@ -36,9 +36,9 @@
 
 ### Register Company Name: `register`
 Register company name.
-Format: `register c/CUSTOMER_NAME`
+Format: `register c/COMPANY_NAME`
 
-* The `CUSTOMER_NAME` can be in a natural language format.
+* The `COMPANY_NAME` can be in a natural language format.
 
 Example of usage: 
 

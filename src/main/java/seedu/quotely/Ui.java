@@ -8,13 +8,13 @@ public class Ui {
     public Ui() {
         scanner = new Scanner(System.in);
     }
-    
+
     public void showWelcome() {
         String logo = " ____  _     ____ _____ _____ _    ___  _\n" + //
-                        "/  _ \\/ \\ /\\/  _ Y__ __Y  __// \\   \\  \\//\n" + //
-                        "| / \\|| | ||| / \\| / \\ |  \\  | |    \\  / \n" + //
-                        "| \\_\\|| \\_/|| \\_/| | | |  /_ | |_/\\ / /  \n" + //
-                        "\\____\\\\____/\\____/ \\_/ \\____\\\\____//_/   \n";
+                "/  _ \\/ \\ /\\/  _ Y__ __Y  __// \\   \\  \\//\n" + //
+                "| / \\|| | ||| / \\| / \\ |  \\  | |    \\  / \n" + //
+                "| \\_\\|| \\_/|| \\_/| | | |  /_ | |_/\\ / /  \n" + //
+                "\\____\\\\____/\\____/ \\_/ \\____\\\\____//_/   \n";
         System.out.println("Hello from\n" + logo);
         System.out.println("What can I do for you?");
     }
@@ -37,5 +37,10 @@ public class Ui {
 
     public void showMessage(String message) {
         System.out.println(message);
+    }
+
+    public void promptCompanyName() {
+        System.out.println("Please enter your company name: ");
+        // to be updated to prompt user if companyName is default String
     }
 }
