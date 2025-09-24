@@ -1,7 +1,7 @@
 package seedu.quotely.exception;
 
 public class QuotelyException extends Exception {
-    public static enum ErrorType {
+    public enum ErrorType {
         INVALID_COMMAND,
         WRONG_COMMAND_FORMAT,
         INVALID_NUMBER_FORMAT,
@@ -26,7 +26,7 @@ public class QuotelyException extends Exception {
     }
 
     @Override
-    public String getMessage () {
+    public String getMessage() {
         switch (errorType) {
         case FILE_ERROR:
             return "There was an error loading the file.";
