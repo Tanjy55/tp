@@ -19,7 +19,8 @@ public class CalculateTotalCommand extends Command {
     public void execute (Ui ui,
                          QuoteList quoteList,
                          CompanyName companyName) throws QuotelyException {
-        ui.showMessage("Total cost of quote " + quoteName + " for " + customerName + ": " + quoteList.calculateQuoteTotal(quoteName, customerName));
+        ui.showMessage("Total cost of quote " + quoteName + " for " + customerName + ": "
+                + quoteList.calculateQuoteTotal(quoteName, customerName));
     }
 
 }

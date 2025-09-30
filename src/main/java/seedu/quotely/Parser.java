@@ -2,9 +2,17 @@ package seedu.quotely;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import seedu.quotely.command.*;
 import seedu.quotely.exception.QuotelyException;
+import seedu.quotely.command.Command;
+import seedu.quotely.command.ExitCommand;
+import seedu.quotely.command.AddQuoteCommand;
+import seedu.quotely.command.RegisterCommand;
+import seedu.quotely.command.DeleteQuoteCommand;
+import seedu.quotely.command.ShowQuotesCommand;
+import seedu.quotely.command.FinishQuoteCommand;
+import seedu.quotely.command.AddItemCommand;
+import seedu.quotely.command.DeleteItemCommand;
+import seedu.quotely.command.CalculateTotalCommand;
 
 public class Parser {
     private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
