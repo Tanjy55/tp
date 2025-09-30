@@ -33,6 +33,15 @@ public class QuoteList {
         return -1; //exception to be implemented
     }
 
+    public double calculateQuoteTotal(String quoteName, String customerName) {
+        for (Quote q : quotes) {
+            if (q.getQuoteName().equals(quoteName) && q.getCustomerName().equals(customerName)) {
+                return q.getQuoteTotal();
+            }
+        }
+        return -1;
+    }
+
     public void removeItem(String quoteName, String itemName) {
         int index = getQuoteIndex(quoteName);
         quotes.get(index).removeItem(itemName);

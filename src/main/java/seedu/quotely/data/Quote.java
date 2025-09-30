@@ -25,6 +25,14 @@ public class Quote {
         return items;
     }
 
+    public double getQuoteTotal()  {
+        double total = 0;
+        for (Item item : items) {
+            double itemTotal = (double) item.getQuantity() * item.getPrice();
+            total += itemTotal;
+        }
+        return Math.round(total * 100.0) / 100.0;
+    }
 
     public void removeItem(String itemName) {
         int index = getItemIndex(itemName);
