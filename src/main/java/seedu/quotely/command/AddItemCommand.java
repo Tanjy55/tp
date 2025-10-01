@@ -1,26 +1,28 @@
 package seedu.quotely.command;
 
 import seedu.quotely.Ui;
+import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
+import seedu.quotely.exception.QuotelyException;
 
 public class AddItemCommand extends Command {
     private String quoteName;
     private String itemName;
     private Double price;
     private int quantity;
-    private QuoteList quoteList;
 
-    public AddItemCommand(String itemName, String quoteName, Double price, int quantity, QuoteList quoteList) {
+    public AddItemCommand(String itemName, String quoteName, Double price, int quantity) {
         super("addItem");
         this.itemName = itemName;
         this.quoteName = quoteName;
         this.price = price;
         this.quantity = quantity;
-        this.quoteList = quoteList;
     }
 
     @Override
-    public void execute(Ui ui) {
+    public void execute(Ui ui,
+                        QuoteList quoteList,
+                        CompanyName companyName) throws QuotelyException {
         ui.showMessage(
                 String.format(
                         "Adding item to quote %s with name %s, price %.2f, quantity %d",
@@ -29,5 +31,4 @@ public class AddItemCommand extends Command {
         );
         quoteList.addItem(quoteName, itemName, price, quantity);
     }
-
 }
