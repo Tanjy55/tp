@@ -12,6 +12,7 @@ import seedu.quotely.command.ShowQuotesCommand;
 import seedu.quotely.command.FinishQuoteCommand;
 import seedu.quotely.command.AddItemCommand;
 import seedu.quotely.command.DeleteItemCommand;
+import seedu.quotely.command.CalculateTotalCommand;
 
 public class Parser {
     private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
@@ -20,6 +21,8 @@ public class Parser {
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)\\s+p/(.*)\\s+q/(.*)";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)";
+
+    private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
 
     public static Command parse(String fullCommand) throws QuotelyException {
         System.out.println("Parsing command: " + fullCommand);
@@ -43,6 +46,8 @@ public class Parser {
             return parseDeleteItemCommand(arguments);
         case "add":
             return parseAddItemCommand(arguments);
+        case "total":
+            return parseCalculateTotalCommand(arguments);
         case "exit":
             return new ExitCommand();
         default:
@@ -126,6 +131,21 @@ public class Parser {
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
                     "delete i/ITEM_NAME n/QUOTE_NAME"
+            );
+        }
+    }
+
+    private static Command parseCalculateTotalCommand(String arguments) throws QuotelyException {
+        Pattern p = Pattern.compile(CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN);
+        Matcher m = p.matcher(arguments);
+        if (m.find()) {
+            String quoteName = m.group(1).trim();
+            String customerName = m.group(2).trim();
+            return new CalculateTotalCommand(quoteName, customerName);
+        } else {
+            throw new QuotelyException(
+                    QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                    "total n/QUOTE_NAME c/COMPANY_NAME"
             );
         }
     }
