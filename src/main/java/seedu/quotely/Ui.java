@@ -55,21 +55,21 @@ public class Ui {
         // items table columns (these MUST sum to boxInner - 8)
         final int wQty  = 3;
         final int wUnit = 10;
-        final int wDesc = boxInner - wQty - wUnit - 8; // 8 accounts for " | ", " | ", leading/trailing spaces
+        final int wDesc = boxInner - wQty - wUnit - 6; // 6 accounts for " | ", " | "
 
         // totals block (left margin + label + space + amount = boxInner)
         final int amtW   = 10;             // width for "$xx.xx" (right aligned)
         final int indent = 28;             // left margin you want before totals
-        final int labelW = boxInner - indent - amtW - 2; // -2 for the single space before amount
+        final int labelW = boxInner - indent - amtW - 1; // -1 for the single space before amount
 
         // reusable strings
-        final String dash = "-".repeat(boxInner);
-        final String und  = "_".repeat(boxInner);
+        final String dash = "-".repeat(boxInner + 2);
+        final String und  = "_".repeat(boxInner + 2);
 
         StringBuilder sb = new StringBuilder();
 
         // ===== header (all rows exactly boxInner wide) =====
-        sb.append("______QUOTE").append("_".repeat(Math.max(0, boxInner - "QUOTE".length()))).append("\n");
+        sb.append("______QUOTE").append("_".repeat(Math.max(0, boxInner - 2 - "QUOTE".length()))).append("\n");
         sb.append(String.format("| %-"+boxInner+"s |%n", "Company name: " + companyName.getCompanyName()));
         sb.append(String.format("| %-"+boxInner+"s |%n", "Quote ID: " + q.getQuoteName()));
         sb.append(String.format("| %-"+boxInner+"s |%n", "Customer name: " + q.getCustomerName()));
@@ -81,7 +81,7 @@ public class Ui {
 
         String headerLine = String.format(headerFmt, "Description", "QTY", "Unit cost");
         sb.append(headerLine);
-        sb.append(String.format("|%s|%n", "-".repeat(boxInner)));
+        sb.append(String.format("|%s|%n", dash));
 
         double subtotal = 0.0;
         if (q.getItems().isEmpty()) {
@@ -97,7 +97,7 @@ public class Ui {
             }
         }
 
-        sb.append(String.format("|%s|%n", "-".repeat(boxInner)));
+        sb.append(String.format("|%s|%n", dash));
 
         // ===== totals (left indent + aligned amounts) =====
         double gst = subtotal * gstRate;
