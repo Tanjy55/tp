@@ -25,7 +25,6 @@ public class Quote {
         return items;
     }
 
-
     public void removeItem(String itemName) {
         int index = getItemIndex(itemName);
         items.remove(index);
