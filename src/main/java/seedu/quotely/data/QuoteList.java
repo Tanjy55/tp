@@ -19,9 +19,8 @@ public class QuoteList {
         quotes.add(quote);
     }
 
-    public void removeQuote(String quoteName) throws QuotelyException {
-        int index = getQuoteIndex(quoteName);
-        quotes.remove(index);
+    public void removeQuote(Quote quote) throws QuotelyException {
+        quotes.remove(quote);
     }
 
     private int getQuoteIndex(String quoteName) throws QuotelyException {

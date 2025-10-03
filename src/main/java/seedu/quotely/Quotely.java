@@ -44,7 +44,7 @@ public class Quotely {
                 String fullCommand = ui.readCommand(state);
                 ui.showLine();
                 Command c = Parser.parse(fullCommand, state, quoteList);
-                c.execute(ui, quoteList, companyName);
+                c.execute(ui, quoteList, companyName, state);
                 isExit = c.isExit();
             } catch (QuotelyException e) {
                 ui.showError(e.getMessage());

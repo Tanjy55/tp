@@ -24,8 +24,8 @@ public class Parser {
 
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
-    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?";
-    private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "(?:n/(.*))?";
+    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(\\S+))?";
+    private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
     public static Command parse(String fullCommand, QuotelyState state, QuoteList quoteList)
             throws QuotelyException {
@@ -35,7 +35,7 @@ public class Parser {
         add exception handling in parser
          */
 
-        System.out.println("Parsing command: " + fullCommand);
+        // System.out.println("Parsing command: " + fullCommand);
         String command = fullCommand.split(" ")[0];
         String arguments = "";
         if (fullCommand.split(" ").length > 1) {
@@ -43,35 +43,42 @@ public class Parser {
         }
         switch (command) {
         case "register":
-            //available in all state
+            // available in all state
             return parseRegisterCommand(arguments);
         case "quote":
-            //main menu only
-            return parseAddQuoteCommand(arguments);
+            // main menu only
+            return parseAddQuoteCommand(arguments, state);
         case "unquote":
-            //main menu only
-            return parseDeleteQuoteCommand(arguments);
+            // can use without quote name if inside a quote
+            return parseDeleteQuoteCommand(arguments, state, quoteList);
         case "show":
-            //main menu only
+            // available in all state, for now?
             return new ShowQuotesCommand();
         case "finish":
             //inside quote only
-            return new FinishQuoteCommand();
+            return parseFinishQuoteCommand(state);
         case "delete":
+            // can use without quote name if inside a quote
             return parseDeleteItemCommand(arguments, state, quoteList);
         case "add":
+            // can use without quote name if inside a quote
             return parseAddItemCommand(arguments, state, quoteList);
         case "total":
+            // can use without quote name if inside a quote
             return parseCalculateTotalCommand(arguments, state, quoteList);
         case "exit":
-            //available in all state, for now
+            // available in all state, for now
             return new ExitCommand();
         default:
             throw new QuotelyException(QuotelyException.ErrorType.INVALID_COMMAND);
         }
     }
 
-    private static Command parseAddQuoteCommand(String arguments) throws QuotelyException {
+    private static Command parseAddQuoteCommand(String arguments, QuotelyState state)
+            throws QuotelyException {
+        if (state.isInsideQuote()) {
+            throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+        }
         Pattern p = Pattern.compile(ADD_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
@@ -86,14 +93,19 @@ public class Parser {
         }
     }
 
-    private static Command parseDeleteQuoteCommand(String arguments) throws QuotelyException {
+    private static Command parseDeleteQuoteCommand(String arguments, QuotelyState state,
+            QuoteList quoteList) throws QuotelyException {
         Pattern p = Pattern.compile(DELETE_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+        String quoteName = null;
         if (m.find()) {
-            String quoteName = m.group(1).trim();
-            return new DeleteQuoteCommand(quoteName);
+            quoteName = m.group(1).trim();
+        } 
+        Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+        if (quote != null) {
+            return new DeleteQuoteCommand(quote);
         } else {
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "unquote n/QUOTE_NAME");
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "unquote [n/QUOTE_NAME]");
         }
     }
 
@@ -156,19 +168,31 @@ public class Parser {
         }
     }
 
-    private static Command parseCalculateTotalCommand(String arguments, QuotelyState state,
-            QuoteList quoteList) throws QuotelyException {
+    private static Command parseCalculateTotalCommand(String arguments, 
+            QuotelyState state, QuoteList quoteList) throws QuotelyException {
         Pattern p = Pattern.compile(CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+        String quoteName = null;
         if (m.find()) {
-            String quoteName = m.group(1) != null ? m.group(1).trim() : null;
-            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            quoteName = m.group(1).trim();
+        } 
+        Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+        if (quote != null) {
             return new CalculateTotalCommand(quote);
         } else {
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
                     "total [n/QUOTE_NAME]"
             );
+        }
+    }
+
+    private static Command parseFinishQuoteCommand(QuotelyState state) 
+            throws QuotelyException {
+        if (state.isInsideQuote()) {
+            return new FinishQuoteCommand();
+        } else {
+            throw new QuotelyException(QuotelyException.ErrorType.NO_ACTIVE_QUOTE);
         }
     }
 

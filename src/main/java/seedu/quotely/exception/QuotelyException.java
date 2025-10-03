@@ -57,7 +57,7 @@ public class QuotelyException extends Exception {
         case ITEM_NOT_FOUND:
             return "The specified item was not found in the quote.";
         case INVALID_STATE:
-            return "Unable to execute this command in Main Menu state";
+            return "This command should be executed in Main Menu.";
         default:
             return "An unknown error occurred.";
         }
