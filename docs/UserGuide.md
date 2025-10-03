@@ -38,8 +38,10 @@ This user guide provides step-by-step instructions with examples on how to use Q
 ### Register Company Name: `register`
 Register company name.
 
-**Format**
-`register c/COMPANY_NAME`
+**Format:**
+```
+register c/COMPANY_NAME
+```
 
 * The `COMPANY_NAME` can be in a natural language format.
 
@@ -57,8 +59,10 @@ Registering company: NUS
 ### Creating a Quote: `quote`
 Create a new quote for a customer.
 
-**Format**
-`quote n/QUOTE_NAME c/CUSTOMER_NAME`
+**Format:**
+```
+quote n/QUOTE_NAME c/CUSTOMER_NAME
+```
 
 * The `QUOTE_NAME` and `CUSTOMER_NAME` can be in a natural language format.
 * This command can only be used in main menu.
@@ -77,8 +81,10 @@ Adding quote: new quote for NUS
 ### Deleting a Quote: `unquote`
 Delete Quote and all items inside for a given quote name
 
-**Format**
-`unquote {n/QUOTE_NAME}`
+**Format:**
+```
+unquote {n/QUOTE_NAME}
+```
 
 * The `QUOTE_NAME` can be in a natural language format.
 * `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
@@ -97,8 +103,10 @@ Deleting quote: new quote
 ### Adding an item: `add`
 Add item to the quote with the unit cost and quantity.
 
-**Format**
-`add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY`
+**Format:**
+```
+add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY
+```
 
 * The `ITEM_NAME` and `QUOTE_NAME` can be in a natural language format.
 * `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
@@ -119,8 +127,10 @@ Adding book to quote quote_100 with price 10.50, quantity 3
 ### Delete an item `delete`
 Deletes an item of matching name completely from the list of items in the quote, regardless of quantity.
 
-**Format**
-`delete i/ITEM_NAME {n/QUOTE_NAME}`
+**Format:**
+```
+delete i/ITEM_NAME {n/QUOTE_NAME}
+```
 
 * `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
 
@@ -139,8 +149,10 @@ Deleting book from quote quote_100
 ### Calculate the total `total`
 Calculate the total of specific quote.
 
-**Format**
-`total {n/QUOTE_NAME}`
+**Format:**
+```
+total {n/QUOTE_NAME}
+```
 
 * `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
 
