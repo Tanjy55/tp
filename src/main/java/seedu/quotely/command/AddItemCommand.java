@@ -2,7 +2,6 @@ package seedu.quotely.command;
 
 import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
-import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.exception.QuotelyException;
 
