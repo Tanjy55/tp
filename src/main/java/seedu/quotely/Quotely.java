@@ -39,16 +39,12 @@ public class Quotely {
         ui.showWelcome();
         boolean isExit = false;
         ui.showLine();
-
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
-                boolean isInsideState = state.isInsideQuote();
                 ui.showLine();
-                Command c = Parser.parse(fullCommand, isInsideState);
-
-                //setting of state attribute is done inside execute
-                c.execute(ui, quoteList, companyName, state);
+                Command c = Parser.parse(fullCommand, state);
+                c.execute(ui, quoteList, companyName);
                 isExit = c.isExit();
             } catch (QuotelyException e) {
                 ui.showError(e.getMessage());

@@ -4,7 +4,6 @@ import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuoteList;
-import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
 public class AddItemCommand extends Command {
@@ -24,12 +23,7 @@ public class AddItemCommand extends Command {
     @Override
     public void execute(Ui ui,
                         QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
-
-        if (!state.isInsideQuote()) {
-            throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
-        }
+                        CompanyName companyName) throws QuotelyException {
 
         ui.showMessage(
                 String.format(
@@ -38,8 +32,11 @@ public class AddItemCommand extends Command {
                 )
         );
 
+        /*
+        Adding item needs quote reference or user input from parser
         Quote currentQuote = state.getQuoteReference();
-        //to edit add item method
+        to edit add item method
+         */
         quoteList.addItem(quoteName, itemName, price, quantity);
     }
 }

@@ -3,6 +3,7 @@ package seedu.quotely;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.command.Command;
 import seedu.quotely.command.ExitCommand;
@@ -25,9 +26,12 @@ public class Parser {
 
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
 
-    public static Command parse(String fullCommand, boolean isInsideState) throws QuotelyException {
+    public static Command parse(String fullCommand, QuotelyState state) throws QuotelyException {
 
-        //edit parse method to allow command input depending on isInsideState
+        /*
+        edit parse method to allow command input depending on isInsideState
+        add exception handling in parser
+         */
 
         System.out.println("Parsing command: " + fullCommand);
         String command = fullCommand.split(" ")[0];

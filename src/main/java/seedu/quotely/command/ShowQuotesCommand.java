@@ -4,7 +4,6 @@ import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuoteList;
-import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
 import java.util.List;
@@ -20,12 +19,7 @@ public class ShowQuotesCommand extends Command {
     @Override
     public void execute(Ui ui,
                         QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
-
-        if (state.isInsideQuote()) {
-            throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
-        }
+                        CompanyName companyName) throws QuotelyException {
 
         List<Quote> quotes = quoteList.getQuotes();
 

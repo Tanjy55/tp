@@ -3,7 +3,6 @@ package seedu.quotely.command;
 import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
-import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
 public class FinishQuoteCommand extends Command {
@@ -14,15 +13,15 @@ public class FinishQuoteCommand extends Command {
     @Override
     public void execute(Ui ui,
                         QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+                        CompanyName companyName) throws QuotelyException {
 
-        if (!state.isInsideQuote()) {
-            throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
-        }
-
+        /*
+        Finish quote needs to set state back to main menu
+        Suggestion: pass state to constructor
         state.setInsideQuote(false);
         state.setQuoteReference(null);
+         */
+
         ui.showMessage("Finishing quote process.");
     }
 
