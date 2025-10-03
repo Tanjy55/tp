@@ -3,16 +3,17 @@ package seedu.quotely.command;
 import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
+import seedu.quotely.data.Quote;
 import seedu.quotely.exception.QuotelyException;
 
 public class DeleteItemCommand extends Command {
     private String itemName;
-    private String quoteName;
+    private Quote quote;
 
-    public DeleteItemCommand(String itemName, String quoteName) {
+    public DeleteItemCommand(String itemName, Quote quote) {
         super("deleteItem");
         this.itemName = itemName;
-        this.quoteName = quoteName;
+        this.quote = quote;
     }
 
     @Override
@@ -20,13 +21,13 @@ public class DeleteItemCommand extends Command {
                         QuoteList quoteList,
                         CompanyName companyName) throws QuotelyException {
 
-        ui.showMessage("Deleting item: " + itemName + " from quote: " + quoteName);
+        ui.showMessage("Deleting item: " + itemName + " from quote: " + quote.getQuoteName());
 
         /*
         Delete item needs quote reference or user input from parser
         Quote currentQuote = state.getQuoteReference();
         to edit remove item method
          */
-        quoteList.removeItem(quoteName, itemName);
+        quote.removeItem(itemName);
     }
 }

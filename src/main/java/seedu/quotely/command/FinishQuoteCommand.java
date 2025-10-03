@@ -23,6 +23,7 @@ public class FinishQuoteCommand extends Command {
          */
 
         ui.showMessage("Finishing quote process.");
+        // State.setOutOfQuote();
     }
 
 }

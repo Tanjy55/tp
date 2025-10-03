@@ -3,6 +3,8 @@ package seedu.quotely.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import seedu.quotely.exception.QuotelyException;
+
 public class QuoteList {
     private List<Quote> quotes = new ArrayList<>();
 
@@ -17,12 +19,12 @@ public class QuoteList {
         quotes.add(quote);
     }
 
-    public void removeQuote(String quoteName) {
+    public void removeQuote(String quoteName) throws QuotelyException {
         int index = getQuoteIndex(quoteName);
         quotes.remove(index);
     }
 
-    private int getQuoteIndex(String quoteName) {
+    private int getQuoteIndex(String quoteName) throws QuotelyException {
         int index = 0;
         for (Quote q : quotes) {
             if (q.getQuoteName().equals(quoteName)) {
@@ -30,25 +32,15 @@ public class QuoteList {
             }
             index++;
         }
-        return -1; //exception to be implemented
+        throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
 
-    public double calculateQuoteTotal(String quoteName, String customerName) {
+    public Quote getQuoteByName(String quoteName) throws QuotelyException {
         for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName) && q.getCustomerName().equals(customerName)) {
-                return q.getQuoteTotal();
+            if (q.getQuoteName().equals(quoteName)) {
+                return q;
             }
         }
-        return -1;
-    }
-
-    public void removeItem(String quoteName, String itemName) {
-        int index = getQuoteIndex(quoteName);
-        quotes.get(index).removeItem(itemName);
-    }
-
-    public void addItem(String quoteName, String itemName, double price, int quantity) {
-        int index = getQuoteIndex(quoteName);
-        quotes.get(index).addItem(itemName, price, quantity);
+        throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
 }

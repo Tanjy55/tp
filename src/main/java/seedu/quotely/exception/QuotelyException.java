@@ -11,6 +11,9 @@ public class QuotelyException extends Exception {
         EMPTY_TASK_LIST,
         INVALID_DATE_TIME,
         DUPLICATE_TASK,
+        NO_ACTIVE_QUOTE,
+        QUOTE_NOT_FOUND,
+        ITEM_NOT_FOUND,
         INVALID_STATE
     }
 
@@ -47,6 +50,12 @@ public class QuotelyException extends Exception {
             return "This task already exists in your list.";
         case INVALID_NUMBER_FORMAT:
             return "The number format is invalid. Please enter a valid number.";
+        case NO_ACTIVE_QUOTE:
+            return "There is no active quote. Please create a quote first.";
+        case QUOTE_NOT_FOUND:
+            return "The specified quote was not found.";
+        case ITEM_NOT_FOUND:
+            return "The specified item was not found in the quote.";
         case INVALID_STATE:
             return "Unable to execute this command in Main Menu state";
         default:

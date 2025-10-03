@@ -3,7 +3,6 @@ package seedu.quotely;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.command.Command;
 import seedu.quotely.command.ExitCommand;
@@ -15,18 +14,21 @@ import seedu.quotely.command.FinishQuoteCommand;
 import seedu.quotely.command.AddItemCommand;
 import seedu.quotely.command.DeleteItemCommand;
 import seedu.quotely.command.CalculateTotalCommand;
+import seedu.quotely.data.QuotelyState;
+import seedu.quotely.data.Quote;
+import seedu.quotely.data.QuoteList;
 
 public class Parser {
     private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
     private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
 
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
-    private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)\\s+p/(.*)\\s+q/(.*)";
-    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+n/(.*)";
+    private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
+    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?";
+    private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "(?:n/(.*))?";
 
-    private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
-
-    public static Command parse(String fullCommand, QuotelyState state) throws QuotelyException {
+    public static Command parse(String fullCommand, QuotelyState state, QuoteList quoteList)
+            throws QuotelyException {
 
         /*
         edit parse method to allow command input depending on isInsideState
@@ -56,16 +58,11 @@ public class Parser {
             //inside quote only
             return new FinishQuoteCommand();
         case "delete":
-            //inside quote only
-            //needs state reference in execute
-            return parseDeleteItemCommand(arguments);
+            return parseDeleteItemCommand(arguments, state, quoteList);
         case "add":
-            //inside quote only
-            //needs state reference in execute
-            return parseAddItemCommand(arguments);
+            return parseAddItemCommand(arguments, state, quoteList);
         case "total":
-            //main menu only?
-            return parseCalculateTotalCommand(arguments);
+            return parseCalculateTotalCommand(arguments, state, quoteList);
         case "exit":
             //available in all state, for now
             return new ExitCommand();
@@ -114,12 +111,13 @@ public class Parser {
         }
     }
 
-    private static Command parseAddItemCommand(String arguments) throws QuotelyException {
+    private static Command parseAddItemCommand(String arguments, 
+            QuotelyState state, QuoteList quoteList) throws QuotelyException {
         Pattern p = Pattern.compile(ADD_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String itemName = m.group(1).trim();
-            String quoteName = m.group(2).trim();
+            String quoteName = m.group(2) != null ? m.group(2).trim() : null;
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
             double price;
@@ -130,42 +128,58 @@ public class Parser {
             } catch (NumberFormatException e) {
                 throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
             }
-            return new AddItemCommand(itemName, quoteName, price, quantity);
+
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            return new AddItemCommand(itemName, quote, price, quantity);
         } else {
             throw new QuotelyException(
-                    QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY"
+                 QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                    "add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY"
             );
         }
     }
 
-    private static Command parseDeleteItemCommand(String arguments) throws QuotelyException {
+    private static Command parseDeleteItemCommand(String arguments, QuotelyState state, 
+            QuoteList quoteList) throws QuotelyException {
         Pattern p = Pattern.compile(DELETE_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
             String itemName = m.group(1).trim();
-            String quoteName = m.group(2).trim();
-            return new DeleteItemCommand(itemName, quoteName);
+            String quoteName = m.group(2) != null ? m.group(2).trim() : null;
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            return new DeleteItemCommand(itemName, quote);
         } else {
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "delete i/ITEM_NAME n/QUOTE_NAME"
+                    "delete i/ITEM_NAME [n/QUOTE_NAME]"
             );
         }
     }
 
-    private static Command parseCalculateTotalCommand(String arguments) throws QuotelyException {
+    private static Command parseCalculateTotalCommand(String arguments, QuotelyState state,
+            QuoteList quoteList) throws QuotelyException {
         Pattern p = Pattern.compile(CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
         if (m.find()) {
-            String quoteName = m.group(1).trim();
-            String customerName = m.group(2).trim();
-            return new CalculateTotalCommand(quoteName, customerName);
+            String quoteName = m.group(1) != null ? m.group(1).trim() : null;
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            return new CalculateTotalCommand(quote);
         } else {
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "total n/QUOTE_NAME c/COMPANY_NAME"
+                    "total [n/QUOTE_NAME]"
             );
+        }
+    }
+
+    private static Quote getQuoteFromStateAndName(String quoteName, 
+            QuotelyState state, QuoteList quoteList) throws QuotelyException {
+        if (quoteName == null && state.getQuoteReference() == null) {
+            throw new QuotelyException(QuotelyException.ErrorType.NO_ACTIVE_QUOTE);
+        } else if (quoteName != null) {
+            return quoteList.getQuoteByName(quoteName);
+        } else {
+            return state.getQuoteReference();
         }
     }
 }
