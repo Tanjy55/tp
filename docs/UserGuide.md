@@ -109,7 +109,7 @@ add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY
 ```
 
 * The `ITEM_NAME` and `QUOTE_NAME` can be in a natural language format.
-* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
+* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, item will be added to that quote instead of the current one)
 * The `PRICE` should be decimal.
 * The `QUANTITY` should be integer.
 
@@ -132,7 +132,7 @@ Deletes an item of matching name completely from the list of items in the quote,
 delete i/ITEM_NAME {n/QUOTE_NAME}
 ```
 
-* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
+* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, item will be deleted from that quote instead of the current one)
 
 
 **Example:** 
@@ -154,7 +154,7 @@ Calculate the total of specific quote.
 total {n/QUOTE_NAME}
 ```
 
-* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, that quote will be deleted instead of the current one)
+* `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, total will be calculated for that quote instead of the current one)
 
 
 **Example:** 
