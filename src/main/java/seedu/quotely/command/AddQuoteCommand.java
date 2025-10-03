@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuotelyState;
@@ -19,9 +19,9 @@ public class AddQuoteCommand extends Command {
 
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
         ui.showMessage("Adding quote: " + quoteName + " for " + customerName);
 

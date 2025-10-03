@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.QuotelyState;
@@ -17,11 +17,11 @@ public class CalculateTotalCommand extends Command {
 
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
-        ui.showMessage("Total cost of quote " + quote.getQuoteName() + " for " 
-            + quote.getCustomerName() + ": " + quote.getQuoteTotal());
+        ui.showMessage("Total cost of quote " + quote.getQuoteName() + " for "
+                + quote.getCustomerName() + ": " + quote.getQuoteTotal());
     }
 }

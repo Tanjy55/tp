@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.QuotelyState;
@@ -19,16 +19,16 @@ public class DeleteItemCommand extends Command {
 
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
         ui.showMessage("Deleting " + itemName + " from quote " + quote.getQuoteName());
 
         /*
-        Delete item needs quote reference or user input from parser
-        Quote currentQuote = state.getQuoteReference();
-        to edit remove item method
+         * Delete item needs quote reference or user input from parser
+         * Quote currentQuote = state.getQuoteReference();
+         * to edit remove item method
          */
         quote.removeItem(itemName);
     }
