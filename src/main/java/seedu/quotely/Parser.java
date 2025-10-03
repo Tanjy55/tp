@@ -2,6 +2,7 @@ package seedu.quotely;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.command.Command;
 import seedu.quotely.command.ExitCommand;
@@ -24,7 +25,10 @@ public class Parser {
 
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
 
-    public static Command parse(String fullCommand) throws QuotelyException {
+    public static Command parse(String fullCommand, boolean isInsideState) throws QuotelyException {
+
+        //edit parse method to allow command input depending on isInsideState
+
         System.out.println("Parsing command: " + fullCommand);
         String command = fullCommand.split(" ")[0];
         String arguments = "";
@@ -33,22 +37,33 @@ public class Parser {
         }
         switch (command) {
         case "register":
+            //available in all state
             return parseRegisterCommand(arguments);
         case "quote":
+            //main menu only
             return parseAddQuoteCommand(arguments);
         case "unquote":
+            //main menu only
             return parseDeleteQuoteCommand(arguments);
         case "show":
+            //main menu only
             return new ShowQuotesCommand();
         case "finish":
+            //inside quote only
             return new FinishQuoteCommand();
         case "delete":
+            //inside quote only
+            //needs state reference in execute
             return parseDeleteItemCommand(arguments);
         case "add":
+            //inside quote only
+            //needs state reference in execute
             return parseAddItemCommand(arguments);
         case "total":
+            //main menu only?
             return parseCalculateTotalCommand(arguments);
         case "exit":
+            //available in all state, for now
             return new ExitCommand();
         default:
             throw new QuotelyException(QuotelyException.ErrorType.INVALID_COMMAND);

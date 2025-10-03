@@ -10,7 +10,8 @@ public class QuotelyException extends Exception {
         EMPTY_DESCRIPTION,
         EMPTY_TASK_LIST,
         INVALID_DATE_TIME,
-        DUPLICATE_TASK
+        DUPLICATE_TASK,
+        INVALID_STATE
     }
 
     private final ErrorType errorType;
@@ -46,6 +47,8 @@ public class QuotelyException extends Exception {
             return "This task already exists in your list.";
         case INVALID_NUMBER_FORMAT:
             return "The number format is invalid. Please enter a valid number.";
+        case INVALID_STATE:
+            return "Unable to execute this command in Main Menu state";
         default:
             return "An unknown error occurred.";
         }

@@ -3,6 +3,7 @@ package seedu.quotely.command;
 import seedu.quotely.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
+import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
 public class RegisterCommand extends Command {
@@ -16,7 +17,8 @@ public class RegisterCommand extends Command {
     @Override
     public void execute(Ui ui,
                         QuoteList quoteList,
-                        CompanyName companyName) throws QuotelyException {
+                        CompanyName companyName,
+                        QuotelyState state) throws QuotelyException {
         ui.showMessage("Registering company: " + newName);
         companyName.setCompanyName(newName);
     }
