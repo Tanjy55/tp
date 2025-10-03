@@ -13,7 +13,7 @@ public class ExitCommand extends Command {
     @Override
     public void execute(Ui ui,
                         QuoteList quoteList,
-                        CompanyName companyName) throws QuotelyException{
+                        CompanyName companyName) throws QuotelyException {
         ui.showExitMessage();
     }
 
@@ -21,5 +21,5 @@ public class ExitCommand extends Command {
     public boolean isExit() {
         return true;
     }
-    
+
 }

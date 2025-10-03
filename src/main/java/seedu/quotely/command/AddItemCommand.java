@@ -23,12 +23,19 @@ public class AddItemCommand extends Command {
     public void execute(Ui ui,
                         QuoteList quoteList,
                         CompanyName companyName) throws QuotelyException {
+
         ui.showMessage(
                 String.format(
                         "Adding item to quote %s with name %s, price %.2f, quantity %d",
                         quoteName, itemName, price, quantity
                 )
         );
+
+        /*
+        Adding item needs quote reference or user input from parser
+        Quote currentQuote = state.getQuoteReference();
+        to edit add item method
+         */
         quoteList.addItem(quoteName, itemName, price, quantity);
     }
 }

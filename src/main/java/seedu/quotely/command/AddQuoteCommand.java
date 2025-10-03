@@ -20,7 +20,10 @@ public class AddQuoteCommand extends Command {
     public void execute(Ui ui,
                         QuoteList quoteList,
                         CompanyName companyName) throws QuotelyException {
+
         ui.showMessage("Adding quote: " + quoteName + " for " + customerName);
-        quoteList.addQuote(new Quote(quoteName, customerName));
+
+        Quote quoteToAdd = new Quote(quoteName, customerName);
+        quoteList.addQuote(quoteToAdd);
     }
 }

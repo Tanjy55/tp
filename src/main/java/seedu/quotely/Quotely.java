@@ -3,12 +3,14 @@ package seedu.quotely;
 import seedu.quotely.command.Command;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
+import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
 public class Quotely {
     private Ui ui;
     private CompanyName companyName;
     private QuoteList quoteList;
+    private QuotelyState state;
 
     /**
      * Constructor for Quotely
@@ -30,18 +32,18 @@ public class Quotely {
         ui = new Ui();
         companyName = new CompanyName("Default");
         quoteList = new QuoteList();
+        state = new QuotelyState();
     }
 
     public void run() {
         ui.showWelcome();
         boolean isExit = false;
         ui.showLine();
-
         while (!isExit) {
             try {
                 String fullCommand = ui.readCommand();
                 ui.showLine();
-                Command c = Parser.parse(fullCommand);
+                Command c = Parser.parse(fullCommand, state);
                 c.execute(ui, quoteList, companyName);
                 isExit = c.isExit();
             } catch (QuotelyException e) {

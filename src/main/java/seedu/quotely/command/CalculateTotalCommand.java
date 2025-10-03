@@ -16,11 +16,11 @@ public class CalculateTotalCommand extends Command {
     }
 
     @Override
-    public void execute (Ui ui,
-                         QuoteList quoteList,
-                         CompanyName companyName) throws QuotelyException {
+    public void execute(Ui ui,
+                        QuoteList quoteList,
+                        CompanyName companyName) throws QuotelyException {
+
         ui.showMessage("Total cost of quote " + quoteName + " for " + customerName + ": "
                 + quoteList.calculateQuoteTotal(quoteName, customerName));
     }
-
 }

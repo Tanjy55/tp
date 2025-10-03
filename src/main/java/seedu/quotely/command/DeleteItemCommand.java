@@ -19,7 +19,14 @@ public class DeleteItemCommand extends Command {
     public void execute(Ui ui,
                         QuoteList quoteList,
                         CompanyName companyName) throws QuotelyException {
+
         ui.showMessage("Deleting item: " + itemName + " from quote: " + quoteName);
+
+        /*
+        Delete item needs quote reference or user input from parser
+        Quote currentQuote = state.getQuoteReference();
+        to edit remove item method
+         */
         quoteList.removeItem(quoteName, itemName);
     }
 }
