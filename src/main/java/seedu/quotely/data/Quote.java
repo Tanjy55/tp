@@ -3,6 +3,8 @@ package seedu.quotely.data;
 import java.util.ArrayList;
 import java.util.List;
 
+import seedu.quotely.exception.QuotelyException;
+
 public class Quote {
     private String quoteName;
     private String customerName;
@@ -34,7 +36,7 @@ public class Quote {
         return Math.round(total * 100.0) / 100.0;
     }
 
-    public void removeItem(String itemName) {
+    public void removeItem(String itemName) throws QuotelyException {
         int index = getItemIndex(itemName);
         items.remove(index);
     }
@@ -43,7 +45,7 @@ public class Quote {
         items.add(new Item(itemName, price, quantity));
     }
 
-    private int getItemIndex(String itemName) {
+    private int getItemIndex(String itemName) throws QuotelyException {
         int index = 0;
         for (Item i : items) {
             if (i.getItemName().equals(itemName)) {
@@ -51,6 +53,10 @@ public class Quote {
             }
             index++;
         }
-        return -1; //exception to be implemented
+        throw new QuotelyException(QuotelyException.ErrorType.ITEM_NOT_FOUND);
+    }
+
+    public String toString() {
+        return quoteName;
     }
 }

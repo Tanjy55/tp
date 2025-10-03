@@ -3,6 +3,7 @@ package seedu.quotely;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Item;
 import seedu.quotely.data.Quote;
+import seedu.quotely.data.QuotelyState;
 
 import java.util.Scanner;
 
@@ -31,7 +32,12 @@ public class Ui {
         System.out.println("Bye. Hope to see you again soon!");
     }
 
-    public String readCommand() {
+    public String readCommand(QuotelyState state) {
+        if (state.isInsideQuote()) {
+            System.out.print(state.getQuoteReference().toString() + " > ");
+        } else {
+            System.out.print("main > ");
+        }
         return scanner.nextLine();
     }
 
