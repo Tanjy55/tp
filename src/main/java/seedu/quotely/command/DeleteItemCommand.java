@@ -23,7 +23,7 @@ public class DeleteItemCommand extends Command {
                         CompanyName companyName,
                         QuotelyState state) throws QuotelyException {
 
-        ui.showMessage("Deleting item: " + itemName + " from quote: " + quote.getQuoteName());
+        ui.showMessage("Deleting " + itemName + " from quote " + quote.getQuoteName());
 
         /*
         Delete item needs quote reference or user input from parser
