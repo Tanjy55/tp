@@ -141,7 +141,7 @@ public class ParserQuoteCommandTest {
         QuotelyState state = new QuotelyState();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
-        state.setInsideQuote(q);
+        state.setOutsideQuote();
         quoteList.addQuote(q);
         try {
             Command command = Parser.parse("unquote n/quote 1", state, quoteList);
