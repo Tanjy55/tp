@@ -25,11 +25,6 @@ public class DeleteItemCommand extends Command {
 
         ui.showMessage("Deleting " + itemName + " from quote " + quote.getQuoteName());
 
-        /*
-         * Delete item needs quote reference or user input from parser
-         * Quote currentQuote = state.getQuoteReference();
-         * to edit remove item method
-         */
         quote.removeItem(itemName);
     }
 }

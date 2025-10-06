@@ -23,17 +23,6 @@ public class QuoteList {
         quotes.remove(quote);
     }
 
-    private int getQuoteIndex(String quoteName) throws QuotelyException {
-        int index = 0;
-        for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName)) {
-                return index;
-            }
-            index++;
-        }
-        throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
-    }
-
     public Quote getQuoteByName(String quoteName) throws QuotelyException {
         for (Quote q : quotes) {
             if (q.getQuoteName().equals(quoteName)) {

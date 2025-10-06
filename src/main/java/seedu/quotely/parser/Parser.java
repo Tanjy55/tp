@@ -24,7 +24,7 @@ public class Parser {
 
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
-    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(\\S+))?";
+    private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
     public static Command parse(String fullCommand, QuotelyState state, QuoteList quoteList)
@@ -49,7 +49,7 @@ public class Parser {
             // main menu only
             return parseAddQuoteCommand(arguments, state);
         case "unquote":
-            // can use without quote name if inside a quote
+            // can use no quote name if inside a quote
             return parseDeleteQuoteCommand(arguments, state, quoteList);
         case "show":
             // available in all state, for now?
@@ -137,6 +137,9 @@ public class Parser {
             try {
                 price = Double.parseDouble(priceStr);
                 quantity = Integer.parseInt(quantityStr);
+                if (quantity <= 0 || price < 0) {
+                    throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                }
             } catch (NumberFormatException e) {
                 throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
             }
@@ -159,6 +162,9 @@ public class Parser {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            if (!quote.hasItem(itemName)) {
+                throw new QuotelyException(QuotelyException.ErrorType.ITEM_NOT_FOUND);
+            }
             return new DeleteItemCommand(itemName, quote);
         } else {
             throw new QuotelyException(

@@ -56,6 +56,15 @@ public class Quote {
         throw new QuotelyException(QuotelyException.ErrorType.ITEM_NOT_FOUND);
     }
 
+    public boolean hasItem(String itemName) {
+        for (Item i : items) {
+            if (i.getItemName().equals(itemName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public String toString() {
         return quoteName;
     }
