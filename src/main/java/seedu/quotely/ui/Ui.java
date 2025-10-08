@@ -1,4 +1,4 @@
-package seedu.quotely;
+package seedu.quotely.ui;
 
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Item;

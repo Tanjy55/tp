@@ -1,0 +1,103 @@
+package seedu.quotely.parser;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import org.junit.jupiter.api.Test;
+
+import seedu.quotely.command.Command;
+import seedu.quotely.data.Quote;
+import seedu.quotely.data.QuotelyState;
+import seedu.quotely.data.QuoteList;
+import seedu.quotely.exception.QuotelyException;
+
+/**
+ * Tests for utility command parsing including total, register, and show
+ * commands.
+ */
+public class ParserUtilityCommandTest {
+
+    @Test
+    public void parseTotalQuoteCommand_insideQuote_returnTotalCommand() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote name", "customer name");
+        quoteList.addQuote(q);
+        state.setInsideQuote(q);
+        try {
+            Command command = Parser.parse("total", state, quoteList);
+            assertTrue(command instanceof seedu.quotely.command.CalculateTotalCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parseTotalQuoteCommand_validInputOutsideQuote_returnTotalCommand() {
+        QuotelyState state = new QuotelyState();
+        state.setOutsideQuote();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote name", "customer name");
+        quoteList.addQuote(q);
+        try {
+            Command command = Parser.parse("total n/quote name", state, quoteList);
+            assertTrue(command instanceof seedu.quotely.command.CalculateTotalCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parseTotalQuoteCommand_invalidQuoteNameOutsideQuote_throwException() {
+        QuotelyState state = new QuotelyState();
+        state.setOutsideQuote();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote name", "customer name");
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("total n/invalid quote name", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseTotalQuoteCommand_noQuoteNameOutsideQuote_throwException() {
+        QuotelyState state = new QuotelyState();
+        state.setOutsideQuote();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote name", "customer name");
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("total", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseRegisterCommand_validInput_returnRegisterCommand() {
+        try {
+            Command command = Parser.parse("register c/Customer Name", null, null);
+            assertTrue(command instanceof seedu.quotely.command.RegisterCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parseRegisterCommand_invalidInput_throwException() {
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("register invalidinput", null, null);
+        });
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("register", null, null);
+        });
+    }
+
+    @Test
+    public void parseShowQuotesCommand_validInput_returnShowQuotesCommand() {
+        try {
+            Command command = Parser.parse("show", null, null);
+            assertTrue(command instanceof seedu.quotely.command.ShowQuotesCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+}

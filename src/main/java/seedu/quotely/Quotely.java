@@ -5,6 +5,8 @@ import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
+import seedu.quotely.parser.Parser;
+import seedu.quotely.ui.Ui;
 
 public class Quotely {
     private Ui ui;

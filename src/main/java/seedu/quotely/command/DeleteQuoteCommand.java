@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.data.QuoteList;
@@ -17,9 +17,9 @@ public class DeleteQuoteCommand extends Command {
 
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
         ui.showMessage("Deleting quote: " + quote.getQuoteName());
         // go back to main menu if the deleted quote is the current quote

@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.Quote;
@@ -23,16 +23,14 @@ public class AddItemCommand extends Command {
 
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
         ui.showMessage(
                 String.format(
                         "Adding %s to quote %s with price %.2f, quantity %d",
-                        itemName, quote.getQuoteName(), price, quantity
-                )
-        );
+                        itemName, quote.getQuoteName(), price, quantity));
         quote.addItem(itemName, price, quantity);
     }
 }

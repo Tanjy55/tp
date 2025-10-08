@@ -1,6 +1,6 @@
 package seedu.quotely.command;
 
-import seedu.quotely.Ui;
+import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.QuotelyState;
@@ -14,9 +14,9 @@ public abstract class Command {
     }
 
     public abstract void execute(Ui ui,
-                                 QuoteList quoteList,
-                                 CompanyName companyName,
-                                 QuotelyState state) throws QuotelyException;
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException;
 
     public boolean isExit() {
         return false;
