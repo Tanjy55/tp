@@ -2,6 +2,7 @@ package seedu.quotely.command;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuotelyState;
@@ -23,7 +24,7 @@ public class DeleteQuoteCommandTest {
             DeleteQuoteCommand deleteQuoteCommand = new DeleteQuoteCommand(quote);
             deleteQuoteCommand.execute(ui, quoteList, companyName, state);
             assertEquals(0, quoteList.getQuotes().size());
-            assertEquals(state.getQuoteReference(), null);
+            assertNull(state.getQuoteReference());
             assert !state.isInsideQuote();
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";

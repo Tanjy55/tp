@@ -22,7 +22,7 @@ public class AddQuoteCommandTest {
             assertEquals("TestQuote", quoteList.getQuotes().get(0).getQuoteName());
             assertEquals("TestCustomer", quoteList.getQuotes().get(0).getCustomerName());
         } catch (QuotelyException e) {
-            assert false : "Execution should not fail.";    
+            assert false : "Execution should not fail.";
         }
     }
 }
