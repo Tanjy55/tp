@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import seedu.quotely.command.Command;
+import seedu.quotely.data.QuoteList;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 
@@ -18,16 +19,18 @@ public class ParserGeneralTest {
     @Test
     public void parseUnknownCommand_invalidInput_throwException() {
         QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
         assertThrows(QuotelyException.class, () -> {
-            Parser.parse("unknowncommand", state, null);
+            Parser.parse("unknowncommand", state, quoteList);
         });
     }
 
     @Test
     public void parseExitCommand_validInput_returnExitCommand() {
         QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
         try {
-            Command command = Parser.parse("exit", state, null);
+            Command command = Parser.parse("exit", state, quoteList);
             assertTrue(command instanceof seedu.quotely.command.ExitCommand);
         } catch (Exception e) {
             assert false : "Exception should not be thrown";

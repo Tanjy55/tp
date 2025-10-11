@@ -34,6 +34,13 @@ public class Parser {
     public static Command parse(String fullCommand, QuotelyState state, QuoteList quoteList)
             throws QuotelyException {
 
+        // Precondition assertions
+        assert state != null : "QuotelyState cannot be null";
+        assert quoteList != null : "QuoteList cannot be null";
+        if (fullCommand == null || fullCommand.trim().isEmpty()) {
+            throw new QuotelyException(QuotelyException.ErrorType.EMPTY_COMMAND);
+        }
+
         logger.info("Parsing command: " + fullCommand);
         logger.fine("Current state - isInside quote: " + state.isInsideQuote() +
             " QuoteReference: " + (state.getQuoteReference() != null ? 
@@ -95,11 +102,13 @@ public class Parser {
         }
         Pattern p = Pattern.compile(ADD_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+
         if (m.find()) {
             String quoteName = m.group(1).trim();
             String customerName = m.group(2).trim();
-            logger.info("Successfully parsed add quote command - Quote: '" + quoteName + "', Customer: '" + customerName
-                    + "'");
+
+            logger.info("Successfully parsed add quote command - Quote: '" 
+                + quoteName + "', Customer: '" + customerName + "'");
             return new AddQuoteCommand(quoteName, customerName);
         } else {
             logger.warning("Invalid format for add quote command: " + arguments);
@@ -114,10 +123,12 @@ public class Parser {
         logger.fine("parseDeleteQuoteCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(DELETE_QUOTE_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+
         String quoteName = null;
         if (m.find()) {
             quoteName = m.group(1).trim();
         }
+
         Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
         if (quote != null) {
             logger.info("Successfully parsed delete quote command for quote: " + quote.getQuoteName());
@@ -132,6 +143,7 @@ public class Parser {
         logger.fine("parseRegisterCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(REGISTER_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+
         if (m.find()) {
             String name = m.group(1).trim();
             logger.info("Successfully parsed register command for company: " + name);
@@ -149,11 +161,13 @@ public class Parser {
         logger.fine("parseAddItemCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(ADD_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
+
         if (m.find()) {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
+
             logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + 
                 (quoteName != null ? quoteName : "<none>") + "', Price: '" + 
                 priceStr + "', Quantity: '" + quantityStr + "'");
@@ -176,6 +190,7 @@ public class Parser {
             logger.info("Successfully parsed add item command - Item: '" +
                     itemName + "' Price: " + price + " Quantity: " + quantity +
                     " for quote: '" + quote.getQuoteName() + "'");
+
             return new AddItemCommand(itemName, quote, price, quantity);
         } else {
             logger.warning("Invalid format for add item command: " + arguments);
@@ -242,9 +257,14 @@ public class Parser {
         }
     }
 
-    private static Quote getQuoteFromStateAndName(String quoteName, 
+    private static Quote getQuoteFromStateAndName(String quoteName,
             QuotelyState state, QuoteList quoteList) throws QuotelyException {
+        // Precondition assertions
+        assert state != null : "QuotelyState cannot be null";
+        assert quoteList != null : "QuoteList cannot be null";
+
         logger.fine("getQuoteFromStateAndName called");
+
         if (quoteName == null && state.getQuoteReference() == null) {
             logger.warning("No quote name provided and no active quote in state");
             throw new QuotelyException(QuotelyException.ErrorType.NO_ACTIVE_QUOTE);

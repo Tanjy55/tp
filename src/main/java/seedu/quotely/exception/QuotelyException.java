@@ -14,7 +14,8 @@ public class QuotelyException extends Exception {
         NO_ACTIVE_QUOTE,
         QUOTE_NOT_FOUND,
         ITEM_NOT_FOUND,
-        INVALID_STATE
+        INVALID_STATE,
+        EMPTY_COMMAND
     }
 
     private final ErrorType errorType;
@@ -58,6 +59,8 @@ public class QuotelyException extends Exception {
             return "The specified item was not found in the quote.";
         case INVALID_STATE:
             return "This command should be executed in Main Menu.";
+        case EMPTY_COMMAND:
+            return "The command cannot be empty. Please enter a valid command.";
         default:
             return "An unknown error occurred.";
         }
