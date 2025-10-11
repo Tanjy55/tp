@@ -7,6 +7,8 @@ import seedu.quotely.data.QuotelyState;
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.parser.Parser;
 import seedu.quotely.ui.Ui;
+import seedu.quotely.util.LoggerConfig;
+import java.util.logging.Logger;
 
 public class Quotely {
     private Ui ui;
@@ -57,6 +59,18 @@ public class Quotely {
     }
 
     public static void main(String[] args) {
-        new Quotely().run();
+        // Initialize global logging configuration
+        LoggerConfig.initializeGlobalLogging();
+
+        Logger logger = LoggerConfig.getLogger(Quotely.class);
+        logger.info("Starting Quotely application");
+
+        try {
+            new Quotely().run();
+            logger.info("Quotely application finished successfully");
+        } catch (Exception e) {
+            logger.severe("Quotely application crashed: " + e.getMessage());
+            throw e;
+        }
     }
 }
