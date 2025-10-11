@@ -106,11 +106,11 @@ public class LoggerConfig {
             // Set up file handler with better error handling
             try {
                 FileHandler fileHandler = new FileHandler(
-                        DEFAULT_LOG_DIR + "/" + DEFAULT_LOG_FILE
+                        DEFAULT_LOG_DIR + File.separator + DEFAULT_LOG_FILE
                 );
                 fileHandler.setLevel(DEFAULT_FILE_LEVEL);
                 rootLogger.addHandler(fileHandler);
-                System.out.println("File logging enabled: " + DEFAULT_LOG_DIR + "/" + DEFAULT_LOG_FILE);
+                System.out.println("File logging enabled: " + DEFAULT_LOG_DIR + File.separator + DEFAULT_LOG_FILE);
             } catch (IOException e) {
                 System.err.println("Failed to set up file logging: " + e.getMessage());
                 System.err.println("Continuing with console logging only");
@@ -161,22 +161,5 @@ public class LoggerConfig {
                 handler.setLevel(level);
             }
         }
-    }
-
-    /**
-     * Legacy method for backward compatibility.
-     */
-    @Deprecated
-    public static Logger setupLogger(String className, String logFileName,
-            Level fileLevel, Level consoleLevel) {
-        return getLogger(className);
-    }
-
-    /**
-     * Legacy method for backward compatibility.
-     */
-    @Deprecated
-    public static Logger setupDefaultLogger(String className) {
-        return getLogger(className);
     }
 }
