@@ -16,6 +16,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    
+    // Enable assertions for tests
+    jvmArgs '-enableassertions', '-ea'
 
     testLogging {
         events "passed", "skipped", "failed"
@@ -42,5 +45,7 @@ checkstyle {
 }
 
 run{
+    // Enable assertions for development
+    jvmArgs '-enableassertions', '-ea'
     standardInput = System.in
 }
