@@ -35,8 +35,9 @@ public class Parser {
             throws QuotelyException {
 
         logger.info("Parsing command: " + fullCommand);
-        logger.fine("Current state - isInside quote: " + state.isInsideQuote() + 
-            " QuoteReference: " + state.getQuoteReference());
+        logger.fine("Current state - isInside quote: " + state.isInsideQuote() +
+            " QuoteReference: " + (state.getQuoteReference() != null ? 
+            state.getQuoteReference().toString() : "null"));
 
         /*
          * edit parse method to allow command input depending on isInsideState
@@ -153,8 +154,9 @@ public class Parser {
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
-            logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + quoteName + "', Price: '" + priceStr
-                    + "', Quantity: '" + quantityStr + "'");
+            logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + 
+                (quoteName != null ? quoteName : "<none>") + "', Price: '" + 
+                priceStr + "', Quantity: '" + quantityStr + "'");
 
             double price;
             int quantity;
@@ -240,9 +242,9 @@ public class Parser {
         }
     }
 
-    private static Quote getQuoteFromStateAndName(String quoteName,
+    private static Quote getQuoteFromStateAndName(String quoteName, 
             QuotelyState state, QuoteList quoteList) throws QuotelyException {
-        logger.fine("getQuoteFromStateAndName called with quoteName: " + quoteName);
+        logger.fine("getQuoteFromStateAndName called");
         if (quoteName == null && state.getQuoteReference() == null) {
             logger.warning("No quote name provided and no active quote in state");
             throw new QuotelyException(QuotelyException.ErrorType.NO_ACTIVE_QUOTE);
