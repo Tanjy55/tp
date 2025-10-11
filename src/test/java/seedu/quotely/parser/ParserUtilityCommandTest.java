@@ -73,8 +73,9 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseRegisterCommand_validInput_returnRegisterCommand() {
+        QuotelyState state = new QuotelyState();
         try {
-            Command command = Parser.parse("register c/Customer Name", null, null);
+            Command command = Parser.parse("register c/Customer Name", state, null);
             assertTrue(command instanceof seedu.quotely.command.RegisterCommand);
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
@@ -83,18 +84,20 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseRegisterCommand_invalidInput_throwException() {
+        QuotelyState state = new QuotelyState();
         assertThrows(QuotelyException.class, () -> {
-            Parser.parse("register invalidinput", null, null);
+            Parser.parse("register invalidinput", state, null);
         });
         assertThrows(QuotelyException.class, () -> {
-            Parser.parse("register", null, null);
+            Parser.parse("register", state, null);
         });
     }
 
     @Test
     public void parseShowQuotesCommand_validInput_returnShowQuotesCommand() {
         try {
-            Command command = Parser.parse("show", null, null);
+            QuotelyState state = new QuotelyState();
+            Command command = Parser.parse("show", state, null);
             assertTrue(command instanceof seedu.quotely.command.ShowQuotesCommand);
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
