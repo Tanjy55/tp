@@ -15,6 +15,7 @@ import seedu.quotely.command.FinishQuoteCommand;
 import seedu.quotely.command.AddItemCommand;
 import seedu.quotely.command.DeleteItemCommand;
 import seedu.quotely.command.CalculateTotalCommand;
+import seedu.quotely.command.NavigateCommand;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuoteList;
@@ -25,7 +26,7 @@ public class Parser {
 
     private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
     private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
-
+    private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
@@ -85,6 +86,9 @@ public class Parser {
         case "total":
             // can use without quote name if inside a quote
             return parseCalculateTotalCommand(arguments, state, quoteList);
+        case "nav":
+            // available in all states, but need to specify target location e.g. 'main' or quoteName
+            return parseNavigateCommand(arguments, state, quoteList);
         case "exit":
             // available in all state, for now
             return new ExitCommand();
@@ -115,6 +119,36 @@ public class Parser {
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
                     "quote n/QUOTE_NAME c/COMPANY_NAME");
+        }
+    }
+
+    private static Command parseNavigateCommand(String arguments, QuotelyState state, QuoteList quoteList)
+            throws QuotelyException {
+        logger.fine("parseNavigateCommand called with arguments: " + arguments);
+
+        String targetName =  arguments.trim();
+        if (targetName.equals("main")) {
+            return new NavigateCommand();
+        }
+
+        Pattern p = Pattern.compile(NAVIGATE_COMMAND_PATTERN);
+        Matcher m = p.matcher(arguments);
+
+        String targetQuoteName = null;
+        if (m.find()) {
+            targetQuoteName = m.group(1);
+        } else {
+            logger.warning("Failed to navigate to target with name: " + targetQuoteName);
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "nav main OR nav n/QUOTE_NAME");
+        }
+
+        Quote targetQuote = getQuoteFromStateAndName(targetQuoteName, state, quoteList);
+        if (targetQuote != null) {
+            logger.info("Successfully parsed navigate command to target location" + targetQuote.getQuoteName());
+            return new NavigateCommand(targetQuote);
+        } else {
+            logger.warning("Failed to navigate to target with name: " + targetQuoteName);
+            throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
         }
     }
 
