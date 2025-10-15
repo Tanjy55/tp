@@ -35,16 +35,21 @@ public class NavigateCommand extends Command {
             return;
         }
 
-        if (!state.isInsideQuote()) { //if at main menu
-            ui.showMessage("Navigating to quote: " + quote.getQuoteName());
-            state.setQuoteReference(quote);
-            state.setInsideQuote(quote);
-        } else if (state.getQuoteReference() != quote) { //if navigating from one quote to another
-            ui.showMessage("Navigating to quote: " + quote.getQuoteName());
-            state.setQuoteReference(quote);
-            state.setInsideQuote(quote);
-        } else { //if trying to navigate to the same quote
+        if (state.getQuoteReference() == quote) { //if at main menu
             ui.showMessage("You're already at quote: " + quote.getQuoteName());
+
+//            ui.showMessage("Navigating to quote: " + quote.getQuoteName());
+//            state.setQuoteReference(quote);
+//            state.setInsideQuote(quote);
+//        } else if (state.getQuoteReference() != quote) { //if navigating from one quote to another
+//            ui.showMessage("Navigating to quote: " + quote.getQuoteName());
+//            state.setQuoteReference(quote);
+//            state.setInsideQuote(quote);
+        } else { //if trying to navigate to the same quote
+//            ui.showMessage("You're already at quote: " + quote.getQuoteName());
+            ui.showMessage("Navigating to quote: " + quote.getQuoteName());
+            state.setQuoteReference(quote);
+            state.setInsideQuote(quote);
         }
     }
 }
