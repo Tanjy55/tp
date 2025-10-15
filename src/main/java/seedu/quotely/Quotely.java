@@ -22,8 +22,18 @@ public class Quotely {
      * 2) create new CompanyName and set a default company name
      * 3) create new QuoteList instance, which contains list of quotes
      * <p>
-     * Future flexibility
-     * - Multiple CompanyName (different user), multiple Quotelist may be implemented
+     * Future additions for v2.0:
+     * - local file saving
+     * - isTax attribute for Items
+     * - pdf export function
+     * - user may show particular quote
+     * - business address, customer address
+     * - quote runs on serial number instead of name
+     *
+     * Possible additions for 2.0b:
+     * - installment calculator
+     * - converter (future update if unable to finish)
+     * - pdf different template generation
      * <p>
      * Data handling
      * - Quotelist currently implemented as ArrayList
@@ -31,6 +41,12 @@ public class Quotely {
      * - quoteList and companyName is passed into parser then command
      * - lists are not mutated until execute() is called
      * - data is stored in classes under data package only
+     *
+     * State:
+     * - 2 states currently implemented
+     * - differentiate main menu and quote environments
+     * - first state: in main menu
+     * - other state: inside quote
      */
     public Quotely() {
         ui = new Ui();
@@ -72,5 +88,6 @@ public class Quotely {
             logger.severe("Quotely application crashed: " + e.getMessage());
             throw e;
         }
+        assert false : "dummy assertion set to fail";
     }
 }

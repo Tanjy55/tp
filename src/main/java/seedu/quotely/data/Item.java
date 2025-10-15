@@ -16,7 +16,7 @@ public class Item {
     }
 
     /**
-     * Unused getters and setters for future versions
+     * Unused getters and setters for future use
      */
 
     public void setItemName(String itemName) {
