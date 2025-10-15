@@ -52,7 +52,7 @@ public class QuotelyException extends Exception {
         case INVALID_NUMBER_FORMAT:
             return "The number format is invalid. Please enter a valid number.";
         case NO_ACTIVE_QUOTE:
-            return "There is no active quote. Please create a quote first.";
+            return "There is no active quote. Please navigate to a quote or specify one in the commands.";
         case QUOTE_NOT_FOUND:
             return "The specified quote was not found.";
         case ITEM_NOT_FOUND:

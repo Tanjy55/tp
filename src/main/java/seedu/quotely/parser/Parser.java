@@ -162,12 +162,11 @@ public class Parser {
         if (m.find()) {
             quoteName = m.group(1).trim();
         }
-
-        Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
-        if (quote != null) {
+        try {
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             logger.info("Successfully parsed delete quote command for quote: " + quote.getQuoteName());
             return new DeleteQuoteCommand(quote);
-        } else {
+        } catch (QuotelyException e) {
             logger.warning("Failed to find quote for deletion with name: " + quoteName);
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "unquote [n/QUOTE_NAME]");
         }
@@ -268,10 +267,10 @@ public class Parser {
         if (m.find()) {
             quoteName = m.group(1).trim();
         }
-        Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
-        if (quote != null) {
+        try {
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             return new CalculateTotalCommand(quote);
-        } else {
+        } catch (QuotelyException e) {
             logger.warning("Invalid format for calculate total command: " + arguments);
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,

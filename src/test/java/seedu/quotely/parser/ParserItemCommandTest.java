@@ -113,6 +113,30 @@ public class ParserItemCommandTest {
     }
 
     @Test
+    public void parseAddItemCommand_invalidPriceOutsideQuote_throwException() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("add n/quote 1 i/Item1 p/-0.3 q/2", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseAddItemCommand_invalidQuantityOutsideQuote_throwException() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("add n/quote 1 i/Item1 p/12.2 q/-10", state, quoteList);
+        });
+    }
+
+    @Test
     public void parseDeleteItemCommand_noQuoteNameOutsideQuote_throwException() {
         QuotelyState state = new QuotelyState();
         QuoteList quoteList = new QuoteList();
@@ -135,6 +159,19 @@ public class ParserItemCommandTest {
         q.addItem("Item1", 10.0, 4);
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("delete i/invalid item", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseDeleteItemCommand_noArguments_throwException() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setInsideQuote(q);
+        quoteList.addQuote(q);
+        q.addItem("Item1", 10.0, 4);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("delete", state, quoteList);
         });
     }
 }

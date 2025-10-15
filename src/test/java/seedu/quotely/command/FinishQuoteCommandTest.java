@@ -1,6 +1,7 @@
 package seedu.quotely.command;
 
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuotelyState;
@@ -20,7 +21,8 @@ public class FinishQuoteCommandTest {
         FinishQuoteCommand finishQuoteCommand = new FinishQuoteCommand();
         try {
             finishQuoteCommand.execute(ui, quoteList, companyName, state);
-            assert !state.isInsideQuote();
+            assertFalse(finishQuoteCommand.isExit());
+            assertFalse(state.isInsideQuote());
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";
         }

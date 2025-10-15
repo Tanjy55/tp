@@ -125,6 +125,9 @@ public class ParserQuoteCommandTest {
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("unquote n/invalid quote", state, quoteList);
         });
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("unquote", state, quoteList);
+        });
     }
 
     @Test
