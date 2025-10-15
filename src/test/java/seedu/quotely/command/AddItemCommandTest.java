@@ -2,6 +2,7 @@ package seedu.quotely.command;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuotelyState;
@@ -28,6 +29,7 @@ public class AddItemCommandTest {
             assertEquals("TestItem", item.getItemName());
             assertEquals(10.0, item.getPrice());
             assertEquals(2, item.getQuantity());
+            assertFalse(addItemCommand.isExit());
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";
         }

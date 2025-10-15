@@ -19,3 +19,10 @@ logging.md
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
+
+settings.json
+
+# Logs
+**/logs/
+*.log
+logging.md
