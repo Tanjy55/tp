@@ -12,10 +12,10 @@ import seedu.quotely.data.Quote;
 public class FinishQuoteCommandTest {
     @Test
     public void execute_finishQuoteCommand_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("TestCompany");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("Test quote", "Test customer");
         state.setInsideQuote(quote);
         FinishQuoteCommand finishQuoteCommand = new FinishQuoteCommand();

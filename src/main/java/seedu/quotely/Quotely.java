@@ -48,10 +48,10 @@ public class Quotely {
      * - pdf different template generation
      */
     public Quotely() {
-        ui = new Ui();
+        ui = Ui.getInstance();
+        state = QuotelyState.getInstance();
         companyName = new CompanyName("Default");
         quoteList = new QuoteList();
-        state = new QuotelyState();
     }
 
     public void run() {

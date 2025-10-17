@@ -18,7 +18,7 @@ public class ParserGeneralTest {
 
     @Test
     public void parseUnknownCommand_invalidInput_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("unknowncommand", state, quoteList);
@@ -27,7 +27,7 @@ public class ParserGeneralTest {
 
     @Test
     public void parseExitCommand_validInput_returnExitCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         try {
             Command command = Parser.parse("exit", state, quoteList);

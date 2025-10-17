@@ -1,12 +1,20 @@
 package seedu.quotely.data;
 
 public class QuotelyState {
+    private static QuotelyState state = null;
     private boolean isInsideQuote;
     private Quote quoteReference;
 
-    public QuotelyState() {
+    private QuotelyState() {
         isInsideQuote = false;
         quoteReference = null;
+    }
+
+    public static QuotelyState getInstance() {
+        if (state == null) {
+            state = new QuotelyState();
+        }
+        return state;
     }
 
     public boolean isInsideQuote() {

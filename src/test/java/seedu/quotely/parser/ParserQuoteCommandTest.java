@@ -21,7 +21,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseFinishQuoteCommand_insideQuote_returnFinishQuoteCommand() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote q = new Quote("quote name", "customer name");
         state.setInsideQuote(q);
 
@@ -36,7 +36,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseFinishQuoteCommand_outsideQuote_throwException() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("finish", state, quoteList);
@@ -46,7 +46,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseAddQuoteCommand_validInput_returnAddQuoteCommand() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         try {
             Command command = Parser.parse("quote n/Quote Name c/Customer Name", state, quoteList);
@@ -59,7 +59,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseAddQuoteCommand_noCustomerName_throwException() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("quote n/Quote Name", state, quoteList);
@@ -69,7 +69,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseAddQuoteCommand_noQuoteName_throwException() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("quote c/Customer Name", state, quoteList);
@@ -79,7 +79,7 @@ public class ParserQuoteCommandTest {
     @Test
     public void parseAddQuoteCommand_insideQuote_throwException() {
         QuoteList quoteList = new QuoteList();
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote q = new Quote("quote name", "customer name");
         state.setInsideQuote(q);
         assertThrows(QuotelyException.class, () -> {
@@ -89,7 +89,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseDeleteQuoteCommand_validInputOutsideQuote_returnDeleteQuoteCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
@@ -104,7 +104,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseDeleteQuoteCommand_validInputInsideQuote_returnDeleteQuoteCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -119,7 +119,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseDeleteQuoteCommand_invalidQuoteName_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         QuoteList quoteList = new QuoteList();
         assertThrows(QuotelyException.class, () -> {
@@ -132,7 +132,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseUnquoteCommand_validInputInsideQuote_returnUnquoteCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -147,7 +147,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseUnquoteCommand_validInputOutsideQuote_returnUnquoteCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -162,7 +162,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseUnquoteCommand_invalidQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -174,7 +174,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseUnquoteCommand_noQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();

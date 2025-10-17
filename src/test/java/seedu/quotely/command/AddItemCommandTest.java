@@ -14,10 +14,10 @@ import seedu.quotely.data.Item;
 public class AddItemCommandTest {
     @Test
     public void execute_addItemCommand_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         try {
             Quote quote = new Quote("TestQuote", "TestCustomer");
             quoteList.addQuote(quote);

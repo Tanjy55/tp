@@ -15,10 +15,10 @@ import seedu.quotely.data.Quote;
 public class DeleteQuoteCommandTest {
     @Test
     public void execute_deleteCurrentQuote_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("TestQuote", "TestCustomer");
         quoteList.addQuote(quote);
         state.setInsideQuote(quote);
@@ -36,10 +36,10 @@ public class DeleteQuoteCommandTest {
 
     @Test
     public void execute_deleteOtherQuote_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("TestQuote", "TestCustomer");
         Quote quote2 = new Quote("AnotherQuote", "AnotherCustomer");
         quoteList.addQuote(quote);
@@ -60,10 +60,10 @@ public class DeleteQuoteCommandTest {
 
     @Test
     public void execute_deleteQuoteOutside_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("TestQuote", "TestCustomer");
         quoteList.addQuote(quote);
         state.setOutsideQuote();

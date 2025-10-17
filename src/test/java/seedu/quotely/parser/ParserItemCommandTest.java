@@ -19,7 +19,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_validInputInsideQuote_returnAddItemCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -34,7 +34,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_validInputOutsideQuote_returnAddItemCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -49,7 +49,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_invalidInputInsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -70,7 +70,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseDeleteItemCommand_validInputInsideQuote_returnDeleteItemCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -86,7 +86,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseDeleteItemCommand_validInputOutsideQuote_returnDeleteItemCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -102,7 +102,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_invalidQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -114,7 +114,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_invalidPriceOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -126,7 +126,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseAddItemCommand_invalidQuantityOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -138,7 +138,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseDeleteItemCommand_noQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -151,7 +151,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseDeleteItemCommand_invalidItemInsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
@@ -164,7 +164,7 @@ public class ParserItemCommandTest {
 
     @Test
     public void parseDeleteItemCommand_noArguments_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
