@@ -13,10 +13,10 @@ import seedu.quotely.data.Quote;
 public class DeleteItemCommandTest {
     @Test
     public void execute_deleteItemCommand_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("TestQuote", "TestCustomer");
         quoteList.addQuote(quote);
         quote.addItem("Item1", 10.0, 2);

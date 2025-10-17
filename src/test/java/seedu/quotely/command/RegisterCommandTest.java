@@ -12,10 +12,10 @@ import seedu.quotely.exception.QuotelyException;
 public class RegisterCommandTest {
     @Test
     public void execute_registerCommand_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         RegisterCommand registerCommand = new RegisterCommand("TestCompany");
         try {
             registerCommand.execute(ui, quoteList, companyName, state);

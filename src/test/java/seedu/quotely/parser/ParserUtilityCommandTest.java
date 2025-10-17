@@ -19,7 +19,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseTotalQuoteCommand_insideQuote_returnTotalCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote name", "customer name");
         quoteList.addQuote(q);
@@ -34,7 +34,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseTotalQuoteCommand_validInputOutsideQuote_returnTotalCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote name", "customer name");
@@ -49,7 +49,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseTotalQuoteCommand_invalidQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote name", "customer name");
@@ -61,7 +61,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseTotalQuoteCommand_noQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote name", "customer name");
@@ -73,7 +73,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseRegisterCommand_validInput_returnRegisterCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         try {
             Command command = Parser.parse("register c/Customer Name", state, quoteList);
@@ -85,7 +85,7 @@ public class ParserUtilityCommandTest {
 
     @Test
     public void parseRegisterCommand_invalidInput_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("register invalidinput", state, quoteList);
@@ -99,7 +99,7 @@ public class ParserUtilityCommandTest {
     public void parseShowQuotesCommand_validInput_returnShowQuotesCommand() {
         try {
             QuoteList quoteList = new QuoteList();
-            QuotelyState state = new QuotelyState();
+            QuotelyState state = QuotelyState.getInstance();
             Command command = Parser.parse("show", state, quoteList);
             assertTrue(command instanceof seedu.quotely.command.ShowQuotesCommand);
         } catch (Exception e) {

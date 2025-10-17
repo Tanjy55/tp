@@ -28,10 +28,10 @@ public class NavigateCommandTest {
 
     @Test
     public void execute_navigateToQuoteFromOutside_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote targetQuote = new Quote("TargetQuote", "TargetCustomer");
         setupInitialState(quoteList, state, targetQuote);
 
@@ -49,10 +49,10 @@ public class NavigateCommandTest {
 
     @Test
     public void execute_navigateToSameQuote_noChange() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote currentQuote = new Quote("CurrentQuote", "CurrentCustomer");
         setupInsideQuoteState(quoteList, state, currentQuote);
 
@@ -69,10 +69,10 @@ public class NavigateCommandTest {
 
     @Test
     public void execute_navigateToDifferentQuote_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote oldQuote = new Quote("OldQuote", "OldCustomer");
         Quote newQuote = new Quote("NewQuote", "NewCustomer");
         setupInsideQuoteState(quoteList, state, oldQuote);
@@ -91,10 +91,10 @@ public class NavigateCommandTest {
 
     @Test
     public void execute_navigateToMainMenuFromQuote_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         Quote currentQuote = new Quote("CurrentQuote", "CurrentCustomer");
         setupInsideQuoteState(quoteList, state, currentQuote);
 
@@ -111,10 +111,10 @@ public class NavigateCommandTest {
 
     @Test
     public void execute_navigateToMainMenuWhenAlreadyOutside_noChange() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         state.setOutsideQuote(); // Already outside
 
         try {

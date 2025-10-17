@@ -31,10 +31,10 @@ public class CalculateTotalCommandTest {
             System.setOut(new PrintStream(outContent));
 
             // 1. Arrange: Set up the necessary objects
-            Ui ui = new Ui();
+            Ui ui = Ui.getInstance();
             QuoteList quoteList = new QuoteList();
             CompanyName companyName = new CompanyName("Test Corp");
-            QuotelyState state = new QuotelyState();
+            QuotelyState state = QuotelyState.getInstance();
 
             // Create a quote with items to get a predictable total
             Quote quote = new Quote("Sample Quote", "John Doe");

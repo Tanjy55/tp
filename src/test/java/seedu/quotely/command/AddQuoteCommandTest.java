@@ -12,10 +12,10 @@ import seedu.quotely.exception.QuotelyException;
 public class AddQuoteCommandTest {
     @Test
     public void execute_addQuoteCommand_success() {
-        Ui ui = new Ui();
+        Ui ui = Ui.getInstance();
         QuoteList quoteList = new QuoteList();
         CompanyName companyName = new CompanyName("default");
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         try {
             AddQuoteCommand addQuoteCommand = new AddQuoteCommand("TestQuote", "TestCustomer");
             addQuoteCommand.execute(ui, quoteList, companyName, state);
