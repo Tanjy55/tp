@@ -31,7 +31,7 @@ public class QuoteList {
                 return q;
             }
         }
-        logger.warning("Failed to find quote for export with name: " + quoteName);
+        logger.warning("Failed to find quote with name: " + quoteName);
         throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
 }
