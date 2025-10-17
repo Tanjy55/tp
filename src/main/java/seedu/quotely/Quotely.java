@@ -88,6 +88,5 @@ public class Quotely {
             logger.severe("Quotely application crashed: " + e.getMessage());
             throw e;
         }
-        assert false : "dummy assertion set to fail";
     }
 }

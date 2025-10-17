@@ -2,7 +2,10 @@ package seedu.quotely.data;
 
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+
+
 
 public class CompanyNameTest {
     @Test
@@ -16,7 +19,7 @@ public class CompanyNameTest {
     }
 
     @Test
-    public void setCompanyName_validInput_CompanyNameSet() {
+    public void setCompanyName_validInput_companyNameSet() {
         CompanyName companyName = new CompanyName("invalid");
         try {
             companyName.setCompanyName("test2");

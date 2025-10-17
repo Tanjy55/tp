@@ -6,11 +6,13 @@ import seedu.quotely.exception.QuotelyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class QuoteListTest {
     @Test
-    void QuoteList_validInput_constructorSuccess() {
+    void quoteList_validInput_constructorSuccess() {
         QuoteList quoteList = new QuoteList();
         try {
             assertInstanceOf(QuoteList.class, quoteList);

@@ -7,7 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class ItemTest {
     @Test
-    void Item_validInput_constructorSuccess() {
+    void item_validInput_constructorSuccess() {
         Item item = new Item("test", 1.0, 1);
         try {
             assertInstanceOf(Item.class, item);

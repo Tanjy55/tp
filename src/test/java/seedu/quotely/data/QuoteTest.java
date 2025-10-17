@@ -6,11 +6,15 @@ import seedu.quotely.exception.QuotelyException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class QuoteTest {
     @Test
-    void Quote_validInput_constructorSuccess() {
+    void quote_validInput_constructorSuccess() {
         Quote quote = new Quote("test1", "customer1");
         try {
             assertInstanceOf(Quote.class, quote);
