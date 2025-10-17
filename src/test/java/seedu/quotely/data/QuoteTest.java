@@ -158,7 +158,7 @@ public class QuoteTest {
     void toString_validInput_returnQuoteNameAsString() {
         Quote quote = new Quote("test10", "customer10");
         try {
-            assertEquals("test9", quote.toString());
+            assertEquals("test10", quote.toString());
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
         }
