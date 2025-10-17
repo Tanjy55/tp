@@ -1,12 +1,12 @@
 package seedu.quotely.data;
 
 import org.junit.jupiter.api.Test;
+import seedu.quotely.exception.QuotelyException;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class QuoteListTest {
     @Test
@@ -62,7 +62,7 @@ public class QuoteListTest {
     }
 
     @Test
-    void removeItem_validInput_success() {
+    void removeQuote_validInput_success() {
         QuoteList quoteList = new QuoteList();
         try {
             Quote quote1 = new Quote("quote1", "customer1");
@@ -92,6 +92,24 @@ public class QuoteListTest {
             quoteList.addQuote(new Quote("009361", "customer3"));
             assertEquals("009361",
                     quoteList.getQuoteByName("009361").getQuoteName());
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    void getQuoteByName_invalidInput_throwException() {
+        QuoteList quoteList = new QuoteList();
+        try {
+            assertThrows(QuotelyException.class,
+                    ()-> quoteList.getQuoteByName("quote1"));
+            Quote quote1 = new Quote("quote1", "customer1");
+            quoteList.addQuote(quote1);
+            assertThrows(QuotelyException.class,
+                    ()-> quoteList.getQuoteByName("quote2"));
+            quoteList.removeQuote(quote1);
+            assertThrows(QuotelyException.class,
+                    ()-> quoteList.getQuoteByName("quote1"));
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
         }

@@ -1,6 +1,7 @@
 package seedu.quotely.data;
 
 import org.junit.jupiter.api.Test;
+import seedu.quotely.exception.QuotelyException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +41,7 @@ public class QuoteTest {
 
     @Test
     void addItem_validInput_success() {
-        Quote quote = new Quote("test6", "customer6");
+        Quote quote = new Quote("test4", "customer4");
         try {
             assertEquals(0, quote.getItems().size());
             quote.addItem("item1", 1.0, 48);
@@ -59,7 +60,7 @@ public class QuoteTest {
 
     @Test
     void getItems_validInput_returnItemsArrayList() {
-        Quote quote = new Quote("test4", "customer4");
+        Quote quote = new Quote("test5", "customer5");
         try {
             List<Item> items = new ArrayList<Item>();
             items.add(new Item("item1", 1.0, 2));
@@ -83,7 +84,7 @@ public class QuoteTest {
 
     @Test
     void getQuoteTotal_validInput_returnQuoteTotal() {
-        Quote quote = new Quote("test5", "customer5");
+        Quote quote = new Quote("test6", "customer6");
         try {
             quote.addItem("item1", 1.0, 48);
             quote.addItem("item2", 9.86, 1);
@@ -117,8 +118,23 @@ public class QuoteTest {
     }
 
     @Test
-    void hasItem_validInput_returnBoolean() {
+    void removeItem_invalidInput_throwException() {
         Quote quote = new Quote("test8", "customer8");
+        try {
+            assertThrows(QuotelyException.class, () -> quote.removeItem("item1"));
+            quote.addItem("item1", 1.0, 48);
+            assertThrows(QuotelyException.class, () -> quote.removeItem("item2"));
+            quote.addItem("item2", 9.86, 1);
+            assertThrows(QuotelyException.class, () -> quote.removeItem("item3"));
+            quote.addItem("item3", 1328.1, 6);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    void hasItem_validInput_returnBoolean() {
+        Quote quote = new Quote("test9", "customer9");
         try {
             quote.addItem("item1", 1.0, 48);
             assertTrue(quote.hasItem("item1"));
@@ -136,7 +152,7 @@ public class QuoteTest {
 
     @Test
     void toString_validInput_returnQuoteNameAsString() {
-        Quote quote = new Quote("test9", "customer9");
+        Quote quote = new Quote("test10", "customer10");
         try {
             assertEquals("test9", quote.toString());
         } catch (Exception e) {
