@@ -19,7 +19,7 @@ public class QuoteList {
         quotes.add(quote);
     }
 
-    public void removeQuote(Quote quote) throws QuotelyException {
+    public void removeQuote(Quote quote) {
         quotes.remove(quote);
     }
 
