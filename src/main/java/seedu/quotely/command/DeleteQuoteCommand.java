@@ -34,6 +34,7 @@ public class DeleteQuoteCommand extends Command {
         if (state.isInsideQuote() && state.getQuoteReference().equals(quote)) {
             logger.info("State set to outside quote");
             state.setOutsideQuote();
+            assert state.getQuoteReference() == null : "state failed";
         }
 
         logger.fine(String.format("Successfully removed quote: %s", quote.getQuoteName()));
