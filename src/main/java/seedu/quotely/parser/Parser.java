@@ -142,13 +142,14 @@ public class Parser {
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "nav main OR nav n/QUOTE_NAME");
         }
 
-        Quote targetQuote = getQuoteFromStateAndName(targetQuoteName, state, quoteList);
-        if (targetQuote != null) {
+        try {
+            Quote targetQuote = getQuoteFromStateAndName(targetQuoteName, state, quoteList);
             logger.info("Successfully parsed navigate command to target location" + targetQuote.getQuoteName());
             return new NavigateCommand(targetQuote);
-        } else {
+        } catch (QuotelyException e) {
             logger.warning("Failed to navigate to target with name: " + targetQuoteName);
-            throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
+                "nav main OR nav n/QUOTE_NAME");
         }
     }
 
