@@ -46,6 +46,7 @@ public class NavigateCommandTest {
         }
     }
 
+
     @Test
     public void execute_navigateToSameQuote_noChange() {
         Ui ui = new Ui();
