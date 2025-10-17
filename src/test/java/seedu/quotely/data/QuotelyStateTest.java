@@ -8,11 +8,10 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-
 public class QuotelyStateTest {
     @Test
     void quotelyState_validInput_success() {
-        QuotelyState quotelyState = new QuotelyState();
+        QuotelyState quotelyState = QuotelyState.getInstance();
         try {
             assertInstanceOf(QuotelyState.class, quotelyState);
         } catch (Exception e) {
@@ -25,7 +24,8 @@ public class QuotelyStateTest {
      */
     @Test
     void isInsideQuote_validInput_success() {
-        QuotelyState quotelyState = new QuotelyState();
+        QuotelyState quotelyState = QuotelyState.getInstance();
+        quotelyState.setOutsideQuote();
         try {
             assertFalse(quotelyState.isInsideQuote());
             Quote quote = new Quote("test", "testCustomer");
@@ -43,7 +43,8 @@ public class QuotelyStateTest {
      */
     @Test
     void getQuoteReference_validInput_returnQuoteReference() {
-        QuotelyState quotelyState = new QuotelyState();
+        QuotelyState quotelyState = QuotelyState.getInstance();
+        quotelyState.setOutsideQuote();
         try {
             assertNull(quotelyState.getQuoteReference());
             Quote quote = new Quote("test", "testCustomer");
