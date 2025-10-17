@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import seedu.quotely.command.Command;
 import seedu.quotely.command.FinishQuoteCommand;
+import seedu.quotely.command.NavigateCommand;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.data.QuoteList;
@@ -181,6 +182,60 @@ public class ParserQuoteCommandTest {
         quoteList.addQuote(q);
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("unquote", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseNavCommand_validQuoteName_returnNavCommand() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        try {
+            Command command = Parser.parse("nav n/quote 1", state, quoteList);
+            assertTrue(command instanceof NavigateCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parseNavCommand_validMainInput_returnNavCommand() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        try {
+            Command command = Parser.parse("nav main", state, quoteList);
+            assertTrue(command instanceof NavigateCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parseNavCommand_invalidQuoteName_throwException() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("nav n/no quote", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseNavCommand_noQuoteNameOutsideQuote_throwException() {
+        QuotelyState state = new QuotelyState();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("nav", state, quoteList);
         });
     }
 }
