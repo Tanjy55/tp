@@ -1,0 +1,40 @@
+@startuml
+actor       Actor
+participant Quotely
+
+Actor -> Quotely: main()
+
+Quotely -> Ui **: getInstance()
+activate Ui #FFBBBB
+return ui:Ui
+
+Quotely -> Parser **: getInstance()
+activate Parser #DarkSalmon
+return: parser:Parser
+
+Actor -> Quotely ++ #Gold: run()
+
+loop !isExit
+    Quotely -> Ui: readCommand()
+    activate Ui #FFBBBB
+    Ui --> Quotely: fullCommand:String
+    deactivate Ui
+
+    Quotely -> Parser ++ #DarkSalmon: parse(fullCommand)
+
+    Parser -> Command **: new Command()
+    activate Command #Green
+    return command:Command
+
+    return: command:Command
+
+    Quotely -> Command ++ #Green: execute()
+    return
+
+    Quotely -> Command ++ #Green: isExit()
+    return isExit:boolean
+end
+
+return 
+
+@enduml

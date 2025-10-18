@@ -1,0 +1,43 @@
+@startuml
+abstract class Command {
+    # commandWord
+    + {abstract} void execute()
+    + boolean isExit(): false
+}
+
+class QuotelyList {
+
+}
+
+class Quote {
+    - quoteName: String
+    - customerName: String
+}
+
+class Item {
+    - itemName: String
+    - price: Double
+    - quantity: Int
+}
+
+class CompanyName {
+    - companyName: String
+}
+
+class QuotelyState {
+    - isInsideQuote: boolean
+}
+
+Command ..> Ui
+Command ..> QuotelyList
+Command ..> CompanyName
+Command ..> QuotelyState
+
+QuotelyList "*" -> Quote: quotes
+Quote "*" -> Item: items
+
+QuotelyState "0..1" -> Quote: quoteReference
+
+Ui "0..1" -> Scanner: scanner
+
+@enduml

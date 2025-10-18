@@ -1,0 +1,66 @@
+@startuml
+package command <<Rectangle>>{
+
+    abstract class Command {
+        # commandWord
+        + {abstract} void execute()
+        + boolean isExit(): false
+    }
+
+    class AddItemCommand {
+        - price: Double
+        - quantity: Int
+        - itemName: String
+    }
+
+    class AddQuoteCommand {
+        - quoteName: String
+        - customerName: String
+    }
+
+    class DeleteItemCommand {
+        - itemName: String
+    }
+
+    class ExitCommand {
+        + exit(): true
+    }
+
+    class RegisterCommand {
+        - newName: String
+    }
+
+    class CalculateTotalCommand {
+
+    }
+
+    class FinishQuoteCommand {
+
+    }
+
+    class NavigateCommand {
+
+    }
+
+    class ShowQuotesCommand {
+
+    }
+    
+    class DeleteQuoteCommand {
+        
+    }
+}
+
+AddItemCommand --|> Command
+AddQuoteCommand --|> Command
+CalculateTotalCommand --|> Command
+DeleteItemCommand --|> Command
+DeleteQuoteCommand --|> Command
+ExitCommand --|> Command
+FinishQuoteCommand --|> Command
+NavigateCommand --|> Command
+RegisterCommand --|> Command
+ShowQuotesCommand --|> Command
+
+
+@enduml
