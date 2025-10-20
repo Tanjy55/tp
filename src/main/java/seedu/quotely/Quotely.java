@@ -8,8 +8,6 @@ import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.parser.Parser;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.util.LoggerConfig;
-
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Quotely {
@@ -75,8 +73,7 @@ public class Quotely {
                 isExit = c.isExit();
             } catch (QuotelyException e) {
                 ui.showError(e.getMessage());
-                //log execute error severe with e trace
-                logger.log(Level.SEVERE, e.getMessage(), e);
+                logger.severe(e.getMessage());
             } finally {
                 ui.showLine();
             }
