@@ -37,8 +37,6 @@ public class AddItemCommand extends Command {
                 "Executing AddItemCommand for item %s to quote %s with price %.2f, quantity %d",
                 itemName, quote.getQuoteName(), price, quantity));
 
-        quote.addItem(itemName, price, quantity);
-
         ui.showMessage(
                 String.format(
                         "Adding %s to quote %s with price %.2f, quantity %d",
