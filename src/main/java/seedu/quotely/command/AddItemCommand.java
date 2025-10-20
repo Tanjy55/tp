@@ -12,13 +12,15 @@ public class AddItemCommand extends Command {
     private String itemName;
     private Double price;
     private int quantity;
+    private boolean isTax;
 
-    public AddItemCommand(String itemName, Quote quote, Double price, int quantity) {
+    public AddItemCommand(String itemName, Quote quote, Double price, int quantity, boolean isTax) {
         super("addItem");
         this.itemName = itemName;
         this.quote = quote;
         this.price = price;
         this.quantity = quantity;
+        this.isTax = isTax;
     }
 
     @Override
@@ -31,6 +33,6 @@ public class AddItemCommand extends Command {
                 String.format(
                         "Adding %s to quote %s with price %.2f, quantity %d",
                         itemName, quote.getQuoteName(), price, quantity));
-        quote.addItem(itemName, price, quantity);
+        quote.addItem(itemName, price, quantity, isTax);
     }
 }

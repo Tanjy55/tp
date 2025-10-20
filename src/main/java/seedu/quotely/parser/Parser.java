@@ -225,7 +225,10 @@ public class Parser {
                     itemName + "' Price: " + price + " Quantity: " + quantity +
                     " for quote: '" + quote.getQuoteName() + "'");
 
-            return new AddItemCommand(itemName, quote, price, quantity);
+            // parsing and UI for isTax to be implemented
+            boolean isTax = false;
+
+            return new AddItemCommand(itemName, quote, price, quantity, isTax);
         } else {
             logger.warning("Invalid format for add item command: " + arguments);
             throw new QuotelyException(

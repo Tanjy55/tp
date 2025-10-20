@@ -41,8 +41,8 @@ public class Quote {
         items.remove(index);
     }
 
-    public void addItem(String itemName, double price, int quantity) {
-        items.add(new Item(itemName, price, quantity));
+    public void addItem(String itemName, double price, int quantity, boolean isTax) {
+        items.add(new Item(itemName, price, quantity, isTax));
     }
 
     private int getItemIndex(String itemName) throws QuotelyException {

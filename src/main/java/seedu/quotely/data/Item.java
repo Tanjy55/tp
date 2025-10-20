@@ -4,11 +4,13 @@ public class Item {
     private String itemName;
     private double price;
     private int quantity;
+    private boolean isTax;
 
-    public Item(String itemName, double price, int quantity) {
+    public Item(String itemName, double price, int quantity, boolean isTax) {
         this.itemName = itemName;
         this.price = price;
         this.quantity = quantity;
+        this.isTax = isTax;
     }
 
     public String getItemName() {
@@ -37,5 +39,13 @@ public class Item {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public boolean isTax() {
+        return isTax;
+    }
+
+    public void setTax(boolean tax) {
+        isTax = tax;
     }
 }
