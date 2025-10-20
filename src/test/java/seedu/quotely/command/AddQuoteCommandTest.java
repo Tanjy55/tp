@@ -17,6 +17,7 @@ public class AddQuoteCommandTest {
         CompanyName companyName = new CompanyName("default");
         QuotelyState state = QuotelyState.getInstance();
         try {
+            state.setOutsideQuote();
             AddQuoteCommand addQuoteCommand = new AddQuoteCommand("TestQuote", "TestCustomer");
             addQuoteCommand.execute(ui, quoteList, companyName, state);
             assertFalse(addQuoteCommand.isExit());

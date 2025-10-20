@@ -31,8 +31,10 @@ public class NavigateCommand extends Command {
 
         if (quote == null) { //if trying to navigate to main menu
             if (state.getQuoteReference() == null) {
+                assert !state.isInsideQuote() : "Invalid state for navigation";
                 ui.showMessage("You're already at the main menu.");
             } else {
+                assert state.isInsideQuote() : "Invalid state for navigation";
                 ui.showMessage("Navigating to the main menu.");
                 logger.info("State set to outside quote");
                 state.setOutsideQuote();
@@ -40,7 +42,8 @@ public class NavigateCommand extends Command {
             return;
         }
 
-        if (state.getQuoteReference() == quote) { //if at main menu
+        if (state.getQuoteReference() == quote) { //if inside quote
+            assert state.isInsideQuote() : "Invalid state for navigation";
             ui.showMessage("You're already at quote: " + quote.getQuoteName());
 
         } else { //if trying to navigate to the same quote
