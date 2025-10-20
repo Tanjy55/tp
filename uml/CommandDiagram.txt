@@ -1,12 +1,5 @@
 @startuml
-package command <<Rectangle>>{
-
-    abstract class Command {
-        # commandWord
-        + {abstract} void execute()
-        + boolean isExit(): false
-    }
-
+package command {
     class AddItemCommand {
         - price: Double
         - quantity: Int
@@ -49,7 +42,22 @@ package command <<Rectangle>>{
     class DeleteQuoteCommand {
         
     }
+
+    abstract class Command {
+        # commandWord
+        + {abstract} void execute()
+        + boolean isExit(): false
+    }
 }
+
+package ui {
+
+}
+
+package data {
+
+}
+
 
 AddItemCommand --|> Command
 AddQuoteCommand --|> Command
@@ -62,5 +70,7 @@ NavigateCommand --|> Command
 RegisterCommand --|> Command
 ShowQuotesCommand --|> Command
 
+command ..> ui
+command ..> data
 
 @enduml
