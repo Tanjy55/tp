@@ -22,6 +22,7 @@ public class AddQuoteCommand extends Command {
             QuoteList quoteList,
             CompanyName companyName,
             QuotelyState state) throws QuotelyException {
+        assert !state.isInsideQuote() : "Invalid state for addQuoteCommand execution";
 
         ui.showMessage("Adding quote: " + quoteName + " for " + customerName);
 

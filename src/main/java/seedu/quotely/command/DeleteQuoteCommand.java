@@ -25,6 +25,7 @@ public class DeleteQuoteCommand extends Command {
         // go back to main menu if the deleted quote is the current quote
         if (state.isInsideQuote() && state.getQuoteReference().equals(quote)) {
             state.setOutsideQuote();
+            assert state.getQuoteReference() == null : "State reference invalid";
         }
         quoteList.removeQuote(quote);
     }
