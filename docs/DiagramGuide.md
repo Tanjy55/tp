@@ -2,7 +2,7 @@
 
 This project bundles `plantuml.jar` inside the `/uml` folder. To create diagrams, simply `cd` into `/uml`, write a `.txt` (or `.puml`) file with PlantUML markup, and run the jar.
 
-- Official docs: https://plantuml.com/en/starting
+- [Official docs](https://plantuml.com/en/starting)
 
 ### Prerequisite
 
@@ -116,4 +116,4 @@ If you export to `/docs/images/uml`, reference them in Markdown like:
 - Keep shared styling in a separate include and reuse via `!include`.
 - Commit generated images if your docs site can’t render PlantUML at build time.
 
-For more, see the official guide: https://plantuml.com/en/starting
+For more, see the [Official docs](https://plantuml.com/en/starting)

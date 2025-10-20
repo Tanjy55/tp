@@ -14,7 +14,7 @@
 
 ### Paarser Component
 
-!['Parser diagram'](./src/parserDiagram.png)
+!['Parser diagram'](./src/ParserDiagram.png)
 
 #### Command Component
 
