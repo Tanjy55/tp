@@ -1,0 +1,15 @@
+@startuml
+package parser {
+    class Parser {
+        {static} parser(fullCommand: String, QuotelyState state, QuoteList quoteList): Command
+    }
+}
+
+package data {
+    
+}
+
+Parser ..> data
+
+
+@enduml
