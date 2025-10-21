@@ -251,6 +251,10 @@ public class Parser {
         if (m.find()) {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
+            if (state.isInsideQuote() && quoteName != null) {
+                logger.warning("Attempted to use n/QUOTE_NAME while inside a quote");
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+            }
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             if (!quote.hasItem(itemName)) {
                 logger.warning("Item not found in quote - Item: '" + itemName +

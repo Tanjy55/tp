@@ -45,7 +45,9 @@ public class Item {
         return taxRate > 0;
     }
 
-    public double getTaxRate() { return taxRate; }
+    public double getTaxRate() {
+        return taxRate;
+    }
 
     public void setTax(double taxRate) {
         this.taxRate = taxRate;

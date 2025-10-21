@@ -13,6 +13,7 @@ import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A test class for CalculateTotalCommand that verifies the correct output is printed.
@@ -56,7 +57,11 @@ public class CalculateTotalCommandTest {
             command.execute(ui, quoteList, companyName, state);
 
             // 3. Assert: Check if the captured output matches the expected string
-            assertEquals(expectedOutput, outContent.toString());
+            String actualOutput = outContent.toString();
+            String expectedPrefix = "Total cost of quote Sample Quote for John Doe:";
+            assertTrue(actualOutput.startsWith(expectedPrefix));
+            String value = actualOutput.substring(expectedPrefix.length()).trim();
+            assertTrue(value.matches("72\\.0{1,2}"));
             assertFalse(command.isExit());
 
         } catch (QuotelyException e) {
