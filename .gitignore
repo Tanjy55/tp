@@ -13,16 +13,11 @@ src/main/resources/docs/
 *.iml
 bin/
 
+# Logs
 **/logs/
 *.log
-logging.md
 
 /text-ui-test/ACTUAL.TXT
 text-ui-test/EXPECTED-UNIX.TXT
 
-settings.json
-
-# Logs
-**/logs/
-*.log
-logging.md
+.vscode/
