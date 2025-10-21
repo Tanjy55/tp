@@ -27,13 +27,25 @@ public class Quote {
         return items;
     }
 
-    public double getQuoteTotal()  {
-        double total = 0;
-        for (Item item : items) {
-            double itemTotal = (double) item.getQuantity() * item.getPrice();
-            total += itemTotal;
+    public double getQuoteTotalPriceWithoutTax() {
+        double quoteTotalPriceWithoutTax = 0;
+        for(Item item : items) {
+            quoteTotalPriceWithoutTax += item.getItemTotalPriceWithoutTax();
         }
-        return Math.round(total * 100.0) / 100.0;
+        return quoteTotalPriceWithoutTax;
+    }
+
+    public double getQuoteTotalTax() {
+        double quoteTotalTax = 0;
+        for(Item item : items) {
+            quoteTotalTax += item.getItemTotalTax();
+        }
+        return quoteTotalTax;
+    }
+
+    public double getQuoteTotal()  {
+        double quoteTotal = this.getQuoteTotalPriceWithoutTax() + this.getQuoteTotalTax();
+        return Math.round(quoteTotal * 100.0) / 100.0;
     }
 
     public void removeItem(String itemName) throws QuotelyException {
@@ -41,8 +53,8 @@ public class Quote {
         items.remove(index);
     }
 
-    public void addItem(String itemName, double price, int quantity, boolean isTax) {
-        items.add(new Item(itemName, price, quantity, isTax));
+    public void addItem(String itemName, double price, int quantity, double taxRate) {
+        items.add(new Item(itemName, price, quantity, taxRate));
     }
 
     private int getItemIndex(String itemName) throws QuotelyException {

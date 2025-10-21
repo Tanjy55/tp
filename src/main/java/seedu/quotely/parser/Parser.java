@@ -28,7 +28,8 @@ public class Parser {
     private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
     private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
-    private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
+    private static final String ADD_ITEM_COMMAND_PATTERN
+            = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
@@ -201,18 +202,24 @@ public class Parser {
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
+            String taxRateStr = m.group(5) != null ? m.group(5).trim() : null;
 
             logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + 
                 (quoteName != null ? quoteName : "<none>") + "', Price: '" + 
-                priceStr + "', Quantity: '" + quantityStr + "'");
+                priceStr + "', Quantity: '" + quantityStr + "'" + "', Tax: '" +
+                    (taxRateStr != null ? taxRateStr : "<none>"));
 
             double price;
             int quantity;
+            double taxRate;
+
             try {
                 price = Double.parseDouble(priceStr);
                 quantity = Integer.parseInt(quantityStr);
-                if (quantity <= 0 || price < 0) {
-                    logger.warning("Invalid price or quantity values - Price: " + price + ", Quantity: " + quantity);
+                taxRate = taxRateStr != null ? Double.parseDouble(taxRateStr) : 0;
+                if (quantity <= 0 || price < 0 || taxRate < 0) {
+                    logger.warning("Invalid price or quantity or tax values - Price: " + price
+                            + ", Quantity: " + quantity+ ", Tax: " + taxRate);
                     throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
                 }
             } catch (NumberFormatException e) {
@@ -223,17 +230,16 @@ public class Parser {
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             logger.info("Successfully parsed add item command - Item: '" +
                     itemName + "' Price: " + price + " Quantity: " + quantity +
-                    " for quote: '" + quote.getQuoteName() + "'");
+                    " Tax Rate: " + taxRate + " for quote: '" + quote.getQuoteName() + "'");
 
             // parsing and UI for isTax to be implemented
-            boolean isTax = false;
 
-            return new AddItemCommand(itemName, quote, price, quantity, isTax);
+            return new AddItemCommand(itemName, quote, price, quantity, taxRate);
         } else {
             logger.warning("Invalid format for add item command: " + arguments);
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY");
+                    "add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY [t/TAX_RATE]");
         }
     }
 

@@ -16,15 +16,15 @@ public class AddItemCommand extends Command {
     private String itemName;
     private Double price;
     private int quantity;
-    private boolean isTax;
+    private double taxRate;
 
-    public AddItemCommand(String itemName, Quote quote, Double price, int quantity, boolean isTax) {
+    public AddItemCommand(String itemName, Quote quote, Double price, int quantity, double taxRate) {
         super("addItem");
         this.itemName = itemName;
         this.quote = quote;
         this.price = price;
         this.quantity = quantity;
-        this.isTax = isTax;
+        this.taxRate = taxRate;
     }
 
     @Override
@@ -33,16 +33,19 @@ public class AddItemCommand extends Command {
                         CompanyName companyName,
                         QuotelyState state) throws QuotelyException {
 
+        assert this.quote != null : "Quote reference disappeared during execution.";
+        assert this.price >= 0 && this.quantity > 0 : "Invalid price or quantity detected.";
+
         logger.fine(String.format(
-                "Executing AddItemCommand for item %s to quote %s with price %.2f, quantity %d",
-                itemName, quote.getQuoteName(), price, quantity));
+                "Executing AddItemCommand for item %s to quote %s with price %.2f, quantity %d, tax %.2f%%",
+                itemName, quote.getQuoteName(), price, quantity, taxRate));
 
         ui.showMessage(
                 String.format(
-                        "Adding %s to quote %s with price %.2f, quantity %d",
-                        itemName, quote.getQuoteName(), price, quantity));
+                        "Adding %s to quote %s with price %.2f, quantity %d, tax %.2f%%",
+                        itemName, quote.getQuoteName(), price, quantity, taxRate));
       
-        quote.addItem(itemName, price, quantity, isTax);
+        quote.addItem(itemName, price, quantity, taxRate);
 
         logger.fine(String.format(
                 "Successfully added item %s to quote %s",

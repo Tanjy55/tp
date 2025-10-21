@@ -29,6 +29,10 @@ public class DeleteQuoteCommand extends Command {
 
         quoteList.removeQuote(quote);
 
+        assert quoteList.getQuoteByName(
+                quote.getQuoteName()) == null : "Quote was not " +
+                "successfully removed from the quote list.";
+
         ui.showMessage("Deleting quote: " + quote.getQuoteName());
         // go back to main menu if the deleted quote is the current quote
         if (state.isInsideQuote() && state.getQuoteReference().equals(quote)) {

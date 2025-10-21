@@ -42,8 +42,8 @@ public class CalculateTotalCommandTest {
 
             // Create a quote with items to get a predictable total
             Quote quote = new Quote("Sample Quote", "John Doe");
-            quote.addItem("Paint", 25.0, 2, false); // 50.0
-            quote.addItem("Brushes", 5.5, 4, false);  // 22.0
+            quote.addItem("Paint", 25.0, 2, 0); // 50.0
+            quote.addItem("Brushes", 5.5, 4, 0);  // 22.0
             // Total = 72.0
 
             CalculateTotalCommand command = new CalculateTotalCommand(quote);
