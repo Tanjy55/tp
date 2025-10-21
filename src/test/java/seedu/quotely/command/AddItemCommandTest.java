@@ -22,13 +22,14 @@ public class AddItemCommandTest {
             Quote quote = new Quote("TestQuote", "TestCustomer");
             quoteList.addQuote(quote);
             state.setInsideQuote(quote);
-            AddItemCommand addItemCommand = new AddItemCommand("TestItem", quote, 10.0, 2);
+            AddItemCommand addItemCommand = new AddItemCommand("TestItem", quote, 10.0, 2, false);
             addItemCommand.execute(ui, quoteList, companyName, state);
             assertEquals(1, quote.getItems().size());
             Item item = quote.getItems().get(0);
             assertEquals("TestItem", item.getItemName());
             assertEquals(10.0, item.getPrice());
             assertEquals(2, item.getQuantity());
+            assertFalse(item.isTax());
             assertFalse(addItemCommand.isExit());
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";
