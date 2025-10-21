@@ -12,7 +12,7 @@
 
 !['sequence diagram'](./src/sequenceDiagram.png)
 
-### Paarser Component
+### Parser Component
 
 !['Parser diagram'](./src/ParserDiagram.png)
 
