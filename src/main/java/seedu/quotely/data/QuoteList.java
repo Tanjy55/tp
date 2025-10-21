@@ -1,6 +1,7 @@
 package seedu.quotely.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -22,10 +23,11 @@ public class QuoteList {
     }
 
     public void removeQuote(Quote quote) throws QuotelyException {
-//        quotes.remove(quote);
-        for (Quote q : quotes) {
+        Iterator<Quote> it = quotes.iterator();
+        while (it.hasNext()) {
+            Quote q = it.next();
             if (q.getQuoteName().equals(quote.getQuoteName())) {
-                quotes.remove(q);
+                it.remove();
                 logger.info("Successfully removed quote: " + quote.getQuoteName());
                 return;
             }

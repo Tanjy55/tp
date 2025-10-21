@@ -215,16 +215,34 @@ public class Parser {
 
             try {
                 price = Double.parseDouble(priceStr);
-                quantity = Integer.parseInt(quantityStr);
-                taxRate = taxRateStr != null ? Double.parseDouble(taxRateStr) : 0;
-                if (quantity <= 0 || price < 0 || taxRate < 0) {
-                    logger.warning("Invalid price or quantity or tax values - Price: " + price
-                            + ", Quantity: " + quantity+ ", Tax: " + taxRate);
+                if (price < 0) {
                     throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
                 }
             } catch (NumberFormatException e) {
-                logger.warning("Failed to parse price or quantity: " + e.getMessage());
+                logger.warning("Failed to parse price: " + e.getMessage());
                 throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+            }
+
+            try {
+                quantity = Integer.parseInt(quantityStr);
+                if (quantity <= 0) {
+                    throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                }
+            } catch (NumberFormatException e) {
+                logger.warning("Failed to parse quantity: " + e.getMessage());
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+            }
+            taxRate = 0;
+            if (taxRateStr != null) {
+                try {
+                    taxRate = Double.parseDouble(taxRateStr);
+                    if (taxRate < 0) {
+                        throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                    }
+                } catch (NumberFormatException e) {
+                    logger.warning("Failed to parse tax rate: " + e.getMessage());
+                    throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                }
             }
 
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
