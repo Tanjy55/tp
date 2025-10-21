@@ -29,7 +29,7 @@ public class Parser {
     private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN
-            = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?";
+            = "^i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?$";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
@@ -200,6 +200,10 @@ public class Parser {
         if (m.find()) {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
+            if (state.isInsideQuote() && quoteName != null) {
+                logger.warning("Attempted to use n/QUOTE_NAME while inside a quote");
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+            }
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
             String taxRateStr = m.group(5) != null ? m.group(5).trim() : null;
