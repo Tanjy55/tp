@@ -8,13 +8,15 @@ package command {
 }
 
 package data {
-    class QuotelyList {
+    together {
+        class QuotelyList {
 
-    }
+        }
 
-    class Quote {
-        - quoteName: String
-        - customerName: String
+        class Quote {
+            - quoteName: String
+            - customerName: String
+        }
     }
 
     class Item {
@@ -43,11 +45,10 @@ Command ..> QuotelyList
 Command ..> CompanyName
 Command ..> QuotelyState
 
+QuotelyState "0..1" --> Quote: quoteReference
 QuotelyList "*" -> Quote: quotes
 Quote "*" -> Item: items
 
-QuotelyState "0..1" -> Quote: quoteReference
-
-Ui "0..1" -> Scanner: scanner
+Ui "0..1" --> Scanner: scanner
 
 @enduml

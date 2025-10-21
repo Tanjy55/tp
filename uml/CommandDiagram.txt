@@ -1,46 +1,51 @@
 @startuml
 package command {
     class AddItemCommand {
+        # commandWord = "addItem"
         - price: Double
         - quantity: Int
         - itemName: String
     }
 
     class AddQuoteCommand {
+        # commandWord = "add"
         - quoteName: String
         - customerName: String
     }
 
     class DeleteItemCommand {
+        # commandWord = "deleteItem"
         - itemName: String
     }
 
     class ExitCommand {
+        # commandWord = "exit"
         + exit(): true
     }
 
     class RegisterCommand {
+        # commandWord = "register"
         - newName: String
     }
 
     class CalculateTotalCommand {
-
+        # commandWord = "total"
     }
 
     class FinishQuoteCommand {
-
+        # commandWord = "finish"
     }
 
     class NavigateCommand {
-
+        # commandWord = "nav"
     }
 
     class ShowQuotesCommand {
-
+        # commandWord = "show"
     }
     
     class DeleteQuoteCommand {
-        
+        # commandWord = "delete"
     }
 
     abstract class Command {
@@ -59,18 +64,18 @@ package data {
 }
 
 
-AddItemCommand --|> Command
-AddQuoteCommand --|> Command
+Command <|-- AddItemCommand 
+Command <|-- AddQuoteCommand
+Command <|-- ExitCommand
+Command <|-- DeleteItemCommand
+Command <|-- RegisterCommand
 CalculateTotalCommand --|> Command
-DeleteItemCommand --|> Command
-DeleteQuoteCommand --|> Command
-ExitCommand --|> Command
 FinishQuoteCommand --|> Command
 NavigateCommand --|> Command
-RegisterCommand --|> Command
+DeleteQuoteCommand --|> Command
 ShowQuotesCommand --|> Command
 
-command ..> ui
+command .> ui
 command ..> data
 
 @enduml

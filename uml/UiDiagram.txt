@@ -11,12 +11,13 @@ package command {
 
 package ui {
     class Ui {
-
+        {static} getInstance(): Ui
     }
 }
 
-Command ..> ui
+Ui <.. Command
 
-Ui "0..1" -> Scanner: scanner
+
+Ui "0..1" --> Scanner: scanner
 
 @enduml
