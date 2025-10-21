@@ -187,7 +187,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseNavCommand_validQuoteName_returnNavCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -202,7 +202,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseNavCommand_validMainInput_returnNavCommand() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -217,7 +217,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseNavCommand_invalidQuoteName_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
@@ -229,7 +229,7 @@ public class ParserQuoteCommandTest {
 
     @Test
     public void parseNavCommand_noQuoteNameOutsideQuote_throwException() {
-        QuotelyState state = new QuotelyState();
+        QuotelyState state = QuotelyState.getInstance();
         QuoteList quoteList = new QuoteList();
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
