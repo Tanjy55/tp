@@ -269,6 +269,42 @@ finish
 Finishing quote process.
 ```
 
+### Navigate: `nav`
+
+Navigate to other states. 
+
+Command is available in both main menu and during quotation.
+* If in main menu, go to specific quote
+* If quoting, go to main menu, or other quote
+
+**Format:**
+
+```
+nav main
+nav {n/QUOTE_NAME}
+```
+
+**Example:**
+
+```
+nav main
+nav n/quote1
+```
+
+**Expected output**
+
+```
+quote1 > nav main
+____________________________________________________________
+Navigating to the main menu.
+____________________________________________________________
+main > nav n/quote1
+____________________________________________________________
+Navigating to quote: quote1
+____________________________________________________________
+quote1 > 
+```
+
 ### Show all Quotes: `show`
 
 Show the current state of all quotes.
