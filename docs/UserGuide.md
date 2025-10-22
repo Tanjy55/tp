@@ -293,6 +293,7 @@ nav n/quote1
 
 **Expected output**
 
+The expected output shows navigation from quote1 to main menu then back to quote1.
 ```
 quote1 > nav main
 ____________________________________________________________
