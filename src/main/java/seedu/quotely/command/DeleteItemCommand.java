@@ -32,6 +32,8 @@ public class DeleteItemCommand extends Command {
 
         quote.removeItem(itemName);
 
+        assert !quote.hasItem(itemName) : "Item was not successfully removed from the quote.";
+
         ui.showMessage(String.format("Deleting item %s from quote %s", itemName, quote.getQuoteName()));
         logger.fine(String.format("Successfully deleted item: %s", itemName));
     }

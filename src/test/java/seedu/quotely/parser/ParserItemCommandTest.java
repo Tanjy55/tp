@@ -75,7 +75,7 @@ public class ParserItemCommandTest {
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
         quoteList.addQuote(q);
-        q.addItem("Item1", 10.0, 4, false);
+        q.addItem("Item1", 10.0, 4, 0);
         try {
             Command command = Parser.parse("delete i/Item1", state, quoteList);
             assertTrue(command instanceof seedu.quotely.command.DeleteItemCommand);
@@ -91,7 +91,7 @@ public class ParserItemCommandTest {
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
         quoteList.addQuote(q);
-        q.addItem("Item1", 10.0, 4, false);
+        q.addItem("Item1", 10.0, 4, 0);
         try {
             Command command = Parser.parse("delete i/Item1 n/quote 1", state, quoteList);
             assertTrue(command instanceof seedu.quotely.command.DeleteItemCommand);
@@ -143,7 +143,7 @@ public class ParserItemCommandTest {
         Quote q = new Quote("quote 1", "customer 1");
         state.setOutsideQuote();
         quoteList.addQuote(q);
-        q.addItem("Item1", 10.0, 4, false);
+        q.addItem("Item1", 10.0, 4, 0);
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("delete i/Item1", state, quoteList);
         });
@@ -156,7 +156,7 @@ public class ParserItemCommandTest {
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
         quoteList.addQuote(q);
-        q.addItem("Item1", 10.0, 4, false);
+        q.addItem("Item1", 10.0, 4, 0);
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("delete i/invalid item", state, quoteList);
         });
@@ -169,7 +169,7 @@ public class ParserItemCommandTest {
         Quote q = new Quote("quote 1", "customer 1");
         state.setInsideQuote(q);
         quoteList.addQuote(q);
-        q.addItem("Item1", 10.0, 4, false);
+        q.addItem("Item1", 10.0, 4, 0);
         assertThrows(QuotelyException.class, () -> {
             Parser.parse("delete", state, quoteList);
         });

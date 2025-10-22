@@ -22,7 +22,7 @@ public class AddItemCommandTest {
             Quote quote = new Quote("TestQuote", "TestCustomer");
             quoteList.addQuote(quote);
             state.setInsideQuote(quote);
-            AddItemCommand addItemCommand = new AddItemCommand("TestItem", quote, 10.0, 2, false);
+            AddItemCommand addItemCommand = new AddItemCommand("TestItem", quote, 10.0, 2, 0);
             addItemCommand.execute(ui, quoteList, companyName, state);
             assertEquals(1, quote.getItems().size());
             Item item = quote.getItems().get(0);

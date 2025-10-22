@@ -35,7 +35,8 @@ public class CalculateTotalCommand extends Command {
                         QuotelyState state) throws QuotelyException {
 
         logger.fine("Executing CalculateTotalCommand");
-        ui.showMessage("Total cost of quote " + quote.getQuoteName() + " for "
-                + quote.getCustomerName() + ": " + quote.getQuoteTotal());
+        ui.showMessage(
+                String.format("Total cost of quote %s for %s: %.2f", quote.getQuoteName(),
+                        quote.getCustomerName(), quote.getQuoteTotal()));
     }
 }

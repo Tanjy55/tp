@@ -28,7 +28,8 @@ public class Parser {
     private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
     private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
-    private static final String ADD_ITEM_COMMAND_PATTERN = "i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.*)";
+    private static final String ADD_ITEM_COMMAND_PATTERN
+            = "^i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?$";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
@@ -199,41 +200,68 @@ public class Parser {
         if (m.find()) {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
+            if (state.isInsideQuote() && quoteName != null) {
+                logger.warning("Attempted to use n/QUOTE_NAME while inside a quote");
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+            }
             String priceStr = m.group(3).trim();
             String quantityStr = m.group(4).trim();
+            String taxRateStr = m.group(5) != null ? m.group(5).trim() : null;
 
             logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + 
                 (quoteName != null ? quoteName : "<none>") + "', Price: '" + 
-                priceStr + "', Quantity: '" + quantityStr + "'");
+                priceStr + "', Quantity: '" + quantityStr + "'" + "', Tax: '" +
+                    (taxRateStr != null ? taxRateStr : "<none>"));
 
             double price;
             int quantity;
+            double taxRate;
+
             try {
                 price = Double.parseDouble(priceStr);
-                quantity = Integer.parseInt(quantityStr);
-                if (quantity <= 0 || price < 0) {
-                    logger.warning("Invalid price or quantity values - Price: " + price + ", Quantity: " + quantity);
+                if (price < 0) {
                     throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
                 }
             } catch (NumberFormatException e) {
-                logger.warning("Failed to parse price or quantity: " + e.getMessage());
+                logger.warning("Failed to parse price: " + e.getMessage());
                 throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+            }
+
+            try {
+                quantity = Integer.parseInt(quantityStr);
+                if (quantity <= 0) {
+                    throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                }
+            } catch (NumberFormatException e) {
+                logger.warning("Failed to parse quantity: " + e.getMessage());
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+            }
+            taxRate = 0;
+            if (taxRateStr != null) {
+                try {
+                    taxRate = Double.parseDouble(taxRateStr);
+                    if (taxRate < 0) {
+                        throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                    }
+                } catch (NumberFormatException e) {
+                    logger.warning("Failed to parse tax rate: " + e.getMessage());
+                    throw new QuotelyException(QuotelyException.ErrorType.INVALID_NUMBER_FORMAT);
+                }
             }
 
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             logger.info("Successfully parsed add item command - Item: '" +
                     itemName + "' Price: " + price + " Quantity: " + quantity +
-                    " for quote: '" + quote.getQuoteName() + "'");
+                    " Tax Rate: " + taxRate + " for quote: '" + quote.getQuoteName() + "'");
 
             // parsing and UI for isTax to be implemented
-            boolean isTax = false;
 
-            return new AddItemCommand(itemName, quote, price, quantity, isTax);
+            return new AddItemCommand(itemName, quote, price, quantity, taxRate);
         } else {
             logger.warning("Invalid format for add item command: " + arguments);
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY");
+                    "add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY [t/TAX_RATE]");
         }
     }
 
@@ -245,6 +273,10 @@ public class Parser {
         if (m.find()) {
             String itemName = m.group(1).trim();
             String quoteName = m.group(2) != null ? m.group(2).trim() : null;
+            if (state.isInsideQuote() && quoteName != null) {
+                logger.warning("Attempted to use n/QUOTE_NAME while inside a quote");
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+            }
             Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
             if (!quote.hasItem(itemName)) {
                 logger.warning("Item not found in quote - Item: '" + itemName +

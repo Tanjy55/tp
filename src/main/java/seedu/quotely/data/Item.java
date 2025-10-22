@@ -4,13 +4,13 @@ public class Item {
     private String itemName;
     private double price;
     private int quantity;
-    private boolean isTax;
+    private double taxRate;
 
-    public Item(String itemName, double price, int quantity, boolean isTax) {
+    public Item(String itemName, double price, int quantity, double taxRate) {
         this.itemName = itemName;
         this.price = price;
         this.quantity = quantity;
-        this.isTax = isTax;
+        this.taxRate = taxRate;
     }
 
     public String getItemName() {
@@ -42,10 +42,22 @@ public class Item {
     }
 
     public boolean isTax() {
-        return isTax;
+        return taxRate > 0;
     }
 
-    public void setTax(boolean tax) {
-        isTax = tax;
+    public double getTaxRate() {
+        return taxRate;
+    }
+
+    public void setTax(double taxRate) {
+        this.taxRate = taxRate;
+    }
+
+    public double getItemTotalPriceWithoutTax() {
+        return quantity * price;
+    }
+
+    public double getItemTotalTax() {
+        return quantity * price * taxRate / 100.0;
     }
 }

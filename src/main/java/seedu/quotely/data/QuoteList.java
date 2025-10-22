@@ -21,8 +21,19 @@ public class QuoteList {
         quotes.add(quote);
     }
 
-    public void removeQuote(Quote quote) {
-        quotes.remove(quote);
+    public void removeQuote(Quote quote) throws QuotelyException {
+        for (int i = 0; i < quotes.size(); i++) {
+            Quote currentQuote = quotes.get(i);
+
+            if (currentQuote.getQuoteName().equals(quote.getQuoteName())) {
+                quotes.remove(i);
+                logger.info("Successfully removed quote: " + currentQuote.getQuoteName());
+                return;
+            }
+        }
+
+        logger.warning("Attempted to remove quote that does not exist: " + quote.getQuoteName());
+        throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
 
     public Quote getQuoteByName(String quoteName) throws QuotelyException {

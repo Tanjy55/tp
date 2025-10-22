@@ -11,8 +11,8 @@ import seedu.quotely.ui.Ui;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * A test class for CalculateTotalCommand that verifies the correct output is printed.
@@ -42,8 +42,8 @@ public class CalculateTotalCommandTest {
 
             // Create a quote with items to get a predictable total
             Quote quote = new Quote("Sample Quote", "John Doe");
-            quote.addItem("Paint", 25.0, 2, false); // 50.0
-            quote.addItem("Brushes", 5.5, 4, false);  // 22.0
+            quote.addItem("Paint", 25.0, 2, 0); // 50.0
+            quote.addItem("Brushes", 5.5, 4, 0);  // 22.0
             // Total = 72.0
 
             CalculateTotalCommand command = new CalculateTotalCommand(quote);
@@ -56,7 +56,11 @@ public class CalculateTotalCommandTest {
             command.execute(ui, quoteList, companyName, state);
 
             // 3. Assert: Check if the captured output matches the expected string
-            assertEquals(expectedOutput, outContent.toString());
+            String actualOutput = outContent.toString();
+            String expectedPrefix = "Total cost of quote Sample Quote for John Doe:";
+            assertTrue(actualOutput.startsWith(expectedPrefix));
+            String value = actualOutput.substring(expectedPrefix.length()).trim();
+            assertTrue(value.matches("72\\.0{1,2}"));
             assertFalse(command.isExit());
 
         } catch (QuotelyException e) {

@@ -19,7 +19,7 @@ public class DeleteItemCommandTest {
         QuotelyState state = QuotelyState.getInstance();
         Quote quote = new Quote("TestQuote", "TestCustomer");
         quoteList.addQuote(quote);
-        quote.addItem("Item1", 10.0, 2, false);
+        quote.addItem("Item1", 10.0, 2, 0);
         try {
             DeleteItemCommand deleteItemCommand = new DeleteItemCommand("Item1", quote);
             deleteItemCommand.execute(ui, quoteList, companyName, state);
