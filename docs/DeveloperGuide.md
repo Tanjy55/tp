@@ -26,29 +26,89 @@ original source as well}
 
 ### Architecture
 
+[Architecture diagram (to be implemented)]
+
+The architecture diagram above explains the high-level design of the App.
+
+Main components of the Architecture
+
+`Quotely` is in charge of program launch.
+
+* At app launch, it initialises the logger, parser and instantiate data objects
+
+The program work is done by the following main components:
+
+* `Parser`: Parse user CLI inputs
+* `Command`: Perform data mutation, UI navigation
+* `UI`: Print CLI text for user
+* `Data`: Store quote and item data
+* `File storage`: to be implemented
+* `Util`: logger configuration
+
+Component interaction is modelled using a sequence diagram for the `run()` method in Quotely, where the bulk of program
+execution occurs.
+
 !['sequence diagram'](./src/sequenceDiagram.png)
+
+Setup is performed once in `main()` upon running the program.
+User input and corresponding work done by the program is run in a loop using the `run()` method
+
+Loop sequence explanation:
+
+1) User input is fetched from `UI`
+2) input is fed into `Parser`
+3) `Parser` determines appropriate `Command` type to create. Returns new command object with appropriate parameters set
+   to Quotely
+4) Quotely runs the execute method in `Commmand`
+
+The above process runs until `Exit` is read from the user.
+
+The sections below give more details of each component.
 
 ### Parser Component
 
 !['Parser diagram'](./src/ParserDiagram.png)
 
+How the parsing works...
+(maybe more sequence diagram)
+
 ### Command Component
 
 !['Command diagram'](./src/CommandDiagram.png)
+
+All `Command` subtypes inherit from the abstract `Command` class which defines a command word and execute method
+
+(more explanation)
 
 ### Ui Component
 
 !['Ui diagram'](./src/UiDiagram.png)
 
+The `UI` component consists of
+
+* (method) (explanation)
+
 ### Data Component
 
 !['Data diagram'](./src/DataDiagram.png)
+
+(sequence diagram)
+
 
 ### File storage Component
 
 To be implemented.
 
 ## Implementation
+
+(future implementations, V2.0/V2.1)
+
+[Proposed] xxx feature
+
+The proposed mechanism is facilitated by... it does ....
+The following operations shall be implemented...
+
+(state diagrams)
 
 ## Product scope
 
@@ -65,7 +125,8 @@ Current methods of quotation by small businesses use Excel or other manual metho
 example: type manually on whatsapp, telegram chat) to generate quotations.
 
 Quotely is a free CLI based Quotation generator that allows users in sales to handle quotations for free without using
-paid quotation generator software. Quotations are stored, and offers ability to manage quotations faster than using informal tools such as social media
+paid quotation generator software. Quotations are stored, and offers ability to manage quotations faster than using
+informal tools such as social media
 chat.
 
 ### User Stories
@@ -89,6 +150,7 @@ chat.
 ## Non-Functional Requirements
 
 {Give non-functional requirements}
+
 * Data: non-volatile, does not get corrupted with use
 * Data: user should be able to store at least 50 quotes
 * Data: total sum and tax calculations must be accurate
