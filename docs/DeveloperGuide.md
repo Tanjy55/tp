@@ -77,8 +77,17 @@ How the parsing works...
 !['Command diagram'](./src/CommandDiagram.png)
 
 All `Command` subtypes inherit from the abstract `Command` class which defines a command word and execute method
+ 
+The `Command` component,  
 
-(more explanation)
+> Implements the Command design pattern and is central to the application's execution logic,
+allowing the user input to trigger specific actions.
+
+How the `Command` component works:
+1) At it's core is the abstract class, `Command.java`, which all specific subtypes must 
+extend. It enforces the execution of the `execute()` method.
+
+(Further explanation)
 
 ### Ui Component
 
