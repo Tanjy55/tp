@@ -238,4 +238,58 @@ public class ParserQuoteCommandTest {
             Parser.parse("nav", state, quoteList);
         });
     }
+
+    @Test
+    public void parserExportCommand_validQuoteName_returnExportCommand() {
+        QuotelyState state = QuotelyState.getInstance();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        try {
+            Command command = Parser.parse("export n/quote 1", state, quoteList);
+            assertTrue(command instanceof seedu.quotely.command.ExportQuoteCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parserExportCommand_validInputInsideQuote_returnExportCommand() {
+        QuotelyState state = QuotelyState.getInstance();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setInsideQuote(q);
+        quoteList.addQuote(q);
+        try {
+            Command command = Parser.parse("export", state, quoteList);
+            assertTrue(command instanceof seedu.quotely.command.ExportQuoteCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown";
+        }
+    }
+
+    @Test
+    public void parserExportCommand_noQuoteNameOutsideQuote_throwException() {
+        QuotelyState state = QuotelyState.getInstance();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("export", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parserExportCommand_invalidQuoteNameOutsideQuote_throwException() {
+        QuotelyState state = QuotelyState.getInstance();
+        QuoteList quoteList = new QuoteList();
+        Quote q = new Quote("quote 1", "customer 1");
+        state.setOutsideQuote();
+        quoteList.addQuote(q);
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("export n/invalid quote", state, quoteList);
+        });
+    }
 }

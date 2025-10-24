@@ -3,21 +3,23 @@
 ## Table of Content
 
 - [User Guide](#user-guide)
-    - [Table of Content](#table-of-content)
-    - [Introduction](#introduction)
-    - [Quick Start](#quick-start)
-    - [Features](#features)
-        - [Register Company Name: `register`](#register-company-name-register)
-        - [Creating a Quote: `quote`](#creating-a-quote-quote)
-        - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
-        - [Adding an item: `add`](#adding-an-item-add)
-        - [Delete an item `delete`](#delete-an-item-delete)
-        - [Calculate the total `total`](#calculate-the-total-total)
-        - [Finish the Quote `finish`](#finish-the-quote-finish)
-        - [Show all Quotes: `show`](#show-all-quotes-show)
-        - [Exit `exit`](#exit-exit)
-    - [FAQ](#faq)
-    - [Command Summary](#command-summary)
+  - [Table of Content](#table-of-content)
+  - [Introduction](#introduction)
+  - [Quick Start](#quick-start)
+  - [Features](#features)
+    - [Register Company Name: `register`](#register-company-name-register)
+    - [Creating a Quote: `quote`](#creating-a-quote-quote)
+    - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
+    - [Adding an item: `add`](#adding-an-item-add)
+    - [Delete an item `delete`](#delete-an-item-delete)
+    - [Calculate the total `total`](#calculate-the-total-total)
+    - [Export a quote: `export`](#export-a-quote-export)
+    - [Finish the Quote `finish`](#finish-the-quote-finish)
+    - [Navigate: `nav`](#navigate-nav)
+    - [Show all Quotes: `show`](#show-all-quotes-show)
+    - [Exit `exit`](#exit-exit)
+  - [FAQ](#faq)
+  - [Command Summary](#command-summary)
 
 ## Introduction
 
@@ -250,6 +252,46 @@ total n/quote 1
 ```
 Total cost of quote quote 1 for c: 1023.4
 ```
+
+### Export a quote: `export`
+
+Export a quote to a PDF file. The command uses the built-in PDF writer to format the quote into an invoice-like PDF and saves it as `invoice.pdf` in the current working directory.
+
+Command availability:
+- If you are currently inside a quote, you may run the command without arguments to export the current quote.
+- If you are in the main menu, specify the quote name using `n/QUOTE_NAME`.
+
+**Format:**
+
+```
+export {n/QUOTE_NAME}
+```
+
+* `{n/QUOTE_NAME}` - optional when inside a quote; required when invoked from main menu.
+
+**Examples:**
+
+During quotation (exports the active quote):
+
+```
+export
+```
+
+From main menu (exports the specified quote):
+
+```
+export n/quote_1
+```
+
+**What happens:**
+- The application will generate a PDF file named `invoice.pdf` in the directory where the application was started.
+- The PDF will contain the invoice header, customer info and a table of items with subtotal, tax and total.
+
+**Notes & troubleshooting:**
+- Ensure your quote contains at least one item; the PDF writer will iterate the items in the quote to populate the table.
+- The PDF writer uses a third-party PDF library and writes to `invoice.pdf` directly; if a file with that name already exists it will be overwritten.
+- If you need a different filename or destination, you can manually move/rename the generated PDF after export (or modify the writer implementation in `seedu.quotely.writer.PDFWriter`).
+
 
 ### Finish the Quote `finish`
 
