@@ -26,6 +26,7 @@ public class Parser {
 
     private static final String ADD_QUOTE_COMMAND_PATTERN = "n/(.*?)\\s+c/(.*)";
     private static final String DELETE_QUOTE_COMMAND_PATTERN = "n/(.*)";
+    private static final String EXPORT_QUOTE_COMMAND_PATTERN = "n/(.*)";
     private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
     private static final String ADD_ITEM_COMMAND_PATTERN
@@ -81,6 +82,9 @@ public class Parser {
         case "delete":
             // can use without quote name if inside a quote
             return parseDeleteItemCommand(arguments, state, quoteList);
+        case "export":
+            // can use without quote name if inside a quote
+            return parseExportCommand(arguments, state, quoteList);
         case "add":
             // can use without quote name if inside a quote
             return parseAddItemCommand(arguments, state, quoteList);
@@ -171,6 +175,26 @@ public class Parser {
         } catch (QuotelyException e) {
             logger.warning("Failed to find quote for deletion with name: " + quoteName);
             throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "unquote [n/QUOTE_NAME]");
+        }
+    }
+
+    private static Command parseExportCommand(String arguments, QuotelyState state,
+            QuoteList quoteList) throws QuotelyException {
+        logger.fine("parseExportCommand called with arguments: " + arguments);
+        Pattern p = Pattern.compile(EXPORT_QUOTE_COMMAND_PATTERN);
+        Matcher m = p.matcher(arguments);
+
+        String quoteName = null;
+        if (m.find()) {
+            quoteName = m.group(1).trim();
+        }
+        try {
+            Quote quote = getQuoteFromStateAndName(quoteName, state, quoteList);
+            logger.info("Successfully parsed export quote command for quote: " + quote.getQuoteName());
+            return new seedu.quotely.command.ExportQuoteCommand(quote);
+        } catch (QuotelyException e) {
+            logger.warning("Failed to find quote for export with name: " + quoteName);
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, "export [n/QUOTE_NAME]");
         }
     }
 
