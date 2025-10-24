@@ -13,12 +13,11 @@ import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.Quote;
 
 /**
- * Unit tests for {@link Ui#showQuote(CompanyName, Quote, double)}.
- * Uses Quote.addItem(...) to avoid depending on Item constructor shape.
+ * UI tests for Ui.showQuote that match the current Quote API:
+ * addItem(String itemName, double price, int quantity, boolean isTax)
  */
 public class UiShowQuoteTest {
 
-    // ---- Test constants ----
     private static final String COMPANY = "Acme Pte Ltd";
     private static final String CUSTOMER = "Jane Doe";
     private static final String QUOTE_ID = "Q-0001";
@@ -33,7 +32,7 @@ public class UiShowQuoteTest {
     private static final int ITEM2_QTY = 1;
 
     private static final double GST_RATE_WITH_ITEMS = 0.09; // 9%
-    private static final double GST_RATE_NO_ITEMS = 0.08;   // totals remain $0.00 anyway
+    private static final double GST_RATE_NO_ITEMS = 0.08;
 
     private final PrintStream originalOut = System.out;
     private ByteArrayOutputStream out;
@@ -55,12 +54,12 @@ public class UiShowQuoteTest {
         CompanyName company = new CompanyName(COMPANY);
         Quote quote = new Quote(QUOTE_ID, CUSTOMER);
 
-        // Use Quote API (matches your Item/Quote classes)
+        // Use the exact Quote API (boolean isTax present)
         quote.addItem(ITEM1_NAME, ITEM1_PRICE, ITEM1_QTY, false);
-        quote.addItem(LONG_DESC,    ITEM2_PRICE, ITEM2_QTY, false);
+        quote.addItem(LONG_DESC,   ITEM2_PRICE, ITEM2_QTY, false);
 
-        // Expected totals computed same way as Ui.showQuote formats them
-        double subtotal = ITEM1_QTY * ITEM1_PRICE + ITEM2_QTY * ITEM2_PRICE;
+        // Totals from the model to match rounding/source-of-truth
+        double subtotal = quote.getQuoteTotal();
         double gst = subtotal * GST_RATE_WITH_ITEMS;
         double total = subtotal + gst;
 
@@ -77,18 +76,18 @@ public class UiShowQuoteTest {
         assertTrue(output.contains("Quote ID: " + QUOTE_ID));
         assertTrue(output.contains("Customer name: " + CUSTOMER));
 
-        // Assert — item presence
+        // Assert — item presence (no fragile alignment checks)
         assertTrue(output.contains(ITEM1_NAME));
 
         // Assert — totals
         assertTrue(output.contains("Subtotal:") && output.contains(expectedSubtotal),
-                "Expected subtotal not found: " + expectedSubtotal + "\nOUTPUT:\n" + output);
+                "Missing subtotal " + expectedSubtotal + "\nOUTPUT:\n" + output);
         assertTrue(output.contains("GST:") && output.contains(expectedGst),
-                "Expected GST not found: " + expectedGst + "\nOUTPUT:\n" + output);
+                "Missing GST " + expectedGst + "\nOUTPUT:\n" + output);
         assertTrue(output.contains("Total:") && output.contains(expectedTotal),
-                "Expected total not found: " + expectedTotal + "\nOUTPUT:\n" + output);
+                "Missing total " + expectedTotal + "\nOUTPUT:\n" + output);
 
-        // Box marker
+        // Box marker present
         assertTrue(output.contains("______QUOTE"));
     }
 
