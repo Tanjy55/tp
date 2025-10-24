@@ -124,7 +124,7 @@ public class PDFWriter {
             totalTaxCell.setBorder(Rectangle.NO_BORDER);
             table.addCell(totalTaxCell);
 
-            // Add total tax
+            // Add grand total
             table.addCell(emptyCell);
             PdfPCell totalCell = new PdfPCell(new Phrase(String.format("$ %.2f", subtotal + totalTax), headFont));
             totalCell.setHorizontalAlignment(Element.ALIGN_LEFT);

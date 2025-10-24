@@ -30,6 +30,6 @@ public class ExportQuoteCommand extends Command {
         ui.showMessage("Exporting quote: " + quote.getQuoteName());
         PDFWriter pdfWriter = PDFWriter.getInstance();
         pdfWriter.writeQuoteToPDF(quote, companyName);
-        logger.fine(String.format("Successfully export quote: %s", quote.getQuoteName(), " to pdf file."));
+        logger.fine(String.format("Successfully export quote: %s to pdf file.", quote.getQuoteName()));
     }
 }
