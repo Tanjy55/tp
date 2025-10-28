@@ -8,6 +8,11 @@ import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.parser.Parser;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.util.LoggerConfig;
+
+import seedu.quotely.storage.Storage;
+import seedu.quotely.storage.JsonSerializer;
+import java.io.IOException;
+
 import java.util.logging.Logger;
 
 public class Quotely {
@@ -16,6 +21,11 @@ public class Quotely {
     private CompanyName companyName;
     private QuoteList quoteList;
     private QuotelyState state;
+
+    // Fields for storage
+    private Storage storage;
+    private JsonSerializer serializer;
+    private static final String DEFAULT_STORAGE_FILEPATH = "data/quotely.json";
 
     /**
      * Constructor for Quotely
@@ -52,7 +62,47 @@ public class Quotely {
         ui = Ui.getInstance();
         state = QuotelyState.getInstance();
         companyName = new CompanyName("Default");
-        quoteList = new QuoteList();
+
+        // Initialize storage and load data
+        storage = new Storage(DEFAULT_STORAGE_FILEPATH);
+        serializer = new JsonSerializer();
+        quoteList = loadDataFromFile();
+    }
+
+    /**
+     * Loads the QuoteList from the file specified in storage.
+     * If the file is not found or is corrupted, returns a new empty QuoteList.
+     */
+    private QuoteList loadDataFromFile() {
+        try {
+            String jsonData = storage.loadData();
+            QuoteList loadedList = serializer.deserialize(jsonData);
+            logger.info("Successfully loaded data from " + DEFAULT_STORAGE_FILEPATH);
+            return loadedList;
+        } catch (IOException e) {
+            logger.warning("Failed to read from data file. "
+                    + "Starting with a new QuoteList. Error: " + e.getMessage());
+            ui.showError("Could not load data file. Starting fresh.");
+            return new QuoteList();
+        } catch (Exception e) { // Catches potential JSON syntax errors
+            logger.severe("Data file is corrupted. Starting with a new QuoteList. Error: " + e.getMessage());
+            ui.showError("Data file appears to be corrupted. Starting fresh.");
+            return new QuoteList();
+        }
+    }
+
+    /**
+     * Saves the current QuoteList to the file specified in storage.
+     */
+    private void saveDataToFile() {
+        try {
+            String jsonData = serializer.serialize(quoteList);
+            storage.saveData(jsonData);
+            logger.info("Data saved successfully to " + DEFAULT_STORAGE_FILEPATH);
+        } catch (IOException e) {
+            logger.severe("Failed to save data to file: " + e.getMessage());
+            ui.showError("Error: Failed to save data to file.");
+        }
     }
 
     public void run() {
@@ -71,6 +121,12 @@ public class Quotely {
                 // execute throws QuotelyException if data mutation fails
                 c.execute(ui, quoteList, companyName, state);
                 isExit = c.isExit();
+
+                // Save data after every successful command that doesn't exit
+                if (!isExit) {
+                    saveDataToFile();
+                }
+
             } catch (QuotelyException e) {
                 ui.showError(e.getMessage());
                 logger.severe(e.getMessage());
@@ -96,4 +152,3 @@ public class Quotely {
         }
     }
 }
-
