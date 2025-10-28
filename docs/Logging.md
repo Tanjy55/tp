@@ -51,7 +51,7 @@ public class YourClass {
 
 ### Default Configuration:
 - **Log Directory**: `logs/` (created automatically)
-- **Main Log File**: `logs/quotely.log`
+- **Main Log File**: `logs/quotely_0.log`
 - **File Rotation**: 5 files × 1MB each
 - **Append Mode**: Yes (logs persist between runs)
 
@@ -140,7 +140,7 @@ public class QuoteList {
 ### If logs aren't appearing:
 1. Check if `LoggerConfig.initializeGlobalLogging()` is called in main()
 2. Verify the `logs/` directory is created
-3. Check log levels - console shows INFO+ by default
+3. Check log levels - console shows WARNING+ by default
 4. Look for `logging.properties` in `src/main/resources/`
 
 ### To see more detailed logs:
