@@ -17,6 +17,8 @@ import java.util.logging.Logger;
 
 public class Quotely {
     private static Logger logger;
+    private static final String DEFAULT_STORAGE_FILEPATH = "data/quotely.json";
+
     private Ui ui;
     private CompanyName companyName;
     private QuoteList quoteList;
@@ -25,7 +27,7 @@ public class Quotely {
     // Fields for storage
     private Storage storage;
     private JsonSerializer serializer;
-    private static final String DEFAULT_STORAGE_FILEPATH = "data/quotely.json";
+
 
     /**
      * Constructor for Quotely
