@@ -1,24 +1,40 @@
 # Developer Guide
 
-- [Acknowledgements](#Acknowledgements)
-- [Design](#Design)
-    - [Architecture](#Architecture)
-    - [Parser Component](#Parser-Component)
-    - [Command Component](#Command-Component)
-    - [Ui Component](#Ui-Component)
-    - [Data Component](#Data-Component)
-    - [File storage Component](#File-storage-Component)
-    - [PDF export Component](#PDF-export-Component)
-- [Implementation](#Implementation)
-    - [QuotelyState](#QuotelyState-feature)
-- [Product Scope](#Product-scope)
-    - [Target user profile](#Target-user-profile)
-    - [Value proposition](#Value-proposition)
-    - [User Stories](#User-Stories)
-- [Non-Functional Requirements](#Non-Functional-Requirements)
-- [Glossary](#Glossary)
-- [Instructions for manual testing](#Instructions-for-manual-testing)
-- [Documentation, logging, testing, configuration, dev-ops](#Documentation,logging,testing,configuration,dev-ops)
+- [Developer Guide](#developer-guide)
+  - [Acknowledgements](#acknowledgements)
+  - [Design](#design)
+    - [Architecture](#architecture)
+    - [Parser Component](#parser-component)
+    - [Command Component](#command-component)
+    - [Ui Component](#ui-component)
+    - [Data Component](#data-component)
+    - [File storage Component](#file-storage-component)
+    - [PDF export Component](#pdf-export-component)
+  - [Implementation](#implementation)
+    - [QuotelyState feature](#quotelystate-feature)
+    - [export feature](#export-feature)
+      - [Overview](#overview)
+      - [User-facing behaviour](#user-facing-behaviour)
+      - [Example (full workflow)](#example-full-workflow)
+      - [Developer notes (implementation)](#developer-notes-implementation)
+      - [Implementation considerations \& TODOs](#implementation-considerations--todos)
+    - [next feature 2](#next-feature-2)
+    - [next feature 3](#next-feature-3)
+  - [Product scope](#product-scope)
+    - [Target user profile](#target-user-profile)
+    - [Value proposition](#value-proposition)
+    - [User Stories](#user-stories)
+  - [Logging](#logging)
+    - [Configuration Files](#configuration-files)
+      - [1. `src/main/resources/logging.properties`](#1-srcmainresourcesloggingproperties)
+      - [2. `src/main/java/seedu/quotely/util/LoggerConfig.java`](#2-srcmainjavaseeduquotelyutilloggerconfigjava)
+    - [How to Use Logging in Your Classes](#how-to-use-logging-in-your-classes)
+      - [1. Import and Get Logger](#1-import-and-get-logger)
+      - [2. Logging Levels (from most to least verbose)](#2-logging-levels-from-most-to-least-verbose)
+  - [Non-Functional Requirements](#non-functional-requirements)
+  - [Glossary](#glossary)
+  - [Instructions for manual testing](#instructions-for-manual-testing)
+  - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 
 ## Acknowledgements
 
@@ -180,7 +196,75 @@ The commands depend on QuotelyState in this manner:
 * `nav` : available in all states, but need to specify target location e.g. 'main' or quoteName
 * `exit` : available in all state as of v1.0
 
-### next feature
+### export feature
+
+The export feature generates a PDF invoice/quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
+
+#### Overview
+
+- Triggered by the `export` command. When executed, the application delegates formatting and file creation to the PDF writer component.
+- Current implementation writes a file named `invoice.pdf` to the working directory (see implementation notes below).
+
+#### User-facing behaviour
+
+- If the user is inside a quote (editing a specific quote), they may run the command without arguments to export the active quote:
+
+```
+export
+```
+
+- If the user is in the main menu, they must specify the quote name to export:
+
+```
+export n/QUOTE_NAME
+```
+
+- On success the UI prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
+
+#### Example (full workflow)
+
+1. Create a quote and add items:
+
+```
+quote n/office chairs c/Acme Ltd
+add i/Chair p/45.00 q/10
+add i/Wheels p/2.50 q/40
+```
+
+2. Export the active quote (inside quote) or use the named export from main:
+
+```
+export
+```
+or
+```
+export n/office chairs
+```
+
+The sequence diagram below illustrates the steps taken when the `export` command is executed.
+
+!['export-feature'](./src/ExportFeature.png)
+
+When the export completes, the application generates a PDF file named `invoice.pdf` in the working directory. The PDF uses an invoice-style layout that includes header information and an itemised table showing each item's description, quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total).
+
+Preview of the generated PDF:
+
+!['invoice'](./src/invoice.png)
+
+#### Developer notes (implementation)
+
+- Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
+- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `invoice.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
+- Logging: the command logs via the centralized `LoggerConfig` utility.
+
+#### Implementation considerations & TODOs
+
+- Make output filename configurable (e.g., `export f/FILE.pdf`) so users can choose a name/location.
+- Add a UI confirmation with the full path of the created file.
+- Improve templates and styling (header/footer, company logo, multiple page handling).
+- Add tests around the command parsing and delegate behaviour; avoid asserting file contents in unit tests (use integration tests or file-existence checks).
+
+
 
 ### next feature 2
 
@@ -222,6 +306,57 @@ chat.
 | v2.1    | user or accountant                                                       | calculate installments                          | save time from manually calculating                                    |
 | v2.1    | user or accountant                                                       | perform currency conversions                    | quote internationally                                                  |
 | v2.1    | user                                                                     | have different PDF and text templates           | have different quotation formats                                       |
+
+## Logging
+
+We use the centralized logging configuration for the Quotely application.
+
+### Configuration Files
+
+#### 1. `src/main/resources/logging.properties`
+This file contains the global logging configuration:
+- Log levels for different packages/classes
+- File output settings (location, size, rotation)
+- Console output settings
+- Formatter settings
+
+#### 2. `src/main/java/seedu/quotely/util/LoggerConfig.java`
+Centralized logging utility class that:
+- Loads configuration from `logging.properties`
+- Provides fallback programmatic configuration
+- Manages logger instances
+- Allows runtime configuration changes
+
+### How to Use Logging in Your Classes
+
+#### 1. Import and Get Logger
+```java
+import seedu.quotely.util.LoggerConfig;
+import java.util.logging.Logger;
+
+public class YourClass {
+    private static final Logger logger = LoggerConfig.getLogger(YourClass.class);
+    
+    public void yourMethod() {
+        logger.info("This is an info message");
+        logger.fine("This is a debug message");
+        logger.warning("This is a warning");
+        logger.severe("This is an error");
+    }
+}
+```
+
+#### 2. Logging Levels (from most to least verbose)
+- `FINEST` - Most detailed tracing
+- `FINER` - Detailed tracing  
+- `FINE` - Debug information
+- `CONFIG` - Configuration messages
+- `INFO` - General information (default console level)
+- `WARNING` - Warning messages
+- `SEVERE` - Error messages
+
+For more detail refer to the [logging guide](./Logging.md).
+
 
 ## Non-Functional Requirements
 

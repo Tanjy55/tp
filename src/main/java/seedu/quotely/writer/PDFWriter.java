@@ -69,7 +69,7 @@ public class PDFWriter {
             // Add table for items
             PdfPTable table = new PdfPTable(columnNumber); // 5 columns
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{4, 1, 1, 2, 2});
+            table.setWidths(new float[]{4, 2, 1, 2, 2});
 
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, headFont));
