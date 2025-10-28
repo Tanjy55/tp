@@ -7,7 +7,10 @@
     - [Command Component](#Command-Component)
     - [Ui Component](#Ui-Component)
     - [Data Component](#Data-Component)
+    - [File storage Component](#File-storage-Component)
+    - [PDF export Component](#PDF-export-Component)
 - [Implementation](#Implementation)
+    - [QuotelyState](#QuotelyState-feature)
 - [Product Scope](#Product-scope)
     - [Target user profile](#Target-user-profile)
     - [Value proposition](#Value-proposition)
@@ -67,25 +70,45 @@ The sections below give more details of each component.
 
 ### Parser Component
 
+Here’s a (partial) class diagram of the `Parser` component:
+
 !['Parser diagram'](./src/ParserDiagram.png)
 
-How the parsing works...
-(maybe more sequence diagram)
+The sequence diagram below illustrates the interactions within the Logic component, taking user input "add n/01
+c/joe" as an example.
+
+[Sequence diagram (to be implemented)]
+
+How the `Parser` component works:
+
+1. When user inputs "add n/01 c/joe", the input is passed from Ui Component to Parser Component.
+2. `Parser` checks for valid command format and runs method to parse command based on command keyword, which is "add"
+   for this example.
+3. The respective method is run to parse the command and set up attributes for the corresponding Command type
+4. This results in a `Command` object created (more precisely, an object of one of its subclasses e.g., AddQuoteCommand)
+   which is executed in Quotely.
+5. The command can communicate with `Data` when it is executed (e.g. to add a quote). Note that although this is shown
+   as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the
+   command object and the Data) to achieve.
+6. The result of the `Parser` execution is encapsulated as a Command object which is returned back from `Parser`.
 
 ### Command Component
+
+Here’s a (partial) class diagram of the `Command` component:
 
 !['Command diagram'](./src/CommandDiagram.png)
 
 All `Command` subtypes inherit from the abstract `Command` class which defines a command word and execute method
- 
-The `Command` component,  
+
+The `Command` component,
 
 > Implements the Command design pattern and is central to the application's execution logic,
-allowing the user input to trigger specific actions.
+> allowing the user input to trigger specific actions.
 
 How the `Command` component works:
-1) At it's core is the abstract class, `Command.java`, which all specific subtypes must 
-extend. It enforces the execution of the `execute()` method.
+
+1) At it's core is the abstract class, `Command.java`, which all specific subtypes must
+   extend. It enforces the execution of the `execute()` method.
 
 (Further explanation)
 
@@ -95,29 +118,73 @@ extend. It enforces the execution of the `execute()` method.
 
 The `UI` component consists of
 
-* (method) (explanation)
+(Further explanation)
 
 ### Data Component
 
 !['Data diagram'](./src/DataDiagram.png)
 
-(sequence diagram)
+The `Data` component,
 
+* stores the quote data i.e., all Quote objects (which are contained in a QuoteList object).
+* stores the item data i.e., all Item objects (which are contained in a Quote object).
+* stores the company name in a CompanyName object
+* stores the state using a QuotelyState object (e.g., inside quote + quote reference)
 
 ### File storage Component
 
 To be implemented.
 
+### PDF export Component
+
 ## Implementation
 
-(future implementations, V2.0/V2.1)
+This section describes some noteworthy details on how certain features are implemented.
 
-[Proposed] xxx feature
+### QuotelyState feature
 
-The proposed mechanism is facilitated by... it does ....
-The following operations shall be implemented...
+The QuotelyState feature is a helper for user interaction, implemented using a simple class. The application and
+explanation is covered below.
 
-(state diagrams)
+The purpose of this feature is to fix the anticipated issue of user confusion by facilitating UI elements for the user
+to navigate between the `main menu` and`quote` state.
+
+* In previous versions, if the user is working on `quote1`, there is no UI element for the user to reference that the
+  current situation is indeed "editing quote 1".
+* The user may be in no quotes, or a different quote.
+* This may become extremely messy and almost unusable if the number of quotes are large.
+
+To solve this problem, QuotelyState was introduced to allow additional UI elements for the user to distinguish the
+current situation.
+
+* If the user is not editing any quote, it is considered as `main menu state`
+* If the user is editing a quote, it is considered as `quote state`, whereby the QuotelyState object stores the quote
+  reference
+* In addition, we determine the type of user inputs allowable in each state. For example, finishing a quote is not
+  allowed in `main menu state`
+
+The following sequence diagram shows how an `add` operation uses the QuotelyState
+
+!['quotelystate-implementation'](./src/quotelystate-implementation.png)
+
+The commands depend on QuotelyState in this manner:
+
+* `register` : available in all state
+* `quote` : main menu only
+* `unquote` : can use no quote name if inside a quote
+* `show` : available in all state as of v1.0
+* `finish` : inside quote only
+* `delete` : can use without quote name if inside a quote
+* `add` : can use without quote name if inside a quote
+* `total` : can use without quote name if inside a quote
+* `nav` : available in all states, but need to specify target location e.g. 'main' or quoteName
+* `exit` : available in all state as of v1.0
+
+### next feature
+
+### next feature 2
+
+### next feature 3
 
 ## Product scope
 
@@ -157,8 +224,6 @@ chat.
 | v2.1    | user                                                                     | have different PDF and text templates           | have different quotation formats                                       |
 
 ## Non-Functional Requirements
-
-{Give non-functional requirements}
 
 * Data: non-volatile, does not get corrupted with use
 * Data: user should be able to store at least 50 quotes
