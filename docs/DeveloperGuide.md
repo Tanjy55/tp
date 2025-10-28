@@ -13,11 +13,11 @@
   - [Implementation](#implementation)
     - [QuotelyState feature](#quotelystate-feature)
     - [export feature](#export-feature)
-  - [Overview](#overview)
-  - [User-facing behaviour](#user-facing-behaviour)
-  - [Example (full workflow)](#example-full-workflow)
-  - [Developer notes (implementation)](#developer-notes-implementation)
-  - [Implementation considerations \& TODOs](#implementation-considerations--todos)
+      - [Overview](#overview)
+      - [User-facing behaviour](#user-facing-behaviour)
+      - [Example (full workflow)](#example-full-workflow)
+      - [Developer notes (implementation)](#developer-notes-implementation)
+      - [Implementation considerations \& TODOs](#implementation-considerations--todos)
     - [next feature 2](#next-feature-2)
     - [next feature 3](#next-feature-3)
   - [Product scope](#product-scope)
@@ -200,13 +200,13 @@ The commands depend on QuotelyState in this manner:
 
 The export feature generates a PDF invoice/quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
 
-Overview
---------
+#### Overview
+
 - Triggered by the `export` command. When executed, the application delegates formatting and file creation to the PDF writer component.
 - Current implementation writes a file named `invoice.pdf` to the working directory (see implementation notes below).
 
-User-facing behaviour
----------------------
+#### User-facing behaviour
+
 - If the user is inside a quote (editing a specific quote), they may run the command without arguments to export the active quote:
 
 ```
@@ -221,8 +221,8 @@ export n/QUOTE_NAME
 
 - On success the UI prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
 
-Example (full workflow)
------------------------
+#### Example (full workflow)
+
 1. Create a quote and add items:
 
 ```
@@ -251,14 +251,14 @@ Preview of the generated PDF:
 
 !['invoice'](./src/invoice.png)
 
-Developer notes (implementation)
---------------------------------
+#### Developer notes (implementation)
+
 - Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
 - Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `invoice.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralized `LoggerConfig` utility.
 
-Implementation considerations & TODOs
------------------------------------
+#### Implementation considerations & TODOs
+
 - Make output filename configurable (e.g., `export f/FILE.pdf`) so users can choose a name/location.
 - Add a UI confirmation with the full path of the created file.
 - Improve templates and styling (header/footer, company logo, multiple page handling).
@@ -355,7 +355,7 @@ public class YourClass {
 - `WARNING` - Warning messages
 - `SEVERE` - Error messages
 
-For more detail refer to the [logging guide](./Logging.md)
+For more detail refer to the [logging guide](./Logging.md).
 
 
 ## Non-Functional Requirements
