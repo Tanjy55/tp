@@ -1,7 +1,7 @@
 @startuml
 package parser {
     class Parser {
-        {static} parser(fullCommand: String, QuotelyState state, QuoteList quoteList): Command
+        {static} + parse(fullCommand: String, QuotelyState state, QuoteList quoteList): Command
     }
 }
 
