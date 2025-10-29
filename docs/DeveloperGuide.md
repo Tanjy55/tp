@@ -134,7 +134,11 @@ How the `Command` component works:
 
 The `UI` component consists of
 
-(Further explanation)
+* a Singleton to ensure only one instance handles all console input and output.
+* is responsible for printing all text to the command line, from welcome messages `showWelcome()` and separators `showLine()` to errors `showError()`
+* handles all reading of user input via its private `Scanner` instance
+* is state-aware, changing its prompt in `readCommand()` (e.g., main > or quote_name > ) based on the QuotelyState
+* formats complex data, like a Quote, into a readable, table-like format for the user like in `showQuote()`
 
 ### Data Component
 
@@ -147,9 +151,20 @@ The `Data` component,
 * stores the company name in a CompanyName object
 * stores the state using a QuotelyState object (e.g., inside quote + quote reference)
 
+
+
 ### File storage Component
 
-To be implemented.
+![StorageDiagram.png](StorageDiagram.png)
+
+The `Storage` component,
+
+* handles the persistence of application data (the `QuoteList`) between sessions
+* loads the `QuoteList` from a local JSON file (data/quotely.json) when the application starts
+* saves the `QuoteList` back to the JSON file after each successful command
+* comprised of a Storage class (for raw file I/O) and a JsonSerializer (for object-to-JSON conversion)
+
+
 
 ### PDF export Component
 
@@ -309,7 +324,7 @@ shown in the example right above (zoom in if necessary):
 
 !['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
 
-### next feature 3
+This features allows to calculate installments based on the Principal (amount of loan), interest rate and number of payments.
 
 ## Product scope
 

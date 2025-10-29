@@ -1,0 +1,46 @@
+@startuml
+
+' Define the main 'seedu.quotely' package
+package "seedu.quotely" {
+
+  class Quotely {
+     - storage: Storage
+     - serializer: JsonSerializer
+     + run()
+  }
+
+  ' Define the 'storage' sub-package
+  package "storage" {
+    class Storage {
+      - {static} logger: Logger
+      - final filePath: Path
+      + Storage(String filePath)
+      + loadData(): String
+      + saveData(String data): void
+    }
+
+    class JsonSerializer {
+      - final gson: Gson
+      + JsonSerializer()
+      + serialize(QuoteList quoteList): String
+      + deserialize(String json): QuoteList
+    }
+  }
+
+  ' Define the 'data' sub-package
+  package "data" {
+    class QuoteList {
+      - quotes: List<Quote>
+    }
+  }
+}
+
+' Define Relationships
+' Quotely 'has a' Storage and JsonSerializer
+Quotely "1" o-- "1" Storage
+Quotely "1" o-- "1" JsonSerializer
+
+' JsonSerializer 'uses' QuoteList (as a parameter/return type)
+JsonSerializer ..> QuoteList
+
+@enduml
