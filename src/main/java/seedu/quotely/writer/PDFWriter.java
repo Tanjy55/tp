@@ -32,16 +32,12 @@ public class PDFWriter {
         return writer;
     }
 
-    public void writeQuoteToPDF(Quote quote, CompanyName companyName) {
-        // Invoice data
-        String quotationNumber = "INV-1001";
-        String customerName = "John Doe";
-        String customerAddress = "123 Main Street, City, Country";
+    public void writeQuoteToPDF(Quote quote, CompanyName companyName, String filename) {
         List<Item> items = quote.getItems();
 
         try {
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("quotation.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(filename + ".pdf"));
             document.open();
 
             // Add quotation title
@@ -54,10 +50,13 @@ public class PDFWriter {
 
             // Add quotation info
             Font infoFont = new Font(Font.HELVETICA, 12);
-            Paragraph quotationInfo = new Paragraph("Invoice Number: " + quotationNumber + "\n" +
-                    "Customer: " + customerName + "\n" +
-                    "Address: " + customerAddress, infoFont);
-            document.add(quotationInfo);
+            Paragraph invoiceInfo = new Paragraph(
+                "Quotation Name: " + quote.getQuoteName() + "\n" + 
+                "Compnay Name: " + companyName.getCompanyName() + "\n" + 
+                "Customer Name: " + quote.getCustomerName() + "\n" +
+                "Date: " + java.time.LocalDate.now().toString(), infoFont
+            );
+            document.add(invoiceInfo);
 
             document.add(Chunk.NEWLINE);
 
@@ -106,30 +105,14 @@ public class PDFWriter {
             }
 
             PdfPCell emptyCell = new PdfPCell(new Phrase(""));
-            emptyCell.setColspan(columnNumber - 1);
+            emptyCell.setColspan(columnNumber - 2);
             emptyCell.setBorder(Rectangle.NO_BORDER);
 
-            // Add subtotal
-            table.addCell(emptyCell);
-            PdfPCell subtotalCell = new PdfPCell(new Phrase(String.format("$ %.2f", subtotal), headFont));
-            subtotalCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            subtotalCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(subtotalCell);
-
-            // Add total tax
-            table.addCell(emptyCell);
-            PdfPCell totalTaxCell = new PdfPCell(new Phrase(String.format("$ %.2f", totalTax), headFont));
-            totalTaxCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            totalTaxCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(totalTaxCell);
-
-            // Add grand total
-            table.addCell(emptyCell);
-            PdfPCell totalCell = new PdfPCell(new Phrase(String.format("$ %.2f", subtotal + totalTax), headFont));
-            totalCell.setHorizontalAlignment(Element.ALIGN_LEFT);
-            totalCell.setBorder(Rectangle.NO_BORDER);
-            table.addCell(totalCell);
-
+            // Add summary rows(subtotal, total tax, grand total)
+            addSummaryRow(table, "Subtotal", subtotal, columnNumber);
+            addSummaryRow(table, "Total Tax", totalTax, columnNumber);
+            addSummaryRow(table, "Grand Total", subtotal + totalTax, columnNumber);
+            
             document.add(table);
 
             document.close();
@@ -138,5 +121,23 @@ public class PDFWriter {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addSummaryRow(PdfPTable table, String label, double amount, int columnSpan) {
+        Font headFont = new Font(Font.HELVETICA, 12, Font.BOLD);
+        PdfPCell emptyCell = new PdfPCell(new Phrase(""));
+        emptyCell.setColspan(columnSpan - 2);
+        emptyCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(emptyCell);
+
+        PdfPCell labelCell = new PdfPCell(new Phrase(label, headFont));
+        labelCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        labelCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(labelCell);
+
+        PdfPCell amountCell = new PdfPCell(new Phrase(String.format("$ %.2f", amount), headFont));
+        amountCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
+        amountCell.setBorder(Rectangle.NO_BORDER);
+        table.addCell(amountCell);
     }
 }

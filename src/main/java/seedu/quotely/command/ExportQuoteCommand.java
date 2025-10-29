@@ -14,10 +14,12 @@ import java.util.logging.Logger;
 public class ExportQuoteCommand extends Command {
     private static final Logger logger = LoggerConfig.getLogger(ExportQuoteCommand.class);
     private Quote quote;
+    private String filename;
 
-    public ExportQuoteCommand(Quote quote) {
+    public ExportQuoteCommand(Quote quote, String filename) {
         super("export");
         this.quote = quote;
+        this.filename = filename;
     }
 
     @Override
@@ -26,10 +28,10 @@ public class ExportQuoteCommand extends Command {
                         CompanyName companyName,
                         QuotelyState state) throws QuotelyException {
 
-        logger.fine(String.format("Executing ExportQuoteCommand to quote %s", quote.getQuoteName()));
-        ui.showMessage("Exporting quote: " + quote.getQuoteName());
+        logger.fine(String.format("Executing ExportQuoteCommand of quote %s to %s", quote.getQuoteName(), filename));
+        ui.showMessage("Exporting quote: " + quote.getQuoteName() + " to " + filename + ".pdf");
         PDFWriter pdfWriter = PDFWriter.getInstance();
-        pdfWriter.writeQuoteToPDF(quote, companyName);
-        logger.fine(String.format("Successfully export quote: %s to pdf file.", quote.getQuoteName()));
+        pdfWriter.writeQuoteToPDF(quote, companyName, filename);
+        logger.fine(String.format("Successfully export quote: %s to %s.pdf", quote.getQuoteName(), filename));
     }
 }
