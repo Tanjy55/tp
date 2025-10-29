@@ -19,9 +19,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class CalculateTotalCommandTest {
 
-
     /**
-     * calculate total needs to be modified to test total with isTax
+     * calculate total needs to be modified to test total with hasTax
      */
     @Test
     public void execute_calculateTotalCommand_printsCorrectTotal() {
@@ -68,4 +67,3 @@ public class CalculateTotalCommandTest {
         }
     }
 }
-

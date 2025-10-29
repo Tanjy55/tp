@@ -29,7 +29,7 @@ public class AddItemCommandTest {
             assertEquals("TestItem", item.getItemName());
             assertEquals(10.0, item.getPrice());
             assertEquals(2, item.getQuantity());
-            assertFalse(item.isTax());
+            assertFalse(item.hasTax());
             assertFalse(addItemCommand.isExit());
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";

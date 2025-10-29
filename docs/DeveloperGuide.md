@@ -18,28 +18,20 @@
       - [Example (full workflow)](#example-full-workflow)
       - [Developer notes (implementation)](#developer-notes-implementation)
       - [Implementation considerations \& TODOs](#implementation-considerations--todos)
-    - [next feature 2](#next-feature-2)
-    - [next feature 3](#next-feature-3)
+    - [hasTax \& tax-handling feature](#hastax--tax-handling-feature)
+      - [User-facing behaviour](#user-facing-behaviour-1)
+      - [Error cases and expected behaviour](#error-cases-and-expected-behaviour)
+  - [Notes](#notes)
   - [Product scope](#product-scope)
     - [Target user profile](#target-user-profile)
     - [Value proposition](#value-proposition)
     - [User Stories](#user-stories)
-  - [Logging](#logging)
-    - [Configuration Files](#configuration-files)
-      - [1. `src/main/resources/logging.properties`](#1-srcmainresourcesloggingproperties)
-      - [2. `src/main/java/seedu/quotely/util/LoggerConfig.java`](#2-srcmainjavaseeduquotelyutilloggerconfigjava)
-    - [How to Use Logging in Your Classes](#how-to-use-logging-in-your-classes)
-      - [1. Import and Get Logger](#1-import-and-get-logger)
-      - [2. Logging Levels (from most to least verbose)](#2-logging-levels-from-most-to-least-verbose)
   - [Non-Functional Requirements](#non-functional-requirements)
   - [Glossary](#glossary)
   - [Instructions for manual testing](#instructions-for-manual-testing)
   - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 
 ## Acknowledgements
-
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well}
 
 ## Design
 
@@ -58,8 +50,8 @@ Main components of the Architecture
 The program work is done by the following main components:
 
 * `Parser`: Parse user CLI inputs
-* `Command`: Perform data mutation, UI navigation
-* `UI`: Print CLI text for user
+* `Command`: Perform data mutation, Ui navigation
+* `Ui`: Print CLI text for user
 * `Data`: Store quote and item data
 * `File storage`: to be implemented
 * `Util`: logger configuration
@@ -74,11 +66,10 @@ User input and corresponding work done by the program is run in a loop using the
 
 Loop sequence explanation:
 
-1) User input is fetched from `UI`
-2) input is fed into `Parser`
-3) `Parser` determines appropriate `Command` type to create. Returns new command object with appropriate parameters set
-   to Quotely
-4) Quotely runs the execute method in `Commmand`
+1. User input is fetched from `Ui`
+2. input is fed into `Parser`
+3. `Parser` determines appropriate `Command` type to create. Returns new command object with appropriate parameters set to Quotely
+4. Quotely runs the execute method in `Command`
 
 The above process runs until `Exit` is read from the user.
 
@@ -98,14 +89,10 @@ c/joe" as an example.
 How the `Parser` component works:
 
 1. When user inputs "add n/01 c/joe", the input is passed from Ui Component to Parser Component.
-2. `Parser` checks for valid command format and runs method to parse command based on command keyword, which is "add"
-   for this example.
+2. `Parser` checks for valid command format and runs method to parse command based on command keyword, which is "add" for this example.
 3. The respective method is run to parse the command and set up attributes for the corresponding Command type
-4. This results in a `Command` object created (more precisely, an object of one of its subclasses e.g., AddQuoteCommand)
-   which is executed in Quotely.
-5. The command can communicate with `Data` when it is executed (e.g. to add a quote). Note that although this is shown
-   as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the
-   command object and the Data) to achieve.
+4. This results in a `Command` object created (more precisely, an object of one of its subclasses e.g., AddQuoteCommand) which is executed in Quotely.
+5. The command can communicate with `Data` when it is executed (e.g. to add a quote). Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the Data) to achieve.
 6. The result of the `Parser` execution is encapsulated as a Command object which is returned back from `Parser`.
 
 ### Command Component
@@ -132,7 +119,7 @@ How the `Command` component works:
 
 !['Ui diagram'](./src/UiDiagram.png)
 
-The `UI` component consists of
+The `Ui` component consists of
 
 * a Singleton to ensure only one instance handles all console input and output.
 * is responsible for printing all text to the command line, from welcome messages `showWelcome()` and separators `showLine()` to errors `showError()`
@@ -177,15 +164,15 @@ This section describes some noteworthy details on how certain features are imple
 The QuotelyState feature is a helper for user interaction, implemented using a simple class. The application and
 explanation is covered below.
 
-The purpose of this feature is to fix the anticipated issue of user confusion by facilitating UI elements for the user
+The purpose of this feature is to fix the anticipated issue of user confusion by facilitating Ui elements for the user
 to navigate between the `main menu` and`quote` state.
 
-* In previous versions, if the user is working on `quote1`, there is no UI element for the user to reference that the
+* In previous versions, if the user is working on `quote1`, there is no Ui element for the user to reference that the
   current situation is indeed "editing quote 1".
 * The user may be in no quotes, or a different quote.
 * This may become extremely messy and almost unusable if the number of quotes are large.
 
-To solve this problem, QuotelyState was introduced to allow additional UI elements for the user to distinguish the
+To solve this problem, QuotelyState was introduced to allow additional Ui elements for the user to distinguish the
 current situation.
 
 * If the user is not editing any quote, it is considered as `main menu state`
@@ -213,12 +200,12 @@ The commands depend on QuotelyState in this manner:
 
 ### export feature
 
-The export feature generates a PDF invoice/quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
+The export feature generates a PDF quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
 
 #### Overview
 
 - Triggered by the `export` command. When executed, the application delegates formatting and file creation to the PDF writer component.
-- Current implementation writes a file named `invoice.pdf` to the working directory (see implementation notes below).
+- Current implementation writes a file named `quotation.pdf` to the working directory (see implementation notes below).
 
 #### User-facing behaviour
 
@@ -234,7 +221,7 @@ export
 export n/QUOTE_NAME
 ```
 
-- On success the UI prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
+- On success the Ui prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `quotation.pdf` is created/overwritten in the directory where the program was started.
 
 #### Example (full workflow)
 
@@ -260,29 +247,29 @@ The sequence diagram below illustrates the steps taken when the `export` command
 
 !['export-feature'](./src/ExportFeature.png)
 
-When the export completes, the application generates a PDF file named `invoice.pdf` in the working directory. The PDF uses an invoice-style layout that includes header information and an itemised table showing each item's description, quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total).
+When the export completes, the application generates a PDF file named `quotation.pdf` in the working directory. The PDF uses an quotation-style layout that includes header information and an itemised table showing each item's description, quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total).
 
 Preview of the generated PDF:
 
-!['invoice'](./src/invoice.png)
+!['quote'](./src/quote.png)
 
 #### Developer notes (implementation)
 
 - Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
-- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `invoice.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
+- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `quotation.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralized `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
 
 - Make output filename configurable (e.g., `export f/FILE.pdf`) so users can choose a name/location.
-- Add a UI confirmation with the full path of the created file.
+- Add a Ui confirmation with the full path of the created file.
 - Improve templates and styling (header/footer, company logo, multiple page handling).
 - Add tests around the command parsing and delegate behaviour; avoid asserting file contents in unit tests (use integration tests or file-existence checks).
 
 
 
-### isTax & tax-handling feature  
-The isTax feature checks whether an item in a quote is taxed, and the tax-handling 
+### hasTax & tax-handling feature  
+The hasTax feature checks whether an item in a quote is taxed, and the tax-handling 
 features enables items in a quote to have an individual tax
 rate assigned to them.  
 
@@ -296,7 +283,7 @@ accounted for in the calculation of the total cost.
 Therefore, to solve this problem, a `taxRate` attribute of `double` type was added to the `Item` class, and users now had the choice to either 
 add a tax rate to their item anywhere from `0.00%` to `100.00%`, or have it at `0.00%` by default if not stated.
 
-Furthermore, an `isTax` method has been added to the `Item` class as well that returns `true` if the Item has a tax rate higher than `0.00%`, and `false` otherwise.  
+Furthermore, an `hasTax` method has been added to the `Item` class as well that returns `true` if the Item has a tax rate higher than `0.00%`, and `false` otherwise.  
 
 So far, only the `add` command modifies the `taxRate` attribute of an Item, and the `total` command depends on the value
 of `taxRate` in calculating the total cost of a quote.
@@ -326,6 +313,67 @@ shown in the example right above (zoom in if necessary):
 
 This features allows to calculate installments based on the Principal (amount of loan), interest rate and number of payments.
 
+#### Error cases and expected behaviour
+
+Below are common invalid inputs the parser and validation layers guard against, with examples and the expected outcome. The `Parser` performs structural validation (right flags, required fields) and numeric parsing; numeric/semantic checks also throw `QuotelyException` with `ErrorType.INVALID_NUMBER_FORMAT` when numbers are malformed or out of valid range.
+
+- Missing item name (flag `i/` omitted)
+
+```
+add p/45.00 q/10
+```
+
+Expected: Parser fails with WRONG_COMMAND_FORMAT; user is prompted with the correct format: `add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY [t/TAX_RATE]`.
+
+- Non-numeric price
+
+```
+add i/Chair p/abc q/10
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT (price parse error). The UI should display an error explaining price must be a decimal number.
+
+- Negative price
+
+```
+add i/Chair p/-5.00 q/2
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT (price must be non-negative). The UI should explain price cannot be negative.
+
+- Non-numeric or negative quantity
+
+```
+add i/Chair p/45.00 q/xyz
+add i/Chair p/45.00 q/-2
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT. Quantities must be positive integers.
+
+- Invalid tax rate (non-numeric or out of range)
+
+```
+add i/Chair p/45.00 q/10 t/abc
+add i/Chair p/45.00 q/10 t/-1
+add i/Chair p/45.00 q/10 t/150
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT for non-numeric values or values outside the allowed range (e.g., <0 or >100). UI should instruct tax rate must be a percentage between 0 and 100.
+
+- Missing price or quantity flags
+
+```
+add i/Chair q/10
+add i/Chair p/45.00
+```
+
+Expected: Parser fails with WRONG_COMMAND_FORMAT; show the correct command format.
+
+Notes
+-----
+- These checks are implemented in `Parser.parseAddItemCommand(...)` and will raise `QuotelyException` with the appropriate `ErrorType`. Keep user-facing messages clear and prescriptive (show the expected format and which token is invalid).
+- For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the UI shows the intended help/error messages.
+
 ## Product scope
 
 ### Target user profile
@@ -351,7 +399,7 @@ chat.
 |---------|--------------------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------------------|
 | v1.0    | sales worker                                                             | add items to quote                              | keep track of items in the quote                                       | 
 | v1.0    | sales worker                                                             | delete item from quote                          | keep track of items in the quote and get rid of wrong or outdated info |
-| v1.0    | small online merchant that uses whatsapp and telegram to quote customers | generate invoices in text form                  | save time typing the full format                                       |
+| v1.0    | small online merchant that uses whatsapp and telegram to quote customers | generate quotes in text form                  | save time typing the full format                                       |
 | v1.0    | new user                                                                 | view my quotations and sales                    | have better oversight of my own work                                   |
 | v1.0    | sales worker                                                             | auto sum the total amount and calculate the tax | send a finished quote                                                  |
 | v2.0    | business owner or accountant                                             | set customised Tax rate for each item           | add non taxed items to quote                                           |
@@ -362,57 +410,6 @@ chat.
 | v2.1    | user or accountant                                                       | calculate installments                          | save time from manually calculating                                    |
 | v2.1    | user or accountant                                                       | perform currency conversions                    | quote internationally                                                  |
 | v2.1    | user                                                                     | have different PDF and text templates           | have different quotation formats                                       |
-
-## Logging
-
-We use the centralized logging configuration for the Quotely application.
-
-### Configuration Files
-
-#### 1. `src/main/resources/logging.properties`
-This file contains the global logging configuration:
-- Log levels for different packages/classes
-- File output settings (location, size, rotation)
-- Console output settings
-- Formatter settings
-
-#### 2. `src/main/java/seedu/quotely/util/LoggerConfig.java`
-Centralized logging utility class that:
-- Loads configuration from `logging.properties`
-- Provides fallback programmatic configuration
-- Manages logger instances
-- Allows runtime configuration changes
-
-### How to Use Logging in Your Classes
-
-#### 1. Import and Get Logger
-```java
-import seedu.quotely.util.LoggerConfig;
-import java.util.logging.Logger;
-
-public class YourClass {
-    private static final Logger logger = LoggerConfig.getLogger(YourClass.class);
-    
-    public void yourMethod() {
-        logger.info("This is an info message");
-        logger.fine("This is a debug message");
-        logger.warning("This is a warning");
-        logger.severe("This is an error");
-    }
-}
-```
-
-#### 2. Logging Levels (from most to least verbose)
-- `FINEST` - Most detailed tracing
-- `FINER` - Detailed tracing  
-- `FINE` - Debug information
-- `CONFIG` - Configuration messages
-- `INFO` - General information (default console level)
-- `WARNING` - Warning messages
-- `SEVERE` - Error messages
-
-For more detail refer to the [logging guide](./Logging.md).
-
 
 ## Non-Functional Requirements
 

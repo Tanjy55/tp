@@ -1,7 +1,10 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 package parser {
     class Parser {
-        {static} + parse(fullCommand: String, QuotelyState state, QuoteList quoteList): Command
+        {static} + parse(fullCommand: String, state: QuotelyState, quoteList: QuoteList): Command
     }
 }
 

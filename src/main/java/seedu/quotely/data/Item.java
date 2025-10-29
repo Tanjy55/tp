@@ -41,7 +41,7 @@ public class Item {
         this.quantity = quantity;
     }
 
-    public boolean isTax() {
+    public boolean hasTax() {
         return taxRate > 0;
     }
 
