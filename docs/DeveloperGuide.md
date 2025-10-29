@@ -266,7 +266,48 @@ Preview of the generated PDF:
 
 
 
-### next feature 2
+### isTax & tax-handling feature  
+The isTax feature checks whether an item in a quote is taxed, and the tax-handling 
+features enables items in a quote to have an individual tax
+rate assigned to them.  
+
+The purpose of this feature is to give more functionality to users in scenarios where the item they are adding 
+has a certain tax rate assigned to them, and allow them to include the tax in calculations of the total cost of a quote. 
+
+In previous versions, there was no tax field for items, which overlooked cases where a user would have 
+to input an item into a list that has a tax rate. Therefore, only the individual cost of an item before tax was 
+accounted for in the calculation of the total cost.  
+
+Therefore, to solve this problem, a `taxRate` attribute of `double` type was added to the `Item` class, and users now had the choice to either 
+add a tax rate to their item anywhere from `0.00%` to `100.00%`, or have it at `0.00%` by default if not stated.
+
+Furthermore, an `isTax` method has been added to the `Item` class as well that returns `true` if the Item has a tax rate higher than `0.00%`, and `false` otherwise.  
+
+So far, only the `add` command modifies the `taxRate` attribute of an Item, and the `total` command depends on the value
+of `taxRate` in calculating the total cost of a quote.
+  
+#### User-facing behaviour  
+
+- If a user is already inside a quote and wants to add an item without any tax, they can do so as before, 
+without having to specify the tax rate:   
+
+```
+add i/Chair p/45.00 q/10
+```
+This sets `taxRate` to its default value `0.00%`.
+
+- Now, if the user wants to add an item with a certain tax rate, e.g. `5.00%`, they'd have to specify it in the add
+command as such:
+
+```
+add i/Chair p/45.00 q/10 t/5.00
+```
+This sets `taxRate` to a value of `5.00%`.
+
+The sequence diagram below shows what happens when a user executes the `add` command with the tax rate of `5.00%` as
+shown in the example right above (zoom in if necessary):
+
+!['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
 
 ### next feature 3
 

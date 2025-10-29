@@ -1,0 +1,88 @@
+@startuml
+actor Actor
+participant Quotely
+participant QuotelyState
+participant Parser
+participant QuoteList
+participant AddQuoteCommand
+participant AddItemCommand
+participant Quote
+
+
+
+Actor -> Quotely: main()
+
+Quotely -> QuotelyState **: getInstance()
+activate QuotelyState #FFBBBB
+return state:QuotelyState
+deactivate QuotelyState
+
+Actor -> Quotely ++ : "quote n/01 c/Tom"
+activate Quotely #FFBBBB
+
+Quotely -> Parser ++ : Parse "quote n/01 c/Tom"
+activate Parser #FFBBBB
+
+Parser -> QuotelyState ++ : isInsideQuote()
+activate QuotelyState #FFBBBB
+return: false
+deactivate QuotelyState
+
+Parser -> AddQuoteCommand **: new AddQuoteCommand("01", "Tom")
+
+Parser --> Quotely: command:AddQuoteCommand
+deactivate Parser
+
+Quotely -> AddQuoteCommand: execute(ui, quoteList, companyName, state)
+activate AddQuoteCommand
+
+AddQuoteCommand -> Quote **: new Quote("01", "Tom")
+AddQuoteCommand -> QuoteList ++ : addQuote(Quote("01"))
+QuoteList --> AddQuoteCommand:
+
+AddQuoteCommand -> QuotelyState: setInsideQuote(Quote("01"))
+
+AddQuoteCommand --> Quotely:
+deactivate AddQuoteCommand
+
+Quotely --> Actor: Success message (Quote added)
+deactivate Quotely
+
+
+Actor -> Quotely ++ : "add i/Chair p/45.00 q/10 t/5.00"
+activate Quotely #FFBBBB
+
+Quotely -> Parser ++ : Parse "add i/Chair p/45.00 q/10 t/5.00"
+activate Parser #FFBBBB
+
+Parser -> Parser: parseAddItemCommand()
+
+Parser -> Parser: getQuoteFromStateAndName(null, state, quoteList)
+activate Parser #lightblue
+Parser -> QuotelyState ++ : getQuoteReference()
+return: Quote("01")
+deactivate QuotelyState
+Parser --> Parser: Quote("01")
+deactivate Parser #lightblue
+
+Parser -> AddItemCommand **: new AddItemCommand("Chair", Quote("01"), 45.00, 10, 5.00)
+
+Parser --> Quotely: command:AddItemCommand
+deactivate Parser
+
+Quotely -> AddItemCommand: execute(ui, quoteList, companyName, state)
+activate AddItemCommand
+
+AddItemCommand -> Quote: addItem("Chair", 45.00, 10, 5.00)
+activate Quote
+Quote -> Item **: new Item(...)
+Quote --> AddItemCommand:
+deactivate Quote
+
+AddItemCommand --> Quotely:
+deactivate AddItemCommand
+
+Quotely --> Actor: Success message (Item added)
+deactivate Quotely
+
+@enduml
