@@ -29,8 +29,8 @@ public class Parser {
     private static final String EXPORT_QUOTE_COMMAND_PATTERN = "n/(.*)";
     private static final String NAVIGATE_COMMAND_PATTERN = "n/(.*)";
     private static final String REGISTER_COMMAND_PATTERN = "c/(.*)";
-    private static final String ADD_ITEM_COMMAND_PATTERN
-            = "^i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?$";
+    private static final String ADD_ITEM_COMMAND_PATTERN = 
+        "^i/(.*?)\\s+(?:n/(.*?)\\s+)?p/(.*?)\\s+q/(.+?)(?:\\s+t/(.*))?$";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(\\S+)(?:\\s+n/(.*))?";
     private static final String CALCULATE_QUOTE_TOTAL_COMMAND_PATTERN = "n/(.*)";
 
@@ -46,8 +46,8 @@ public class Parser {
 
         logger.info("Parsing command: " + fullCommand);
         logger.fine("Current state - isInside quote: " + state.isInsideQuote() +
-            " QuoteReference: " + (state.getQuoteReference() != null ? 
-            state.getQuoteReference().toString() : "null"));
+                " QuoteReference: "
+                + (state.getQuoteReference() != null ? state.getQuoteReference().toString() : "null"));
 
         /*
          * edit parse method to allow command input depending on isInsideState
@@ -116,8 +116,8 @@ public class Parser {
             String quoteName = m.group(1).trim();
             String customerName = m.group(2).trim();
 
-            logger.info("Successfully parsed add quote command - Quote: '" 
-                + quoteName + "', Customer: '" + customerName + "'");
+            logger.info("Successfully parsed add quote command - Quote: '"
+                    + quoteName + "', Customer: '" + customerName + "'");
             return new AddQuoteCommand(quoteName, customerName);
         } else {
             logger.warning("Invalid format for add quote command: " + arguments);
@@ -131,7 +131,7 @@ public class Parser {
             throws QuotelyException {
         logger.fine("parseNavigateCommand called with arguments: " + arguments);
 
-        String targetName =  arguments.trim();
+        String targetName = arguments.trim();
         if (targetName.equals("main")) {
             return new NavigateCommand();
         }
@@ -153,8 +153,8 @@ public class Parser {
             return new NavigateCommand(targetQuote);
         } catch (QuotelyException e) {
             logger.warning("Failed to navigate to target with name: " + targetQuoteName);
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
-                "nav main OR nav n/QUOTE_NAME");
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                    "nav main OR nav n/QUOTE_NAME");
         }
     }
 
@@ -232,9 +232,9 @@ public class Parser {
             String quantityStr = m.group(4).trim();
             String taxRateStr = m.group(5) != null ? m.group(5).trim() : null;
 
-            logger.fine("Extracted - Item: '" + itemName + "', Quote: '" + 
-                (quoteName != null ? quoteName : "<none>") + "', Price: '" + 
-                priceStr + "', Quantity: '" + quantityStr + "'" + "', Tax: '" +
+            logger.fine("Extracted - Item: '" + itemName + "', Quote: '" +
+                    (quoteName != null ? quoteName : "<none>") + "', Price: '" +
+                    priceStr + "', Quantity: '" + quantityStr + "'" + "', Tax: '" +
                     (taxRateStr != null ? taxRateStr : "<none>"));
 
             double price;
@@ -278,7 +278,7 @@ public class Parser {
                     itemName + "' Price: " + price + " Quantity: " + quantity +
                     " Tax Rate: " + taxRate + " for quote: '" + quote.getQuoteName() + "'");
 
-            // parsing and UI for isTax to be implemented
+            // parsing and UI for hasTax to be implemented
 
             return new AddItemCommand(itemName, quote, price, quantity, taxRate);
         } else {

@@ -18,8 +18,10 @@
       - [Example (full workflow)](#example-full-workflow)
       - [Developer notes (implementation)](#developer-notes-implementation)
       - [Implementation considerations \& TODOs](#implementation-considerations--todos)
-    - [isTax \& tax-handling feature](#istax--tax-handling-feature)
+    - [hasTax \& tax-handling feature](#hastax--tax-handling-feature)
       - [User-facing behaviour](#user-facing-behaviour-1)
+      - [Error cases and expected behaviour](#error-cases-and-expected-behaviour)
+  - [Notes](#notes)
   - [Product scope](#product-scope)
     - [Target user profile](#target-user-profile)
     - [Value proposition](#value-proposition)
@@ -198,12 +200,12 @@ The commands depend on QuotelyState in this manner:
 
 ### export feature
 
-The export feature generates a PDF invoice/quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
+The export feature generates a PDF quotation from a Quote object. It is intended to let users produce a printable, shareable PDF of the quote they have composed in the CLI.
 
 #### Overview
 
 - Triggered by the `export` command. When executed, the application delegates formatting and file creation to the PDF writer component.
-- Current implementation writes a file named `invoice.pdf` to the working directory (see implementation notes below).
+- Current implementation writes a file named `quotation.pdf` to the working directory (see implementation notes below).
 
 #### User-facing behaviour
 
@@ -219,7 +221,7 @@ export
 export n/QUOTE_NAME
 ```
 
-- On success the Ui prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
+- On success the Ui prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `quotation.pdf` is created/overwritten in the directory where the program was started.
 
 #### Example (full workflow)
 
@@ -245,16 +247,16 @@ The sequence diagram below illustrates the steps taken when the `export` command
 
 !['export-feature'](./src/ExportFeature.png)
 
-When the export completes, the application generates a PDF file named `invoice.pdf` in the working directory. The PDF uses an invoice-style layout that includes header information and an itemised table showing each item's description, quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total).
+When the export completes, the application generates a PDF file named `quotation.pdf` in the working directory. The PDF uses an quotation-style layout that includes header information and an itemised table showing each item's description, quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total).
 
 Preview of the generated PDF:
 
-!['invoice'](./src/invoice.png)
+!['quote'](./src/quote.png)
 
 #### Developer notes (implementation)
 
 - Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
-- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `invoice.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
+- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `quotation.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralized `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
@@ -266,8 +268,8 @@ Preview of the generated PDF:
 
 
 
-### isTax & tax-handling feature  
-The isTax feature checks whether an item in a quote is taxed, and the tax-handling 
+### hasTax & tax-handling feature  
+The hasTax feature checks whether an item in a quote is taxed, and the tax-handling 
 features enables items in a quote to have an individual tax
 rate assigned to them.  
 
@@ -281,7 +283,7 @@ accounted for in the calculation of the total cost.
 Therefore, to solve this problem, a `taxRate` attribute of `double` type was added to the `Item` class, and users now had the choice to either 
 add a tax rate to their item anywhere from `0.00%` to `100.00%`, or have it at `0.00%` by default if not stated.
 
-Furthermore, an `isTax` method has been added to the `Item` class as well that returns `true` if the Item has a tax rate higher than `0.00%`, and `false` otherwise.  
+Furthermore, an `hasTax` method has been added to the `Item` class as well that returns `true` if the Item has a tax rate higher than `0.00%`, and `false` otherwise.  
 
 So far, only the `add` command modifies the `taxRate` attribute of an Item, and the `total` command depends on the value
 of `taxRate` in calculating the total cost of a quote.
@@ -311,6 +313,67 @@ shown in the example right above (zoom in if necessary):
 
 This features allows to calculate installments based on the Principal (amount of loan), interest rate and number of payments.
 
+#### Error cases and expected behaviour
+
+Below are common invalid inputs the parser and validation layers guard against, with examples and the expected outcome. The `Parser` performs structural validation (right flags, required fields) and numeric parsing; numeric/semantic checks also throw `QuotelyException` with `ErrorType.INVALID_NUMBER_FORMAT` when numbers are malformed or out of valid range.
+
+- Missing item name (flag `i/` omitted)
+
+```
+add p/45.00 q/10
+```
+
+Expected: Parser fails with WRONG_COMMAND_FORMAT; user is prompted with the correct format: `add i/ITEM_NAME [n/QUOTE_NAME] p/PRICE q/QUANTITY [t/TAX_RATE]`.
+
+- Non-numeric price
+
+```
+add i/Chair p/abc q/10
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT (price parse error). The UI should display an error explaining price must be a decimal number.
+
+- Negative price
+
+```
+add i/Chair p/-5.00 q/2
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT (price must be non-negative). The UI should explain price cannot be negative.
+
+- Non-numeric or negative quantity
+
+```
+add i/Chair p/45.00 q/xyz
+add i/Chair p/45.00 q/-2
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT. Quantities must be positive integers.
+
+- Invalid tax rate (non-numeric or out of range)
+
+```
+add i/Chair p/45.00 q/10 t/abc
+add i/Chair p/45.00 q/10 t/-1
+add i/Chair p/45.00 q/10 t/150
+```
+
+Expected: Parser throws INVALID_NUMBER_FORMAT for non-numeric values or values outside the allowed range (e.g., <0 or >100). UI should instruct tax rate must be a percentage between 0 and 100.
+
+- Missing price or quantity flags
+
+```
+add i/Chair q/10
+add i/Chair p/45.00
+```
+
+Expected: Parser fails with WRONG_COMMAND_FORMAT; show the correct command format.
+
+Notes
+-----
+- These checks are implemented in `Parser.parseAddItemCommand(...)` and will raise `QuotelyException` with the appropriate `ErrorType`. Keep user-facing messages clear and prescriptive (show the expected format and which token is invalid).
+- For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the UI shows the intended help/error messages.
+
 ## Product scope
 
 ### Target user profile
@@ -336,7 +399,7 @@ chat.
 |---------|--------------------------------------------------------------------------|-------------------------------------------------|------------------------------------------------------------------------|
 | v1.0    | sales worker                                                             | add items to quote                              | keep track of items in the quote                                       | 
 | v1.0    | sales worker                                                             | delete item from quote                          | keep track of items in the quote and get rid of wrong or outdated info |
-| v1.0    | small online merchant that uses whatsapp and telegram to quote customers | generate invoices in text form                  | save time typing the full format                                       |
+| v1.0    | small online merchant that uses whatsapp and telegram to quote customers | generate quotes in text form                  | save time typing the full format                                       |
 | v1.0    | new user                                                                 | view my quotations and sales                    | have better oversight of my own work                                   |
 | v1.0    | sales worker                                                             | auto sum the total amount and calculate the tax | send a finished quote                                                  |
 | v2.0    | business owner or accountant                                             | set customised Tax rate for each item           | add non taxed items to quote                                           |

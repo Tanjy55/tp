@@ -28,7 +28,6 @@ public class Quotely {
     private Storage storage;
     private JsonSerializer serializer;
 
-
     /**
      * Constructor for Quotely
      * 1) create new ui instance
@@ -49,7 +48,7 @@ public class Quotely {
      * - other state: inside quote
      * Additions for v2.0:
      * - local file saving
-     * - isTax attribute for Items
+     * - hasTax attribute for Items
      * - pdf export function
      * - user may show particular quote
      * - business address, customer address

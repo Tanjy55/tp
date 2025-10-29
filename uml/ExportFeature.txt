@@ -14,7 +14,7 @@ return
 Actor -> ":Quotely" ++ #Gold: add i/Wheels p/2.50 q/40
 return
 
-Actor -> ":Quotely": export
+Actor -> ":Quotely" ++ #Gold: export
 
 ":Quotely" -> ":Parser" ++ #DarkSalmon: parse()
 
@@ -29,6 +29,8 @@ return command:ExportQuoteCommand
 return writer:PDFWriter
 
 ":ExportQuoteCommand" -> ":PDFWriter" ++ #FFBBBB: writeQuoteToPDF(quote, companyName)
+return
+
 return
 
 return

@@ -20,8 +20,9 @@ public class CalculateTotalCommand extends Command {
     }
 
     /**
-     * Calculate total needs to be modified for isTax attribute
+     * Calculate total needs to be modified for hasTax attribute
      * - example: if item is taxable apply the multiplier, then sum
+     * 
      * @param ui
      * @param quoteList
      * @param companyName
@@ -30,9 +31,9 @@ public class CalculateTotalCommand extends Command {
      */
     @Override
     public void execute(Ui ui,
-                        QuoteList quoteList,
-                        CompanyName companyName,
-                        QuotelyState state) throws QuotelyException {
+            QuoteList quoteList,
+            CompanyName companyName,
+            QuotelyState state) throws QuotelyException {
 
         logger.fine("Executing CalculateTotalCommand");
         ui.showMessage(

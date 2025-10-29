@@ -34,42 +34,42 @@ public class PDFWriter {
 
     public void writeQuoteToPDF(Quote quote, CompanyName companyName) {
         // Invoice data
-        String invoiceNumber = "INV-1001";
+        String quotationNumber = "INV-1001";
         String customerName = "John Doe";
         String customerAddress = "123 Main Street, City, Country";
         List<Item> items = quote.getItems();
 
         try {
             Document document = new Document(PageSize.A4, 50, 50, 50, 50);
-            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("invoice.pdf"));
+            PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("quotation.pdf"));
             document.open();
 
-            // Add invoice title
+            // Add quotation title
             Font titleFont = new Font(Font.HELVETICA, 20, Font.BOLD);
-            Paragraph title = new Paragraph("INVOICE", titleFont);
+            Paragraph title = new Paragraph("QUOTATION", titleFont);
             title.setAlignment(Element.ALIGN_CENTER);
             document.add(title);
 
             document.add(Chunk.NEWLINE);
 
-            // Add invoice info
+            // Add quotation info
             Font infoFont = new Font(Font.HELVETICA, 12);
-            Paragraph invoiceInfo = new Paragraph("Invoice Number: " + invoiceNumber + "\n" + 
-                "Customer: " + customerName + "\n" + 
-                "Address: " + customerAddress, infoFont);
-            document.add(invoiceInfo);
+            Paragraph quotationInfo = new Paragraph("Invoice Number: " + quotationNumber + "\n" +
+                    "Customer: " + customerName + "\n" +
+                    "Address: " + customerAddress, infoFont);
+            document.add(quotationInfo);
 
             document.add(Chunk.NEWLINE);
 
             // Table header
             Font headFont = new Font(Font.HELVETICA, 12, Font.BOLD);
-            String[] headers = {"Description", "Unit Price", "Qty", "Taxed", "Amount"};
+            String[] headers = { "Description", "Unit Price", "Qty", "Taxed", "Amount" };
             int columnNumber = headers.length;
 
             // Add table for items
             PdfPTable table = new PdfPTable(columnNumber); // 5 columns
             table.setWidthPercentage(100);
-            table.setWidths(new float[]{4, 2, 1, 2, 2});
+            table.setWidths(new float[] { 4, 2, 1, 2, 2 });
 
             for (String h : headers) {
                 PdfPCell cell = new PdfPCell(new Phrase(h, headFont));
@@ -87,7 +87,7 @@ public class PDFWriter {
                 PdfPCell priceCell = new PdfPCell(new Phrase(String.format("%.2f", item.getPrice())));
                 priceCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table.addCell(priceCell);
-                
+
                 PdfPCell qtyCell = new PdfPCell(new Phrase(String.valueOf(item.getQuantity())));
                 qtyCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(qtyCell);
@@ -96,8 +96,8 @@ public class PDFWriter {
                 taxCell.setHorizontalAlignment(Element.ALIGN_CENTER);
                 table.addCell(taxCell);
 
-                PdfPCell totalCell = new PdfPCell(new Phrase(String.format("%.2f", 
-                    item.getItemTotalTax() + item.getItemTotalPriceWithoutTax())));
+                PdfPCell totalCell = new PdfPCell(new Phrase(String.format("%.2f",
+                        item.getItemTotalTax() + item.getItemTotalPriceWithoutTax())));
                 totalCell.setHorizontalAlignment(Element.ALIGN_RIGHT);
                 table.addCell(totalCell);
 
@@ -105,7 +105,6 @@ public class PDFWriter {
                 totalTax += item.getItemTotalTax();
             }
 
-            
             PdfPCell emptyCell = new PdfPCell(new Phrase(""));
             emptyCell.setColspan(columnNumber - 1);
             emptyCell.setBorder(Rectangle.NO_BORDER);

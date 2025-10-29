@@ -255,7 +255,7 @@ Total cost of quote quote 1 for c: 1023.4
 
 ### Export a quote: `export`
 
-Export a quote to a PDF file. The command uses the built-in PDF writer to format the quote into an invoice-like PDF and saves it as `invoice.pdf` in the current working directory.
+Export a quote to a PDF file. The command uses the built-in PDF writer to format the quote into an quote-like PDF and saves it as `quotation.pdf` in the current working directory.
 
 Command availability:
 - If you are currently inside a quote, you may run the command without arguments to export the current quote.
@@ -284,12 +284,12 @@ export n/quote_1
 ```
 
 **What happens:**
-- The application will generate a PDF file named `invoice.pdf` in the directory where the application was started.
-- The PDF will contain the invoice header, customer info and a table of items with subtotal, tax and total.
+- The application will generate a PDF file named `quotation.pdf` in the directory where the application was started.
+- The PDF will contain the quotataion header, customer info and a table of items with subtotal, tax and total.
 
 **Notes & troubleshooting:**
 - Ensure your quote contains at least one item; the PDF writer will iterate the items in the quote to populate the table.
-- The PDF writer uses a third-party PDF library and writes to `invoice.pdf` directly; if a file with that name already exists it will be overwritten.
+- The PDF writer uses a third-party PDF library and writes to `quotation.pdf` directly; if a file with that name already exists it will be overwritten.
 - If you need a different filename or destination, you can manually move/rename the generated PDF after export (or modify the writer implementation in `seedu.quotely.writer.PDFWriter`).
 
 

@@ -86,12 +86,12 @@ public class ItemTest {
     }
 
     @Test
-    void isTax_validInput_success() {
+    void hasTax_validInput_success() {
         Item item1 = new Item("test8", 8.0, 8, NO_TAX);
         Item item2 = new Item("test9", 8.0, 8, TEST_TAX_RATE);
         try {
-            assertFalse(item1.isTax());
-            assertTrue(item2.isTax());
+            assertFalse(item1.hasTax());
+            assertTrue(item2.hasTax());
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
         }
@@ -101,15 +101,15 @@ public class ItemTest {
     void setTax_validInput_success() {
         Item item = new Item("test10", 8.0, 8, NO_TAX);
         try {
-            assertFalse(item.isTax());
+            assertFalse(item.hasTax());
             assertEquals(NO_TAX, item.getTaxRate());
 
             item.setTax(TEST_TAX_RATE);
-            assertTrue(item.isTax());
+            assertTrue(item.hasTax());
             assertEquals(TEST_TAX_RATE, item.getTaxRate());
 
             item.setTax(NO_TAX);
-            assertFalse(item.isTax());
+            assertFalse(item.hasTax());
             assertEquals(NO_TAX, item.getTaxRate());
         } catch (Exception e) {
             assert false : "Exception should not be thrown";

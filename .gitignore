@@ -21,6 +21,7 @@ bin/
 text-ui-test/EXPECTED-UNIX.TXT
 
 .vscode/
+quotation.pdf
 invoice.pdf
 
 # Data
