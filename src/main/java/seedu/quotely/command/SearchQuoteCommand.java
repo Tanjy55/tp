@@ -8,6 +8,7 @@ import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.ui.Ui;
 import seedu.quotely.util.LoggerConfig;
 
+import java.util.ArrayList;
 import java.util.logging.Logger;
 
 public class SearchQuoteCommand extends Command {
@@ -27,14 +28,21 @@ public class SearchQuoteCommand extends Command {
         logger.fine(String.format("Executing SearchQuoteCommand for: %s", quoteName));
 
         try {
-            Quote quote = quoteList.getQuoteByName(quoteName);
+            ArrayList<Quote> searchFoundQuotes = quoteList.searchQuote(quoteName);
+            if (searchFoundQuotes.isEmpty()) {
+                ui.showMessage("No matching quote found");
+                logger.info("SearchQuoteCommand executed with no matching quote found");
+                return;
+            }
             //gst rate parameter is temporary value
-            ui.showQuote(companyName, quote, 0.00);
-            ui.showMessage("Successfully found quote with name: " + quoteName);
-            logger.info("SearchQuoteCommand executed and matching quote is shown to user");
+            for (Quote q : searchFoundQuotes) {
+                ui.showQuote(companyName, q, 0.00);
+                logger.fine("SearchQuoteCommand executed and matching quote is shown to user");
+            }
+            ui.showMessage("Successfully found quotes containing: " + quoteName);
+            logger.info("SearchQuoteCommand executed with matching quotes found");
         } catch (QuotelyException e) {
-            ui.showMessage("No matching quote found");
-            logger.info("SearchQuoteCommand executed with no matching quote found");
+            logger.severe("SearchQuoteCommand executed with unexpected exception: " + e.getMessage());
         }
     }
 }
