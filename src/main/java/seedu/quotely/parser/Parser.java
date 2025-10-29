@@ -4,6 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.logging.Logger;
 
+import seedu.quotely.command.SearchQuoteCommand;
 import seedu.quotely.exception.QuotelyException;
 import seedu.quotely.command.Command;
 import seedu.quotely.command.ExitCommand;
@@ -91,6 +92,9 @@ public class Parser {
         case "nav":
             // available in all states, but need to specify target location e.g. 'main' or quoteName
             return parseNavigateCommand(arguments, state, quoteList);
+        case "search":
+            // available in main menu only
+            return parseSearchCommand(arguments, state);
         case "exit":
             // available in all state, for now
             return new ExitCommand();
@@ -156,7 +160,7 @@ public class Parser {
     }
 
     private static Command parseDeleteQuoteCommand(String arguments, QuotelyState state,
-            QuoteList quoteList) throws QuotelyException {
+                                                   QuoteList quoteList) throws QuotelyException {
         logger.fine("parseDeleteQuoteCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(QUOTENAME_ARG_PATTERN);
         Matcher m = p.matcher(arguments);
@@ -176,7 +180,7 @@ public class Parser {
     }
 
     private static Command parseExportCommand(String arguments, QuotelyState state,
-            QuoteList quoteList) throws QuotelyException {
+                                              QuoteList quoteList) throws QuotelyException {
         logger.fine("parseExportCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(EXPORT_QUOTENAME_ARG_PATTERN);
         Matcher m = p.matcher(arguments);
@@ -201,8 +205,8 @@ public class Parser {
             return new seedu.quotely.command.ExportQuoteCommand(quote, filename);
         } catch (QuotelyException e) {
             logger.warning("Failed to find quote for export with name: " + quoteName);
-            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT, 
-                "export [n/QUOTE_NAME] [f/FILENAME]");
+            throw new QuotelyException(QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                    "export [n/QUOTE_NAME] [f/FILENAME]");
         }
     }
 
@@ -224,7 +228,7 @@ public class Parser {
     }
 
     private static Command parseAddItemCommand(String arguments,
-            QuotelyState state, QuoteList quoteList) throws QuotelyException {
+                                               QuotelyState state, QuoteList quoteList) throws QuotelyException {
         logger.fine("parseAddItemCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(ADD_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
@@ -298,7 +302,7 @@ public class Parser {
     }
 
     private static Command parseDeleteItemCommand(String arguments, QuotelyState state,
-            QuoteList quoteList) throws QuotelyException {
+                                                  QuoteList quoteList) throws QuotelyException {
         logger.fine("parseDeleteItemCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(DELETE_ITEM_COMMAND_PATTERN);
         Matcher m = p.matcher(arguments);
@@ -327,7 +331,7 @@ public class Parser {
     }
 
     private static Command parseCalculateTotalCommand(String arguments,
-            QuotelyState state, QuoteList quoteList) throws QuotelyException {
+                                                      QuotelyState state, QuoteList quoteList) throws QuotelyException {
         logger.fine("parseCalculateTotalCommand called with arguments: " + arguments);
         Pattern p = Pattern.compile(QUOTENAME_ARG_PATTERN);
         Matcher m = p.matcher(arguments);
@@ -359,7 +363,7 @@ public class Parser {
     }
 
     private static Quote getQuoteFromStateAndName(String quoteName,
-            QuotelyState state, QuoteList quoteList) throws QuotelyException {
+                                                  QuotelyState state, QuoteList quoteList) throws QuotelyException {
         // Precondition assertions
         assert state != null : "QuotelyState cannot be null";
         assert quoteList != null : "QuoteList cannot be null";
@@ -375,6 +379,29 @@ public class Parser {
         } else {
             logger.fine("Using current quote from state");
             return state.getQuoteReference();
+        }
+    }
+
+    private static Command parseSearchCommand(String arguments, QuotelyState state) throws QuotelyException {
+        logger.fine("parseSearchCommand called");
+        String quoteName;
+
+        Pattern p = Pattern.compile(QUOTENAME_ARG_PATTERN);
+        Matcher m = p.matcher(arguments);
+
+        if (m.find()) {
+            quoteName = m.group(1).trim();
+            if (state.isInsideQuote()) {
+                logger.warning("Attempted to use n/QUOTE_NAME while inside a quote");
+                throw new QuotelyException(QuotelyException.ErrorType.INVALID_STATE);
+            }
+            logger.info("Successfully parsed search quote command");
+            return new SearchQuoteCommand(quoteName);
+        } else {
+            logger.warning("Invalid format for search item command: " + arguments);
+            throw new QuotelyException(
+                    QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
+                    "search n/QUOTE_NAME");
         }
     }
 }
