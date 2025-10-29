@@ -18,28 +18,18 @@
       - [Example (full workflow)](#example-full-workflow)
       - [Developer notes (implementation)](#developer-notes-implementation)
       - [Implementation considerations \& TODOs](#implementation-considerations--todos)
-    - [next feature 2](#next-feature-2)
-    - [next feature 3](#next-feature-3)
+    - [isTax \& tax-handling feature](#istax--tax-handling-feature)
+      - [User-facing behaviour](#user-facing-behaviour-1)
   - [Product scope](#product-scope)
     - [Target user profile](#target-user-profile)
     - [Value proposition](#value-proposition)
     - [User Stories](#user-stories)
-  - [Logging](#logging)
-    - [Configuration Files](#configuration-files)
-      - [1. `src/main/resources/logging.properties`](#1-srcmainresourcesloggingproperties)
-      - [2. `src/main/java/seedu/quotely/util/LoggerConfig.java`](#2-srcmainjavaseeduquotelyutilloggerconfigjava)
-    - [How to Use Logging in Your Classes](#how-to-use-logging-in-your-classes)
-      - [1. Import and Get Logger](#1-import-and-get-logger)
-      - [2. Logging Levels (from most to least verbose)](#2-logging-levels-from-most-to-least-verbose)
   - [Non-Functional Requirements](#non-functional-requirements)
   - [Glossary](#glossary)
   - [Instructions for manual testing](#instructions-for-manual-testing)
   - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 
 ## Acknowledgements
-
-{list here sources of all reused/adapted ideas, code, documentation, and third-party libraries -- include links to the
-original source as well}
 
 ## Design
 
@@ -58,8 +48,8 @@ Main components of the Architecture
 The program work is done by the following main components:
 
 * `Parser`: Parse user CLI inputs
-* `Command`: Perform data mutation, UI navigation
-* `UI`: Print CLI text for user
+* `Command`: Perform data mutation, Ui navigation
+* `Ui`: Print CLI text for user
 * `Data`: Store quote and item data
 * `File storage`: to be implemented
 * `Util`: logger configuration
@@ -74,11 +64,10 @@ User input and corresponding work done by the program is run in a loop using the
 
 Loop sequence explanation:
 
-1) User input is fetched from `UI`
-2) input is fed into `Parser`
-3) `Parser` determines appropriate `Command` type to create. Returns new command object with appropriate parameters set
-   to Quotely
-4) Quotely runs the execute method in `Commmand`
+1. User input is fetched from `Ui`
+2. input is fed into `Parser`
+3. `Parser` determines appropriate `Command` type to create. Returns new command object with appropriate parameters set to Quotely
+4. Quotely runs the execute method in `Command`
 
 The above process runs until `Exit` is read from the user.
 
@@ -98,14 +87,10 @@ c/joe" as an example.
 How the `Parser` component works:
 
 1. When user inputs "add n/01 c/joe", the input is passed from Ui Component to Parser Component.
-2. `Parser` checks for valid command format and runs method to parse command based on command keyword, which is "add"
-   for this example.
+2. `Parser` checks for valid command format and runs method to parse command based on command keyword, which is "add" for this example.
 3. The respective method is run to parse the command and set up attributes for the corresponding Command type
-4. This results in a `Command` object created (more precisely, an object of one of its subclasses e.g., AddQuoteCommand)
-   which is executed in Quotely.
-5. The command can communicate with `Data` when it is executed (e.g. to add a quote). Note that although this is shown
-   as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the
-   command object and the Data) to achieve.
+4. This results in a `Command` object created (more precisely, an object of one of its subclasses e.g., AddQuoteCommand) which is executed in Quotely.
+5. The command can communicate with `Data` when it is executed (e.g. to add a quote). Note that although this is shown as a single step in the diagram above (for simplicity), in the code it can take several interactions (between the command object and the Data) to achieve.
 6. The result of the `Parser` execution is encapsulated as a Command object which is returned back from `Parser`.
 
 ### Command Component
@@ -132,7 +117,7 @@ How the `Command` component works:
 
 !['Ui diagram'](./src/UiDiagram.png)
 
-The `UI` component consists of
+The `Ui` component consists of
 
 * a Singleton to ensure only one instance handles all console input and output.
 * is responsible for printing all text to the command line, from welcome messages `showWelcome()` and separators `showLine()` to errors `showError()`
@@ -177,15 +162,15 @@ This section describes some noteworthy details on how certain features are imple
 The QuotelyState feature is a helper for user interaction, implemented using a simple class. The application and
 explanation is covered below.
 
-The purpose of this feature is to fix the anticipated issue of user confusion by facilitating UI elements for the user
+The purpose of this feature is to fix the anticipated issue of user confusion by facilitating Ui elements for the user
 to navigate between the `main menu` and`quote` state.
 
-* In previous versions, if the user is working on `quote1`, there is no UI element for the user to reference that the
+* In previous versions, if the user is working on `quote1`, there is no Ui element for the user to reference that the
   current situation is indeed "editing quote 1".
 * The user may be in no quotes, or a different quote.
 * This may become extremely messy and almost unusable if the number of quotes are large.
 
-To solve this problem, QuotelyState was introduced to allow additional UI elements for the user to distinguish the
+To solve this problem, QuotelyState was introduced to allow additional Ui elements for the user to distinguish the
 current situation.
 
 * If the user is not editing any quote, it is considered as `main menu state`
@@ -234,7 +219,7 @@ export
 export n/QUOTE_NAME
 ```
 
-- On success the UI prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
+- On success the Ui prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `invoice.pdf` is created/overwritten in the directory where the program was started.
 
 #### Example (full workflow)
 
@@ -275,7 +260,7 @@ Preview of the generated PDF:
 #### Implementation considerations & TODOs
 
 - Make output filename configurable (e.g., `export f/FILE.pdf`) so users can choose a name/location.
-- Add a UI confirmation with the full path of the created file.
+- Add a Ui confirmation with the full path of the created file.
 - Improve templates and styling (header/footer, company logo, multiple page handling).
 - Add tests around the command parsing and delegate behaviour; avoid asserting file contents in unit tests (use integration tests or file-existence checks).
 
@@ -362,57 +347,6 @@ chat.
 | v2.1    | user or accountant                                                       | calculate installments                          | save time from manually calculating                                    |
 | v2.1    | user or accountant                                                       | perform currency conversions                    | quote internationally                                                  |
 | v2.1    | user                                                                     | have different PDF and text templates           | have different quotation formats                                       |
-
-## Logging
-
-We use the centralized logging configuration for the Quotely application.
-
-### Configuration Files
-
-#### 1. `src/main/resources/logging.properties`
-This file contains the global logging configuration:
-- Log levels for different packages/classes
-- File output settings (location, size, rotation)
-- Console output settings
-- Formatter settings
-
-#### 2. `src/main/java/seedu/quotely/util/LoggerConfig.java`
-Centralized logging utility class that:
-- Loads configuration from `logging.properties`
-- Provides fallback programmatic configuration
-- Manages logger instances
-- Allows runtime configuration changes
-
-### How to Use Logging in Your Classes
-
-#### 1. Import and Get Logger
-```java
-import seedu.quotely.util.LoggerConfig;
-import java.util.logging.Logger;
-
-public class YourClass {
-    private static final Logger logger = LoggerConfig.getLogger(YourClass.class);
-    
-    public void yourMethod() {
-        logger.info("This is an info message");
-        logger.fine("This is a debug message");
-        logger.warning("This is a warning");
-        logger.severe("This is an error");
-    }
-}
-```
-
-#### 2. Logging Levels (from most to least verbose)
-- `FINEST` - Most detailed tracing
-- `FINER` - Detailed tracing  
-- `FINE` - Debug information
-- `CONFIG` - Configuration messages
-- `INFO` - General information (default console level)
-- `WARNING` - Warning messages
-- `SEVERE` - Error messages
-
-For more detail refer to the [logging guide](./Logging.md).
-
 
 ## Non-Functional Requirements
 
