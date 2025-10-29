@@ -18,15 +18,15 @@ Actor -> ":Quotely": export
 
 ":Quotely" -> ":Parser" ++ #DarkSalmon: parse()
 
-":Parser" -> ":ExportQuoteCommand" **: new ":ExportQuoteCommand"(quote: Quote)
+":Parser" -> ":ExportQuoteCommand" **: new ExportQuoteCommand(quote: Quote)
 activate ":ExportQuoteCommand" #Green
-return command: ":ExportQuoteCommand"
+return command:ExportQuoteCommand
 
-return command: ":ExportQuoteCommand"
+return command:ExportQuoteCommand
 
 ":Quotely" -> ":ExportQuoteCommand" ++ #Green: execute(companyName: CompanyName)
 ":ExportQuoteCommand" -> ":PDFWriter" ++ #FFBBBB: getInstance()
-return writer: ":PDFWriter"
+return writer:PDFWriter
 
 ":ExportQuoteCommand" -> ":PDFWriter" ++ #FFBBBB: writeQuoteToPDF(quote, companyName)
 return

@@ -9,17 +9,17 @@ Actor -> ":Quotely": main()
 
 ":Quotely" -> ":QuotelyState" **: getInstance()
 activate ":QuotelyState" #FFBBBB
-return state:":QuotelyState"
+return state:QuotelyState
 deactivate ":QuotelyState"
 
 Actor -> ":Quotely" ++ : "add n/01 c/Tom"
 activate ":Quotely" #FFBBBB
 
-":Quotely" -> ":Parser" ++ : Parse "add n/01 c/Tom"
+":Quotely" -> ":Parser" ++ : parse("add n/01 c/Tom")
 activate ":Parser" #FFBBBB
 ":Parser" -> ":QuotelyState" ++ : isInsideQuote()
 activate ":QuotelyState" #FFBBBB
-return: isInsideQuote
+return isInsideQuote:boolean
 deactivate ":QuotelyState"
 return command:AddQuoteCommand
 deactivate ":Parser"

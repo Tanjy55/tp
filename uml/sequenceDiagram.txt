@@ -6,11 +6,11 @@ Actor -> ":Quotely": main()
 
 ":Quotely" -> ":Ui" **: getInstance()
 activate ":Ui" #FFBBBB
-return ui":Ui"
+return ui:Ui
 
 ":Quotely" -> ":Parser" **: getInstance()
 activate ":Parser" #DarkSalmon
-return: parser":Parser"
+return parser:Parser
 
 Actor -> ":Quotely" ++ #Gold: run()
 
@@ -24,9 +24,9 @@ loop !isExit
 
     ":Parser" -> ":Command" **: new Command()
     activate ":Command" #Green
-    return command":Command"
+    return command:Command
 
-    return: command":Command"
+    return command:Command
 
     ":Quotely" -> ":Command" ++ #Green: execute()
     return
