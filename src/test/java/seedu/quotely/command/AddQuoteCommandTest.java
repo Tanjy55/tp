@@ -42,7 +42,7 @@ public class AddQuoteCommandTest {
             AddQuoteCommand addQuoteCommand1 = new AddQuoteCommand("TestQuote", "TestCustomer");
             addQuoteCommand1.execute(ui, quoteList, companyName, state);
         } catch (QuotelyException e) {
-            assert false : "Execution should have failed due to duplicate quote name.";
+            assert false : "Execution should not fail.";
         }
         state.setOutsideQuote();
         assertThrows(QuotelyException.class, () -> {
