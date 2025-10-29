@@ -49,12 +49,12 @@ Main components of the Architecture
 
 The program work is done by the following main components:
 
-* `Parser`: Parse user CLI inputs
-* `Command`: Perform data mutation, Ui navigation
-* `Ui`: Print CLI text for user
-* `Data`: Store quote and item data
-* `File storage`: to be implemented
-* `Util`: logger configuration
+* `Parser`: Parse user CLI inputs.
+* `Command`: Perform data mutation, Ui navigation.
+* `Ui`: Print CLI text for user.
+* `Data`: Store quote and item data.
+* `File storage`: Handle persistence of application data.
+* `Util`: Logger configuration
 
 Component interaction is modelled using a sequence diagram for the `run()` method in Quotely, where the bulk of program
 execution occurs.
@@ -151,7 +151,33 @@ The `Storage` component,
 * saves the `QuoteList` back to the JSON file after each successful command
 * comprised of a Storage class (for raw file I/O) and a JsonSerializer (for object-to-JSON conversion)
 
+The JSON storage format used by the `Storage` component (persisted in `data/quotely.json`) is shown below.
+Each quote object contains `quoteName`, `customerName`, and an `items` array; each item object includes `itemName`, `price`, `quantity`, and `taxRate`.
 
+```
+{
+  "quotes": [
+    {
+      "quoteName": "quote 1",
+      "customerName": "John Doe",
+      "items": [
+        {
+          "itemName": "book",
+          "price": 100.0,
+          "quantity": 100,
+          "taxRate": 0.0
+        },
+        {
+          "itemName": "pencil",
+          "price": 13.2,
+          "quantity": 10,
+          "taxRate": 1.2
+        }
+      ]
+    }
+  ]
+}
+```
 
 ### PDF export Component
 
@@ -205,7 +231,8 @@ The export feature generates a PDF quotation from a Quote object. It is intended
 #### Overview
 
 - Triggered by the `export` command. When executed, the application delegates formatting and file creation to the PDF writer component.
-- Current implementation writes a file named `quotation.pdf` to the working directory (see implementation notes below).
+- Current implementation writes a file named `invoice.pdf` to the working directory (see implementation notes below).
+
 
 #### User-facing behaviour
 
@@ -221,7 +248,7 @@ export
 export n/QUOTE_NAME
 ```
 
-- On success the Ui prints a confirmation message (e.g. "Exporting quote: <QUOTE_NAME>") and `quotation.pdf` is created/overwritten in the directory where the program was started.
+- The user may explicitly set the output file name with `f/FILE_NAME`. When provided the writer will use that base name and append the `.pdf` extension if missing. Flags may be supplied in any order (for example `export f/Offer n/quote_1` or `export n/quote_1 f/Offer`).
 
 #### Example (full workflow)
 
@@ -255,14 +282,14 @@ Preview of the generated PDF:
 
 #### Developer notes (implementation)
 
-- Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
-- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName)` formats and writes `quotation.pdf`. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
+- Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object). The command accepts an optional filename parameter and passes it to the writer. See `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
+- Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method `writeQuoteToPDF(Quote, CompanyName, String filename)` accepts a filename base (the method will append `.pdf`) and writes the file into the current working directory. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralized `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
 
-- Make output filename configurable (e.g., `export f/FILE.pdf`) so users can choose a name/location.
-- Add a Ui confirmation with the full path of the created file.
+- Output filename is supported via `f/FILE_NAME` (the CLI accepts an explicit filename and the writer appends `.pdf` if needed). Consider sanitising the filename (remove path traversal characters), supporting explicit paths, and adding collision-avoidance behaviour.
+- Add a Ui confirmation with the full path of the created file (already partially implemented in the command; ensure it uses an absolute path).
 - Improve templates and styling (header/footer, company logo, multiple page handling).
 - Add tests around the command parsing and delegate behaviour; avoid asserting file contents in unit tests (use integration tests or file-existence checks).
 
@@ -331,7 +358,7 @@ Expected: Parser fails with WRONG_COMMAND_FORMAT; user is prompted with the corr
 add i/Chair p/abc q/10
 ```
 
-Expected: Parser throws INVALID_NUMBER_FORMAT (price parse error). The UI should display an error explaining price must be a decimal number.
+Expected: Parser throws INVALID_NUMBER_FORMAT (price parse error). The Ui should display an error explaining price must be a decimal number.
 
 - Negative price
 
@@ -339,7 +366,7 @@ Expected: Parser throws INVALID_NUMBER_FORMAT (price parse error). The UI should
 add i/Chair p/-5.00 q/2
 ```
 
-Expected: Parser throws INVALID_NUMBER_FORMAT (price must be non-negative). The UI should explain price cannot be negative.
+Expected: Parser throws INVALID_NUMBER_FORMAT (price must be non-negative). The Ui should explain price cannot be negative.
 
 - Non-numeric or negative quantity
 
@@ -358,7 +385,7 @@ add i/Chair p/45.00 q/10 t/-1
 add i/Chair p/45.00 q/10 t/150
 ```
 
-Expected: Parser throws INVALID_NUMBER_FORMAT for non-numeric values or values outside the allowed range (e.g., <0 or >100). UI should instruct tax rate must be a percentage between 0 and 100.
+Expected: Parser throws INVALID_NUMBER_FORMAT for non-numeric values or values outside the allowed range (e.g., <0 or >100). Ui should instruct tax rate must be a percentage between 0 and 100.
 
 - Missing price or quantity flags
 
@@ -372,7 +399,7 @@ Expected: Parser fails with WRONG_COMMAND_FORMAT; show the correct command forma
 Notes
 -----
 - These checks are implemented in `Parser.parseAddItemCommand(...)` and will raise `QuotelyException` with the appropriate `ErrorType`. Keep user-facing messages clear and prescriptive (show the expected format and which token is invalid).
-- For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the UI shows the intended help/error messages.
+- For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the Ui shows the intended help/error messages.
 
 ## Product scope
 

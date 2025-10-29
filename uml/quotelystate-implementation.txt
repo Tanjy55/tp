@@ -11,23 +11,17 @@ participant ":QuoteList"
 Actor -> ":Quotely": main()
 
 ":Quotely" -> ":QuotelyState" **: getInstance()
-activate ":QuotelyState" #FFBBBB
+activate ":QuotelyState" #Gold
 return state:QuotelyState
-deactivate ":QuotelyState"
 
-Actor -> ":Quotely" ++ : "add n/01 c/Tom"
-activate ":Quotely" #FFBBBB
+Actor -> ":Quotely" ++ #FFBBBB: "add n/01 c/Tom"
 
-":Quotely" -> ":Parser" ++ : parse("add n/01 c/Tom")
-activate ":Parser" #FFBBBB
-":Parser" -> ":QuotelyState" ++ : isInsideQuote()
-activate ":QuotelyState" #FFBBBB
+":Quotely" -> ":Parser" ++ #Lightblue: parse("add n/01 c/Tom")
+":Parser" -> ":QuotelyState" ++ #Gold: isInsideQuote()
 return isInsideQuote:boolean
-deactivate ":QuotelyState"
 return command:AddQuoteCommand
-deactivate ":Parser"
 
-":Quotely" -> ":QuoteList" ++ : executed AddCommand()
+":Quotely" -> ":QuoteList" ++ #Green : executed AddCommand()
 return
 
 return 

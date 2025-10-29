@@ -144,7 +144,7 @@ Command is available in both main menu and during quotation.
 **Format:**
 
 ```
-add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY
+add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY {t/TAX_RATE}
 ```
 
 * The `ITEM_NAME` and `QUOTE_NAME` can be in a natural language format.
@@ -152,6 +152,7 @@ add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY
   the current one)
 * The `PRICE` should be decimal.
 * The `QUANTITY` should be integer.
+* The `TAX_RATE` should be decimal and between 0, 100.
 
 **Example:**
 
@@ -255,43 +256,41 @@ Total cost of quote quote 1 for c: 1023.4
 
 ### Export a quote: `export`
 
-Export a quote to a PDF file. The command uses the built-in PDF writer to format the quote into an quote-like PDF and saves it as `quotation.pdf` in the current working directory.
+Export a quote to PDF (invoice-style). The command formats the selected Quote and writes a PDF file into the current working directory.
 
-Command availability:
-- If you are currently inside a quote, you may run the command without arguments to export the current quote.
-- If you are in the main menu, specify the quote name using `n/QUOTE_NAME`.
+Key behaviours
+- If run while editing a quote (inside quote), `export` with no `n/` argument exports the active quote.
+- If run from the main menu, you must provide the quote name via `n/QUOTE_NAME`.
+- Use `f/FILE_NAME` to explicitly set the output file name; otherwise the quote name is used.
 
 **Format:**
 
 ```
-export {n/QUOTE_NAME}
+export {n/QUOTE_NAME} {f/FILE_NAME}
 ```
 
-* `{n/QUOTE_NAME}` - optional when inside a quote; required when invoked from main menu.
+Notes on filenames
+- `FILE_NAME` may be provided with or without the `.pdf` extension. The application will ensure the final file uses the `.pdf` extension.
 
-**Examples:**
+**Example:**
 
-During quotation (exports the active quote):
+Export the active quote (inside quote):
 
 ```
 export
 ```
 
-From main menu (exports the specified quote):
+Export a named quote from the main menu:
 
 ```
 export n/quote_1
 ```
 
-**What happens:**
-- The application will generate a PDF file named `quotation.pdf` in the directory where the application was started.
-- The PDF will contain the quotataion header, customer info and a table of items with subtotal, tax and total.
+Export a named quote and save it as `Quote.pdf`:
 
-**Notes & troubleshooting:**
-- Ensure your quote contains at least one item; the PDF writer will iterate the items in the quote to populate the table.
-- The PDF writer uses a third-party PDF library and writes to `quotation.pdf` directly; if a file with that name already exists it will be overwritten.
-- If you need a different filename or destination, you can manually move/rename the generated PDF after export (or modify the writer implementation in `seedu.quotely.writer.PDFWriter`).
-
+```
+export n/quote_1 f/Quote
+```
 
 ### Finish the Quote `finish`
 

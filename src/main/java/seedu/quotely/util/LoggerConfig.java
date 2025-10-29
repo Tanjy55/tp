@@ -35,33 +35,29 @@ public class LoggerConfig {
             return;
         }
 
+        // Create logs directory first
+        File logsDir = new File(DEFAULT_LOG_DIR);
         try {
-            // Create logs directory first (for both approaches)
-            File logsDir = new File(DEFAULT_LOG_DIR);
-            if (!logsDir.exists()) {
-                boolean created = logsDir.mkdirs();
-                if (!created) {
-                    System.err.println("Warning: Could not create logs directory");
-                }
+            if (!logsDir.exists() && !logsDir.mkdirs()) {
+                System.err.println("Warning: Could not create logs directory");
             }
+        } catch (SecurityException se) {
+            System.err.println("Warning: No permission to create logs directory: " + se.getMessage());
+        }
 
-            // Try to load logging.properties from resources
-            InputStream configStream = LoggerConfig.class.getClassLoader()
-                    .getResourceAsStream("logging.properties");
-
-            if (configStream != null) {
-                LogManager.getLogManager().readConfiguration(configStream);
-                System.out.println("Loaded logging configuration from logging.properties");
-                configStream.close();
-            } else {
-                // Fallback to programmatic configuration
-                setupDefaultLogging();
-                System.out.println("Using default logging configuration");
-            }
-
-        } catch (IOException e) {
-            System.err.println("Failed to load logging configuration: " + e.getMessage());
+        // Try to load logging.properties from resources; fall back to programmatic setup on failure
+        InputStream configStream = LoggerConfig.class.getClassLoader().getResourceAsStream("logging.properties");
+        if (configStream == null) {
             setupDefaultLogging();
+            System.out.println("Using default logging configuration");
+        } else {
+            try (InputStream in = configStream) {
+                LogManager.getLogManager().readConfiguration(in);
+                System.out.println("Loaded logging configuration from logging.properties");
+            } catch (IOException e) {
+                System.err.println("Failed to load logging configuration: " + e.getMessage());
+                setupDefaultLogging();
+            }
         }
 
         isInitialized = true;
