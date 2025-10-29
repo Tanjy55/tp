@@ -45,4 +45,13 @@ public class QuoteList {
         logger.warning("Failed to find quote with name: " + quoteName);
         throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
+
+    public boolean hasQuote(String quoteName) {
+        for (Quote q : quotes) {
+            if (q.getQuoteName().equals(quoteName)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

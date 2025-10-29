@@ -31,6 +31,12 @@ public class AddQuoteCommand extends Command {
         assert !state.isInsideQuote() : "Invalid state for addQuoteCommand execution";
         logger.fine(String.format("Executing AddQuoteCommand using quote %s for %s", quoteName, customerName));
 
+        // check for duplicate quote names
+        if (quoteList.hasQuote(quoteName)) {
+            logger.warning(String.format("Duplicate quote name detected: %s", quoteName));
+            throw new QuotelyException(QuotelyException.ErrorType.DUPLICATE_QUOTE_NAME);
+        }
+
         Quote quoteToAdd = new Quote(quoteName, customerName);
         quoteList.addQuote(quoteToAdd);
 
