@@ -1,34 +1,34 @@
 @startuml
 actor Actor
-participant Quotely
-participant Parser
-participant PDFWriter
+participant ":Quotely"
+participant ":Parser"
+participant ":PDFWriter"
 
 
-Actor -> Quotely ++ #Gold: quote n/office chairs c/Acme Ltd
+Actor -> ":Quotely" ++ #Gold: quote n/office chairs c/Acme Ltd
 return
 
-Actor -> Quotely ++ #Gold: add i/Chair p/45.00 q/10
+Actor -> ":Quotely" ++ #Gold: add i/Chair p/45.00 q/10
 return
 
-Actor -> Quotely ++ #Gold: add i/Wheels p/2.50 q/40
+Actor -> ":Quotely" ++ #Gold: add i/Wheels p/2.50 q/40
 return
 
-Actor -> Quotely: export
+Actor -> ":Quotely": export
 
-Quotely -> Parser ++ #DarkSalmon: parse()
+":Quotely" -> ":Parser" ++ #DarkSalmon: parse()
 
-Parser -> ExportQuoteCommand **: new ExportQuoteCommand(quote: Quote)
-activate ExportQuoteCommand #Green
-return command: ExportQuoteCommand
+":Parser" -> ":ExportQuoteCommand" **: new ExportQuoteCommand(quote: Quote)
+activate ":ExportQuoteCommand" #Green
+return command:ExportQuoteCommand
 
-return command: ExportQuoteCommand
+return command:ExportQuoteCommand
 
-Quotely -> ExportQuoteCommand ++ #Green: execute(companyName: CompanyName)
-ExportQuoteCommand -> PDFWriter ++ #FFBBBB: getInstance()
-return writer: PDFWriter
+":Quotely" -> ":ExportQuoteCommand" ++ #Green: execute(companyName: CompanyName)
+":ExportQuoteCommand" -> ":PDFWriter" ++ #FFBBBB: getInstance()
+return writer:PDFWriter
 
-ExportQuoteCommand -> PDFWriter ++ #FFBBBB: writeQuoteToPDF(quote, companyName)
+":ExportQuoteCommand" -> ":PDFWriter" ++ #FFBBBB: writeQuoteToPDF(quote, companyName)
 return
 
 return

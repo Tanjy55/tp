@@ -1,34 +1,34 @@
 @startuml
 actor Actor
-participant Quotely
-participant QuotelyState
-participant Parser
-participant QuoteList
+participant ":Quotely"
+participant ":QuotelyState"
+participant ":Parser"
+participant ":QuoteList"
 
-Actor -> Quotely: main()
+Actor -> ":Quotely": main()
 
-Quotely -> QuotelyState **: getInstance()
-activate QuotelyState #FFBBBB
+":Quotely" -> ":QuotelyState" **: getInstance()
+activate ":QuotelyState" #FFBBBB
 return state:QuotelyState
-deactivate QuotelyState
+deactivate ":QuotelyState"
 
-Actor -> Quotely ++ : "add n/01 c/Tom"
-activate Quotely #FFBBBB
+Actor -> ":Quotely" ++ : "add n/01 c/Tom"
+activate ":Quotely" #FFBBBB
 
-Quotely -> Parser ++ : Parse "add n/01 c/Tom"
-activate Parser #FFBBBB
-Parser -> QuotelyState ++ : isInsideQuote()
-activate QuotelyState #FFBBBB
-return: isInsideQuote
-deactivate QuotelyState
+":Quotely" -> ":Parser" ++ : parse("add n/01 c/Tom")
+activate ":Parser" #FFBBBB
+":Parser" -> ":QuotelyState" ++ : isInsideQuote()
+activate ":QuotelyState" #FFBBBB
+return isInsideQuote:boolean
+deactivate ":QuotelyState"
 return command:AddQuoteCommand
-deactivate Parser
+deactivate ":Parser"
 
-Quotely -> QuoteList ++ : executed AddCommand()
+":Quotely" -> ":QuoteList" ++ : executed AddCommand()
 return
 
 return 
-deactivate Quotely
+deactivate ":Quotely"
 
 @enduml
 
