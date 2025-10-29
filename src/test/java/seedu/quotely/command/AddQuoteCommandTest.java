@@ -3,6 +3,8 @@ package seedu.quotely.command;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import seedu.quotely.ui.Ui;
 import seedu.quotely.data.CompanyName;
 import seedu.quotely.data.QuotelyState;
@@ -27,5 +29,25 @@ public class AddQuoteCommandTest {
         } catch (QuotelyException e) {
             assert false : "Execution should not fail.";
         }
+    }
+
+    @Test
+    public void addQuoteCommand_duplicateQuoteName_throwsException() {
+        Ui ui = Ui.getInstance();
+        QuoteList quoteList = new QuoteList();
+        CompanyName companyName = new CompanyName("default");
+        QuotelyState state = QuotelyState.getInstance();
+        try {
+            state.setOutsideQuote();
+            AddQuoteCommand addQuoteCommand1 = new AddQuoteCommand("TestQuote", "TestCustomer");
+            addQuoteCommand1.execute(ui, quoteList, companyName, state);
+        } catch (QuotelyException e) {
+            assert false : "Execution should not fail.";
+        }
+        state.setOutsideQuote();
+        assertThrows(QuotelyException.class, () -> {
+            AddQuoteCommand addQuoteCommand2 = new AddQuoteCommand("TestQuote", "AnotherCustomer");
+            addQuoteCommand2.execute(ui, quoteList, companyName, state);
+        });
     }
 }

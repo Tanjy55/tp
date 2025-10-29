@@ -15,7 +15,8 @@ public class QuotelyException extends Exception {
         QUOTE_NOT_FOUND,
         ITEM_NOT_FOUND,
         INVALID_STATE,
-        EMPTY_COMMAND
+        EMPTY_COMMAND,
+        DUPLICATE_QUOTE_NAME
     }
 
     private final ErrorType errorType;
@@ -61,6 +62,8 @@ public class QuotelyException extends Exception {
             return "This command should be executed in Main Menu.";
         case EMPTY_COMMAND:
             return "The command cannot be empty. Please enter a valid command.";
+        case DUPLICATE_QUOTE_NAME:
+            return "A quote with this name already exists. Please use a different name.";
         default:
             return "An unknown error occurred.";
         }
