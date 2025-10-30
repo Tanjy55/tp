@@ -46,6 +46,16 @@ public class QuoteList {
         throw new QuotelyException(QuotelyException.ErrorType.QUOTE_NOT_FOUND);
     }
 
+    public ArrayList<Quote> searchQuote(String searchTerm) throws QuotelyException {
+        ArrayList<Quote> result = new ArrayList<>();
+        for (Quote q : quotes) {
+            if (q.getQuoteName().toLowerCase().contains(searchTerm.toLowerCase())) {
+                result.add(q);
+            }
+        }
+        return result;
+    }
+
     public boolean hasQuote(String quoteName) {
         for (Quote q : quotes) {
             if (q.getQuoteName().equals(quoteName)) {

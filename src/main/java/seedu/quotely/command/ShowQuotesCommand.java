@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 public class ShowQuotesCommand extends Command {
     private static final Logger logger = LoggerConfig.getLogger(ShowQuotesCommand.class);
-    private static final double GST_RATE = 0.09;
 
     public ShowQuotesCommand() {
         super("show");
@@ -37,7 +36,7 @@ public class ShowQuotesCommand extends Command {
         ui.showMessage("Displaying all quotes:\n");
         logger.finer("ShowQuoteCommand executed with quotes");
         for (Quote q : quotes) {
-            ui.showQuote(companyName, q, GST_RATE);
+            ui.showQuote(companyName, q);
         }
     }
 }

@@ -36,7 +36,7 @@ public class UiShowQuoteTest {
         CompanyName company = new CompanyName("Acme Pte Ltd");
         Quote quote = new Quote("Q-0001", "John Doe");
 
-        Ui.getInstance().showQuote(company, quote, 0.09);
+        Ui.getInstance().showQuote(company, quote);
         String output = out.toString();
 
         // Verify header
