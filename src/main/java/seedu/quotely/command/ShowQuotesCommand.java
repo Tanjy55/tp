@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 public class ShowQuotesCommand extends Command {
     private static final Logger logger = LoggerConfig.getLogger(ShowQuotesCommand.class);
-    private static final double GST_RATE = 0.09;
 
     public ShowQuotesCommand() {
         super("show");

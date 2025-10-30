@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 
 import seedu.quotely.command.Command;
+import seedu.quotely.command.SearchQuoteCommand;
 import seedu.quotely.data.Quote;
 import seedu.quotely.data.QuotelyState;
 import seedu.quotely.data.QuoteList;
@@ -105,5 +106,38 @@ public class ParserUtilityCommandTest {
         } catch (Exception e) {
             assert false : "Exception should not be thrown";
         }
+    }
+
+    @Test
+    public void parseSearchCommand_validInput_returnSearchQuoteCommand() {
+        QuoteList quoteList = new QuoteList();
+        QuotelyState state = QuotelyState.getInstance();
+        state.setOutsideQuote();
+        try {
+            Command command = Parser.parse("search n/quote1", state, quoteList);
+            assertTrue(command instanceof SearchQuoteCommand);
+        } catch (Exception e) {
+            assert false : "Exception should not be thrown for valid input.";
+        }
+    }
+
+    @Test
+    public void parseSearchCommand_invalidState_throwInvalidStateException() {
+        QuoteList quoteList = new QuoteList();
+        QuotelyState state = QuotelyState.getInstance();
+        state.setInsideQuote(new Quote("quote name", "customer name"));
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("search n/quote1", state, quoteList);
+        });
+    }
+
+    @Test
+    public void parseSearchCommand_invalidInput_throwException() {
+        QuoteList quoteList = new QuoteList();
+        QuotelyState state = QuotelyState.getInstance();
+        state.setOutsideQuote();
+        assertThrows(QuotelyException.class, () -> {
+            Parser.parse("search quote1", state, quoteList);
+        });
     }
 }
