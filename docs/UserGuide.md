@@ -33,8 +33,13 @@ return to the main menu by finishing or deleting the quote.
 ## Quick Start
 
 1. Ensure that you have Java 17 or above installed.
-1. Down the latest version of `Quotely`
-   from [here](https://github.com/AY2526S1-CS2113-W10-1/tp/releases/download/v1.0/quotely.jar).
+2. Down the latest version of `Quotely`
+   from [here](https://github.com/AY2526S1-CS2113-W10-1/tp/releases).
+3. Copy quotely.jar to the folder you want to use as the home folder.
+4. Open a command terminal, cd into the folder you put the jar file in, and use the java -jar quotely.jar command to
+   run the application.
+
+Refer to Features below to see more details on using the quotely application!
 
 ## Features
 
@@ -257,9 +262,11 @@ Total cost of quote quote 1 for c: 1023.4
 
 ### Export a quote: `export`
 
-Export a quote to PDF (invoice-style). The command formats the selected Quote and writes a PDF file into the current working directory.
+Export a quote to PDF (invoice-style). The command formats the selected Quote and writes a PDF file into the current
+working directory.
 
 Key behaviours
+
 - If run while editing a quote (inside quote), `export` with no `n/` argument exports the active quote.
 - If run from the main menu, you must provide the quote name via `n/QUOTE_NAME`.
 - Use `f/FILE_NAME` to explicitly set the output file name; otherwise the quote name is used.
@@ -271,7 +278,9 @@ export {n/QUOTE_NAME} {f/FILE_NAME}
 ```
 
 Notes on filenames
-- `FILE_NAME` may be provided with or without the `.pdf` extension. The application will ensure the final file uses the `.pdf` extension.
+
+- `FILE_NAME` may be provided with or without the `.pdf` extension. The application will ensure the final file uses the
+  `.pdf` extension.
 
 **Example:**
 
@@ -313,9 +322,10 @@ Finishing quote process.
 
 ### Navigate: `nav`
 
-Navigate to other states. 
+Navigate to other states.
 
 Command is available in both main menu and during quotation.
+
 * If in main menu, go to specific quote
 * If quoting, go to main menu, or other quote
 
@@ -336,6 +346,7 @@ nav n/quote1
 **Expected output**
 
 The expected output shows navigation from quote1 to main menu then back to quote1.
+
 ```
 quote1 > nav main
 ____________________________________________________________
@@ -446,7 +457,7 @@ Bye. Hope to see you again soon!
 
 **Q**: How do I transfer my data to another computer?
 
-**A**: Feature is not available in V1.0, addition is planned for future versions. 
+**A**: Feature is not available in V1.0, addition is planned for future versions.
 
 ## Command Summary
 
