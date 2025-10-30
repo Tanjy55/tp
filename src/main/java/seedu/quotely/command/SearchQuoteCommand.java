@@ -36,7 +36,7 @@ public class SearchQuoteCommand extends Command {
             }
             //gst rate parameter is temporary value
             for (Quote q : searchFoundQuotes) {
-                ui.showQuote(companyName, q, 0.00);
+                ui.showQuote(companyName, q);
                 logger.fine("SearchQuoteCommand executed and matching quote is shown to user");
             }
             ui.showMessage("Successfully found quotes containing: " + quoteName);

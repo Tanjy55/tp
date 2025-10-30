@@ -62,7 +62,7 @@ public class Ui {
         // to be updated to prompt user if companyName is default String
     }
 
-    public void showQuote(CompanyName companyName, Quote q, double gstRate) {
+    public void showQuote(CompanyName companyName, Quote q) {
         // ===== choose ONE inner width for the whole box =====
         final int boxInner = 60; // chars between the two side pipes
 
@@ -114,7 +114,7 @@ public class Ui {
         sb.append(String.format("|%s|%n", dash));
 
         // ===== totals (left indent + aligned amounts) =====
-        double gst = subtotal * gstRate;
+        double gst = subtotal;
         double total = subtotal + gst;
 
         sb.append(String.format("| %-" + boxInner + "s |%n", "")); // blank spacer row
