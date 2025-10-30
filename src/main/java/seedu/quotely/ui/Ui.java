@@ -92,7 +92,11 @@ public class Ui {
 
         // ===== table header + items (same formats & computed separator) =====
         final String headerFmt = "| %-" + wDesc + "s | %" + wQty + "s | %" + wUnit + "s | %" + wTax + "s |%n";
-        final String itemFmt = "| %-" + wDesc + "s | %" + wQty + "d | $%" + (wUnit - 1) + ".2f | %" + (wTax - 1) +  ".2f %%|%n";
+        final String itemFmt = "| %-" +
+                wDesc + "s | %" +
+                wQty + "d | $%" +
+                (wUnit - 1) + ".2f | %" +
+                (wTax - 1) + ".2f %%|%n";
 
         String headerLine = String.format(headerFmt, "Description", "QTY", "Unit cost", "Tax Rate");
         sb.append(headerLine);
