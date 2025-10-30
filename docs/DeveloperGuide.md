@@ -9,7 +9,7 @@
     - [Ui Component](#ui-component)
     - [Data Component](#data-component)
     - [File storage Component](#file-storage-component)
-    - [PDF export Component](#pdf-export-component)
+    - [Writer Component (PDF export)](#writer-component-pdf-export)
   - [Implementation](#implementation)
     - [QuotelyState feature](#quotelystate-feature)
       - [Design Considerations](#design-considerations)
@@ -42,6 +42,14 @@
   - [Non-Functional Requirements](#non-functional-requirements)
   - [Glossary](#glossary)
   - [Instructions for manual testing](#instructions-for-manual-testing)
+    - [Initial Setup](#initial-setup)
+    - [Register Company](#register-company)
+    - [Add Quote](#add-quote)
+    - [Navigate](#navigate)
+    - [Add Item](#add-item)
+    - [Search Quote](#search-quote)
+    - [Delete Item](#delete-item)
+    - [Delete Quote](#delete-quote)
   - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
 
 ## Acknowledgements
@@ -73,12 +81,12 @@ levels of detail.
 
 The architecture diagram below shows an overview of the main components.
 
-!['Architecture diagram'](./src/architecturediagram.png)
+!['Architecture diagram'](./diagrams/architecturediagram.png)
 
 The class diagram below show a simplified overview class diagram that represents the primary relationship between all
 classes.
 
-!['Class diagram'](./src/quotelyclassdiagram.png)
+!['Class diagram'](./diagrams/quotelyclassdiagram.png)
 
 The program work is done by the following main components:
 
@@ -111,7 +119,7 @@ The program work is done by the following main components:
 The sequence diagram below shows the main loop which runs continuously in Quotely until an `exit` command is given by
 the user.
 
-!['sequence diagram'](./src/sequenceDiagram.png)
+!['sequence diagram'](./diagrams/sequenceDiagram.png)
 
 Loop sequence explanation:
 
@@ -126,7 +134,7 @@ The above process runs until `Exit` is read from the user.
 Sequence diagram example of component interaction when the user adds one quote, and then add one item
 to that quote:
 
-!['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
+!['taxSequenceDiagram'](./diagrams/taxSequenceDiagram.png)
 
 ### Parser Component
 
@@ -142,7 +150,7 @@ The Parser acts as the command dispatcher for all user inputs.
 
 The class diagram of the `Parser` component is shown below:
 
-!['Parser diagram'](./src/parserclassdiagram.png)
+!['Parser diagram'](./diagrams/parserclassdiagram.png)
 
 How the `Parser` component works:
 
@@ -168,7 +176,7 @@ The Commands define the executable actions that form the logic of Quotely.
 
 The class diagram of the `Command` component is shown below:
 
-!['Command diagram'](./src/commandclassdiagram.png)
+!['Command diagram'](./diagrams/commandclassdiagram.png)
 
 How the `Command` component works:
 
@@ -202,7 +210,7 @@ The Ui is responsible for all user-facing interactions (input and output)
 
 The class diagram of the `Ui` component is shown below:
 
-!['Ui diagram'](./src/uiclassdiagram.png)
+!['Ui diagram'](./diagrams/uiclassdiagram.png)
 
 How the `Ui` component works:
 
@@ -220,7 +228,7 @@ Quotely is running. Each class provides the getters and setters for its attribut
 
 The class diagram of the `Data` component is shown below:
 
-!['Data diagram'](./src/dataclassdiagram.png)
+!['Data diagram'](./diagrams/dataclassdiagram.png)
 
 How the `Data` component works:
 
@@ -241,7 +249,7 @@ How the `Data` component works:
 
 ### File storage Component
 
-![Storage Diagram](./src/StorageDiagram.png)
+![Storage Diagram](./diagrams/StorageDiagram.png)
 
 The `Storage` component,
 
@@ -259,7 +267,7 @@ Data back to local disk after user inputs have been successfully executed.
 
 The class diagram of the `File storage` component is shown below:
 
-!['File storage diagram'](./src/StorageDiagram.png)
+!['File storage diagram'](./diagrams/StorageDiagram.png)
 
 How the `File storage` component works:
 
@@ -302,28 +310,45 @@ Each quote object contains `quoteName`, `customerName`, and an `items` array; ea
 }
 ```
 
-### PDF export Component
+### Writer Component (PDF export)
 
-The PDF export component handles the creation and formatting of quotation PDFs based on data in a quote.
+The Writer component (PDF export) transforms an in-memory `Quote` and related metadata (for example, `CompanyName`) into a printable PDF file. It is intentionally small and focused: callers supply the quote and an optional filename and receive a completed PDF on disk (or a clear error).
 
-* It is implemented as a singleton
-* It acts as the final step in the quotation workflow, transforming in-memory data (Quote, Item, and CompanyName) into a
-  formatted and exportable file.
+Responsibilities
 
-The class diagram of the `PDF export` component is shown below:
+- Produce a readable invoice/quotation layout (header, customer details, itemised table, subtotals, tax lines, footer).
+- Accept a requested output filename (base name) and write a `.pdf` file to the target location.
+- Sanitize filenames and paths to avoid path traversal and filesystem errors.
+- Perform writes atomically where possible, and report failures to `Ui` while logging full details.
 
-!['pdfwriterclass diagram'](./src/pdfwriterclass.png)
+API and implementation notes
 
-How the `PDF export` component works:
+- Public API: a single writer class exposes a concise method such as `PDFWriter.writeQuoteToPDF(Quote quote, CompanyName company, String filename)` (the current implementation follows this pattern).
+- Implementation style: the project currently uses a singleton-style `PDFWriter` implemented with iText/lowagie. The design intentionally keeps formatting code separate from parsing/command logic.
 
-* When a command sis given by user, writeQuoteToPDF(quote, companyName, filename) is called.
-* It retrieves all Item objects within the given Quote and computing subtotal, tax, and grand total values.
-* A new PDF document is created using Document and PdfWriter from the iText library, configured with A4 page dimensions
-  and margins.
-* Once all data is written, the document is closed and automatically saved as a .pdf file using the provided filename (
-  e.g., Invoice.pdf).
+Filename rules (recommended)
 
-More details can be found in [Export feature](#export-feature).
+- Input: the CLI accepts an optional `f/FILE_NAME` token. The command forwards the supplied base name to the writer.
+- Normalisation steps the writer should perform:
+  1. Trim whitespace from the supplied name.
+  2. If the name ends with `.pdf` (any case), remove the extension so the writer can consistently append `.pdf`.
+  3. Reject or strip path traversal segments (`..`) and disallow path separators (`/` or `\`) unless the writer explicitly supports writing to paths. If we accept a path, validate it carefully and document the behaviour. (future work)
+  4. Replace or remove characters that are illegal on common filesystems. A practical whitelist is: letters, digits, space, hyphen (-), underscore (_), and dot (.). Example safe regex: `^[A-Za-z0-9 _\-\.]+$` (apply trimming and fallback for empty names). (future work)
+- Final name: append `.pdf` and write to the destination. By default the current working directory is used; existing files are overwritten.
+
+Developer TODOs (prioritised)
+
+1. Implement and test filename sanitisation using the whitelist strategy above.
+2. Decide on font strategy (bundle TTFs and register at runtime, or document required system fonts) and implement a font registration helper if needed.
+3. Add an integration test that verifies `ExportQuoteCommand` produces a file in a temporary directory.
+
+This writer component is intentionally small and replaceable: contributors can swap the underlying PDF production mechanism while preserving CLI behaviour (`ExportQuoteCommand`) and the `Ui` contract.
+
+Here is the class diagram of `PDFWriter`:
+
+![pdfwriterclass.png](./diagrams/pdfwriterclass.png)
+
+For more detail, refer to the [export feature](#export-feature).
 
 ## Implementation
 
@@ -356,7 +381,7 @@ current situation.
 
 The following sequence diagram shows how an `add` operation uses the QuotelyState
 
-!['quotelystate-implementation'](./src/quotelystate-implementation.png)
+!['quotelystate-implementation'](./diagrams/quotelystate-implementation.png)
 
 The commands depend on QuotelyState in this manner:
 
@@ -425,7 +450,7 @@ export n/office chairs
 
 The sequence diagram below illustrates the steps taken when the `export` command is executed.
 
-!['export-feature'](./src/ExportFeature.png)
+!['export-feature'](./diagrams/ExportFeature.png)
 
 When the export completes, the application generates a PDF file named `quotation.pdf` in the working directory. The PDF
 uses an quotation-style layout that includes header information and an itemised table showing each item's description,
@@ -433,16 +458,16 @@ quantity, unit price, tax, and computed amounts (subtotal, tax, and grand total)
 
 Preview of the generated PDF:
 
-!['quote'](./src/quote.png)
+!['quote'](./diagrams/quote.png)
 
 #### Developer notes (implementation)
 
 - Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object).
   The command accepts an optional filename parameter and passes it to the writer. See
-  `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
+  `diagrams/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
 - Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method
   `writeQuoteToPDF(Quote, CompanyName, String filename)` accepts a filename base (the method will append `.pdf`) and
-  writes the file into the current working directory. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
+  writes the file into the current working directory. See `diagrams/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralised `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
@@ -502,7 +527,7 @@ This sets `taxRate` to a value of `5.00%`.
 The sequence diagram below shows what happens when a user executes the `add` command with the tax rate of `5.00%` as
 shown in the example right above (zoom in if necessary):
 
-!['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
+!['taxSequenceDiagram'](./diagrams/taxSequenceDiagram.png)
 
 This features allows to calculate installments based on the Principal (amount of loan), interest rate and number of
 payments.
@@ -614,7 +639,7 @@ a JSON format.
 
 The sequence diagram below illustrates the loading process at startup and the saving process after a command.
 
-!['gson-sequence-diagram'](./src/gson-sequence-diagram.png)
+!['gson-sequence-diagram'](./diagrams/gson-sequence-diagram.png)
 
 #### Developers note (Implementation of File Storage)
 
@@ -806,7 +831,7 @@ existing quotes.
 - Expected:  
 
 
-  !['searchQuoteOutput'](./src/searchQuoteOutput.png)
+  !['searchQuoteOutput'](./diagrams/searchQuoteOutput.png)
 
   
 ### Delete Item

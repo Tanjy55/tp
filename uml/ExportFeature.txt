@@ -16,7 +16,7 @@ return
 
 Actor -> ":Quotely" ++ #Gold: export
 
-":Quotely" -> ":Parser" ++ #DarkSalmon: parse()
+":Quotely" -> ":Parser" ++ #DarkSalmon: parse(...)
 
 ":Parser" -> ":ExportQuoteCommand" **: new ExportQuoteCommand(quote: Quote)
 activate ":ExportQuoteCommand" #Green
@@ -34,5 +34,7 @@ return
 return
 
 return
+
+destroy ":ExportQuoteCommand"
 
 @enduml
