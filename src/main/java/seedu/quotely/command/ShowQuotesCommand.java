@@ -37,7 +37,7 @@ public class ShowQuotesCommand extends Command {
         ui.showMessage("Displaying all quotes:\n");
         logger.finer("ShowQuoteCommand executed with quotes");
         for (Quote q : quotes) {
-            ui.showQuote(companyName, q, GST_RATE);
+            ui.showQuote(companyName, q);
         }
     }
 }
