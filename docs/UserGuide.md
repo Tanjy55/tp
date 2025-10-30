@@ -224,7 +224,7 @@ Deleting book from quote quote_100
 
 ### Calculate the total `total`
 
-Calculate the total of specific quote.
+Calculate the total of specific quote, including GST.
 
 Command is available in both main menu and during quotation.
 
@@ -406,7 +406,7 @@ Successfully found quotes containing: NUS
 
 ### Show all Quotes: `show`
 
-Show the current state of all quotes.
+Show the current state of all quotes, with Subtotal, GST, and Total including GST.
 
 Command is available in both main menu and during quotation.
 
@@ -454,6 +454,15 @@ Bye. Hope to see you again soon!
 ```
 
 ## FAQ
+
+**Q**: Will I be able to access my past quote records after exiting the program?
+
+**A**: Yes, from V2.0 onwards, every run saves a `quotely.json` file in the same folder as the `quotely.jar` file.
+
+**Q**: What happens if I accidentally deleted a quote/item? Can I retrieve that quote/item back?
+
+**A**: Unfortunately, the app is not able to restore deleted quotes or items. Therefore, we suggest that you thoroughly review
+any deletion commands before running them as once executed, they are permanent.
 
 **Q**: How do I transfer my data to another computer?
 
