@@ -82,10 +82,22 @@ public class Quote {
     }
 
     public boolean isValid() {
-        if (items == null || items.isEmpty()) {
-            items = new ArrayList<>();
+        // check the items as well
+        for (Item item : items) {
+            if (!item.isValid()) {
+                return false;
+            }
         }
         return quoteName != null && !quoteName.trim().isEmpty()
-                && customerName != null && !customerName.trim().isEmpty();
+                && customerName != null && !customerName.trim().isEmpty()
+                && items != null;
+    }
+    /**
+     * Ensures the Quote object is in a valid state by initializing items if necessary.
+     */
+    public void ensureValid() {
+        if (items == null) {
+            items = new ArrayList<>();
+        }
     }
 }

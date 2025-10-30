@@ -60,4 +60,11 @@ public class Item {
     public double getItemTotalTax() {
         return quantity * price * taxRate / 100.0;
     }
+
+    public boolean isValid() {
+        return itemName != null && !itemName.trim().isEmpty()
+                && price >= 0
+                && quantity > 0
+                && taxRate >= 0;
+    }
 }

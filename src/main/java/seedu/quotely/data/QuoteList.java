@@ -69,10 +69,12 @@ public class QuoteList {
     public void validate() {
         List<Quote> validQuotes = new ArrayList<>();
         for (Quote q : quotes) {
+            q.ensureValid();
             if (q.isValid()) {
                 validQuotes.add(q);
             } else {
-                logger.warning("Invalid quote found and removed during validation: " + q.getQuoteName());
+                logger.warning("Invalid quote found and removed during validation: " + 
+                    (q.getQuoteName() != null ? q.getQuoteName() : "<null>"));
             }
         }
         this.quotes = validQuotes;
