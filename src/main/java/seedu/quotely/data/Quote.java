@@ -80,4 +80,12 @@ public class Quote {
     public String toString() {
         return quoteName;
     }
+
+    public boolean isValid() {
+        if (items == null || items.isEmpty()) {
+            items = new ArrayList<>();
+        }
+        return quoteName != null && !quoteName.trim().isEmpty()
+                && customerName != null && !customerName.trim().isEmpty();
+    }
 }

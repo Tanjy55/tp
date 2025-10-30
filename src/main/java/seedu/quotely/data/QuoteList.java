@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import seedu.quotely.exception.QuotelyException;
+import seedu.quotely.util.LoggerConfig;
 
 public class QuoteList {
-    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger logger = LoggerConfig.getLogger(QuoteList.class);
     private List<Quote> quotes = new ArrayList<>();
 
     public QuoteList() {
@@ -63,5 +64,17 @@ public class QuoteList {
             }
         }
         return false;
+    }
+
+    public void validate() {
+        List<Quote> validQuotes = new ArrayList<>();
+        for (Quote q : quotes) {
+            if (q.isValid()) {
+                validQuotes.add(q);
+            } else {
+                logger.warning("Invalid quote found and removed during validation: " + q.getQuoteName());
+            }
+        }
+        this.quotes = validQuotes;
     }
 }
