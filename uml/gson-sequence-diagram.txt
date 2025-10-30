@@ -1,0 +1,50 @@
+@startuml
+actor Actor
+participant ":Quotely" as Quotely
+participant ":Parser" as Parser
+participant "cmd:Command" as Command
+participant ":JsonSerializer" as Serializer
+participant ":Storage" as Storage
+database ":data/quotely.json" as DB
+
+' 1. User issues a command that will modify data
+Actor -> Quotely ++ #Gold: quote n/Project A c/Client X
+
+' 2. Quotely parses the command
+Quotely -> Parser ++ #DarkSalmon: parse("quote...")
+
+' Parser creates the specific command object
+Parser -> Command **: new AddQuoteCommand(...)
+activate Command #Green
+Parser --> Quotely: return cmd
+deactivate Parser
+
+' 3. Quotely executes the command
+Quotely -> Command ++ #Green: execute(...)
+' (The Command modifies the QuoteList in memory)
+Command --> Quotely
+deactivate Command
+
+' 4. After execution, Quotely calls itself to save
+Quotely -> Quotely ++ #LightBlue: saveDataToFile()
+
+' 5. Quotely asks JsonSerializer to convert the data
+Quotely -> Serializer ++ #FFBBBB: serialize(quoteList)
+' (Serializer uses Gson internally here)
+Serializer --> Quotely: return jsonString
+deactivate Serializer
+
+' 6. Quotely tells Storage to write the string to disk
+Quotely -> Storage ++ #Pink: saveData(jsonString)
+' (Storage uses java.nio.Files to write)
+Storage -> DB: Write File
+Storage --> Quotely
+deactivate Storage
+
+' Finish the save call
+deactivate Quotely
+
+' Finish the user command
+return
+
+@enduml

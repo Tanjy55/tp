@@ -513,6 +513,74 @@ add i/Chair p/45.00
 
 Expected: Parser fails with WRONG_COMMAND_FORMAT; show the correct command format.
 
+### Gson implementation in File Storage
+
+The file storage feature ensures all data is saved to local file preventing data
+loss between `Quotley` uses. This is accomplished using the Gson library to serialize data into 
+a JSON format.
+
+#### Overview
+
+- The feature is built around com.google.code.gson, a library that handles data-to-JSON conversion.
+
+- Gson is used to automatically convert the `QuoteList` object (and all its nested `Quote` and `Item` objects)
+into a JSON string, and vice-versa.
+
+#### Trigger
+
+- **Load**: The application reads and deserializes the JSON file on startup, loading the `QuoteList` into memory.
+
+- **Save**: The application serializes and overwrites the JSON file after every successful command, 
+ensuring data is always in sync.
+
+
+#### User-facing behaviour
+
+- The feature is almost entirely transparent to the user.
+- On first launch, **if the data file is not found**, the app logs a warning (`WARNING: Data file not found...`) 
+and starts with a fresh, empty `QuoteList`.
+- After the first data-modifying command (`e.g., quote ...`), 
+the data file (`e.g., data/quotely.json`) is created.
+- On all subsequent launches, the user's previous data is loaded, and no warning is shown.
+
+
+#### Example (full workflow of File Storage)
+
+1. User starts `Quotely` for the first time. The console logs a warning that the data file was not found.
+  (If the `data/quotley.json` file is not inside) 
+2. User adds a new quote: `quote n/Project A c/Client X`
+3. The application saves the new `QuoteList` (containing "Project A") to `data/quotely.json`.
+4. User `exits`
+5. User starts `Quotely` again.
+6. This time, no warning is logged (Since the file is already created). The `Storage` component finds and reads the file. 
+The `JsonSerializer` (using Gson) parses the data.
+7. User runs `show`
+8. The UI displays "Project A", confirming the data was successfully loaded.
+
+The sequence diagram below illustrates the loading process at startup and the saving process after a command.
+
+!['gson-sequence-diagram'](./src/gson-sequence-diagram.png)
+
+#### Developers note (Implementation of File Storage)
+
+- **Core Library (Gson)**: This feature is powered by Google's Gson library `com.google.code.gson:gson:2.10.1`. 
+- **Serialization** : Gson's primary role is **serialization** , automatically converting the live Java `QuoteList` object (and all its nested
+`Quote` and `Item` objects) into a structured JSON string. 
+- **Deserialization** : It also handles **deserialization** which parses the JSON string from the file back into a fully functional `QuoteList` object when `Quotley` starts
+- **Why Gson ?** : Gson was used because it automates this complex conversion. Instead of creating a parser for convertion, `gson.toJson(quoteList)`
+method is called to save data and `gson.fromJson(json, QuoteList.class)` to load data. This logic is encapsulated in 
+the `seedu.quotely.storage.JsonSerializer` class.
+- **File I/O** : The `seedu.quotely.storage.Storage` class handles all raw file I/O operations (Read and Write).
+- The `GsonBuilder().setPrettyPrinting().create()` method is used to make the to make the saved quotely.json file
+human-readable, which aids in debugging.
+
+#### #### Implementation considerations & TODOs
+
+- **Efficency** : The current "save-on-every-command" strategy is simple and robust but could become inefficient if
+`QuoteList` grows to thousands entries.
+- **Error Handling** : If the `quotely.json` file becomes corrupted (e.g., manual edit breaks the JSON syntax), 
+the app will log an error and start with a fresh `QuoteList`, overwriting the corrupted file on the next save.
+
 Notes
 -----
 
