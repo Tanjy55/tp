@@ -1,4 +1,7 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 title Ui Class Diagram
 top to bottom direction
 

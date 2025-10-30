@@ -1,41 +1,49 @@
 # Developer Guide
 
 - [Developer Guide](#developer-guide)
-    - [Acknowledgements](#acknowledgements)
-    - [Design](#design)
-        - [Architecture](#architecture)
-        - [Parser Component](#parser-component)
-        - [Command Component](#command-component)
-        - [Ui Component](#ui-component)
-        - [Data Component](#data-component)
-        - [File storage Component](#file-storage-component)
-        - [PDF export Component](#pdf-export-component)
-    - [Implementation](#implementation)
-        - [QuotelyState feature](#quotelystate-feature)
-            - [Design Considerations](#Design-Considerations)
-            - [Implementation of state](#Implementation-of-state)
-        - [Export feature](#export-feature)
-            - [Overview](#overview)
-            - [User-facing behaviour](#user-facing-behaviour)
-            - [Example (full workflow)](#example-full-workflow)
-            - [Developer notes (implementation)](#developer-notes-implementation)
-            - [Implementation considerations \& TODOs](#implementation-considerations--todos)
-        - [hasTax \& tax-handling feature](#hastax--tax-handling-feature)
-            - [User-facing behaviour](#user-facing-behaviour-1)
-            - [Error cases and expected behaviour](#error-cases-and-expected-behaviour)
-        - [Proposed implementations of future features](#Proposed-implementations-of-future-features)
-          - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
-          - [Multi currency support](#multi-currency-support)
-          - [Installment calculator](#installment-calculator)
-    - [Notes](#notes)
-    - [Product scope](#product-scope)
-        - [Target user profile](#target-user-profile)
-        - [Value proposition](#value-proposition)
-        - [User Stories](#user-stories)
-    - [Non-Functional Requirements](#non-functional-requirements)
-    - [Glossary](#glossary)
-    - [Instructions for manual testing](#instructions-for-manual-testing)
-    - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
+  - [Acknowledgements](#acknowledgements)
+  - [Design](#design)
+    - [Architecture](#architecture)
+    - [Parser Component](#parser-component)
+    - [Command Component](#command-component)
+    - [Ui Component](#ui-component)
+    - [Data Component](#data-component)
+    - [File storage Component](#file-storage-component)
+    - [Writer Component (PDF export)](#writer-component-pdf-export)
+  - [Implementation](#implementation)
+    - [QuotelyState feature](#quotelystate-feature)
+      - [Design Considerations](#design-considerations)
+      - [Implementation of state](#implementation-of-state)
+    - [Export feature](#export-feature)
+      - [Overview](#overview)
+      - [User-facing behaviour](#user-facing-behaviour)
+      - [Example (full workflow)](#example-full-workflow)
+      - [Developer notes (implementation)](#developer-notes-implementation)
+      - [Implementation considerations \& TODOs](#implementation-considerations--todos)
+    - [hasTax \& tax-handling feature](#hastax--tax-handling-feature)
+      - [User-facing behaviour](#user-facing-behaviour-1)
+      - [Error cases and expected behaviour](#error-cases-and-expected-behaviour)
+    - [Gson implementation in File Storage](#gson-implementation-in-file-storage)
+      - [Overview](#overview-1)
+      - [Trigger](#trigger)
+      - [User-facing behaviour](#user-facing-behaviour-2)
+      - [Example (full workflow of File Storage)](#example-full-workflow-of-file-storage)
+      - [Developers note (Implementation of File Storage)](#developers-note-implementation-of-file-storage)
+      - [#### Implementation considerations \& TODOs](#-implementation-considerations--todos)
+    - [Proposed implementations of future features](#Proposed-implementations-of-future-features)
+       - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
+       - [Multi currency support](#multi-currency-support)
+       - [Installment calculator](#installment-calculator)
+  - [Notes](#notes)
+  - [Product scope](#product-scope)
+    - [Target user profile](#target-user-profile)
+    - [Value proposition](#value-proposition)
+    - [User Stories](#user-stories)
+  - [Non-Functional Requirements](#non-functional-requirements)
+  - [Glossary](#glossary)
+  - [Instructions for manual testing](#instructions-for-manual-testing)
+  - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
+
 
 ## Acknowledgements
 
@@ -234,6 +242,14 @@ How the `Data` component works:
 
 ### File storage Component
 
+![Storage Diagram](./src/StorageDiagram.png)
+
+The `Storage` component,
+
+* handles the persistence of application data (the `QuoteList`) between sessions
+* loads the `QuoteList` from a local JSON file (data/quotely.json) when the application starts
+* saves the `QuoteList` back to the JSON file after each successful command
+* comprised of a Storage class (for raw file I/O) and a JsonSerializer (for object-to-JSON conversion)
 The Storage component is responsible for loading data from local disk at initialisation of Quotely and save changes to
 Data back to local disk after user inputs have been successfully executed.
 
@@ -287,28 +303,45 @@ Each quote object contains `quoteName`, `customerName`, and an `items` array; ea
 }
 ```
 
-### PDF export Component
+### Writer Component (PDF export)
 
-The PDF export component handles the creation and formatting of quotation PDFs based on data in a quote.
+The Writer component (PDF export) transforms an in-memory `Quote` and related metadata (for example, `CompanyName`) into a printable PDF file. It is intentionally small and focused: callers supply the quote and an optional filename and receive a completed PDF on disk (or a clear error).
 
-* It is implemented as a singleton
-* It acts as the final step in the quotation workflow, transforming in-memory data (Quote, Item, and CompanyName) into a
-  formatted and exportable file.
+Responsibilities
 
-The class diagram of the `PDF export` component is shown below:
+- Produce a readable invoice/quotation layout (header, customer details, itemised table, subtotals, tax lines, footer).
+- Accept a requested output filename (base name) and write a `.pdf` file to the target location.
+- Sanitize filenames and paths to avoid path traversal and filesystem errors.
+- Perform writes atomically where possible, and report failures to `Ui` while logging full details.
 
-!['pdfwriterclass diagram'](./src/pdfwriterclass.png)
+API and implementation notes
 
-How the `PDF export` component works:
+- Public API: a single writer class exposes a concise method such as `PDFWriter.writeQuoteToPDF(Quote quote, CompanyName company, String filename)` (the current implementation follows this pattern).
+- Implementation style: the project currently uses a singleton-style `PDFWriter` implemented with iText/lowagie. The design intentionally keeps formatting code separate from parsing/command logic.
 
-* When a command sis given by user, writeQuoteToPDF(quote, companyName, filename) is called.
-* It retrieves all Item objects within the given Quote and computing subtotal, tax, and grand total values.
-* A new PDF document is created using Document and PdfWriter from the iText library, configured with A4 page dimensions
-  and margins.
-* Once all data is written, the document is closed and automatically saved as a .pdf file using the provided filename (
-  e.g., Invoice.pdf).
+Filename rules (recommended)
 
-More details can be found in [Export feature](#export-feature).
+- Input: the CLI accepts an optional `f/FILE_NAME` token. The command forwards the supplied base name to the writer.
+- Normalisation steps the writer should perform:
+  1. Trim whitespace from the supplied name.
+  2. If the name ends with `.pdf` (any case), remove the extension so the writer can consistently append `.pdf`.
+  3. Reject or strip path traversal segments (`..`) and disallow path separators (`/` or `\`) unless the writer explicitly supports writing to paths. If we accept a path, validate it carefully and document the behaviour. (future work)
+  4. Replace or remove characters that are illegal on common filesystems. A practical whitelist is: letters, digits, space, hyphen (-), underscore (_), and dot (.). Example safe regex: `^[A-Za-z0-9 _\-\.]+$` (apply trimming and fallback for empty names). (future work)
+- Final name: append `.pdf` and write to the destination. By default the current working directory is used; existing files are overwritten.
+
+Developer TODOs (prioritised)
+
+1. Implement and test filename sanitisation using the whitelist strategy above.
+2. Decide on font strategy (bundle TTFs and register at runtime, or document required system fonts) and implement a font registration helper if needed.
+3. Add an integration test that verifies `ExportQuoteCommand` produces a file in a temporary directory.
+
+This writer component is intentionally small and replaceable: contributors can swap the underlying PDF production mechanism while preserving CLI behaviour (`ExportQuoteCommand`) and the `Ui` contract.
+
+Here is the class diagram of `PDFWriter`:
+
+![pdfwriterclass.png](./src/pdfwriterclass.png)
+
+For more detail, refer to the [export feature](#export-feature).
 
 ## Implementation
 
@@ -718,7 +751,105 @@ chat.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+This section provides instructions for manual testing of Quotely. These test cases can be used to verify the 
+functionality of the application.  
+
+### Initial Setup
+
+1. Download the latest `quotely.jar` file from the releases page.
+2. Copy the jar file into an empty folder designated for testing.
+3. Open a terminal/command prompt and navigate to the folder containing the jar file.
+4. Run the application using `java -jar quotely.jar`.
+5. The application should start and display a welcome message. If a warning `WARNING: Data file not found...` is logged,
+it's perfectly normal. It means that there is no pre-existing `quotely.json` file to load data from as it is the first 
+launch. Subsequent runs after adding data should include the `quotely.json` file on startup.
+
+### Register Company
+
+**Test case: Register a company**
+- Command: `register c/NUS`
+- Expected: `Registering company: NUS`
+
+### Add Quote
+
+**Test case: Add a quote from main**
+- Command: `quote n/001 c/NUS`
+- Expected: `Adding quote: 001 for NUS`
+
+### Navigate
+
+**Test case: Navigating to main menu from quote**
+>You should already be inside the quote n/001 after the 'quote' command.
+- Command: `nav main`
+- Expected: `Navigating to the main menu.`
+
+**Test case: Navigating to quote from main menu**
+>You should already be at the main menu after the previous step.
+- Command: `nav n/001`
+- Expected: `Navigating to quote: 001`
+
+**Test case: Navigating to another quote from a quote**
+> * For this, you have to run another command 'quote n/002 c/NUS'. 
+> * After that, you have to navigate to either one of the
+existing quotes.
+- Command: `nav n/002`
+- Expected: `Navigating to quote: 002`
+
+### Add Item
+
+**Test case: Add an item from main menu without tax**
+- Command: `add i/Chair n/001 p/45.00 q/10`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 0.00%`
+
+**Test case: Add an item from inside quote without tax**  
+> Ensure you have executed the 'nav' command as shown earlier to the quote of choice if at the main menu.  
+
+- Command: `add i/Chair p/45.00 q/10`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 0.00%`
+
+**Test case: Add an item from main menu with tax**
+- Command: `add i/Chair n/001 p/45.00 q/10 t/5.00`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 5.00%`
+
+**Test case: Add an item from inside quote with tax**
+> Ensure you have executed the 'nav' command as shown earlier to the quote 001 if at the main menu.
+
+- Command: `add i/Chair p/45.00 q/10 t/5.00`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 5.00%`
+
+### Search Quote
+
+**Test case: Search for a quote from main menu**
+- Command: `search n/001`
+- Expected:  
+
+
+  !['searchQuoteOutput'](./src/searchQuoteOutput.png)
+
+  
+### Delete Item
+
+**Test case: Delete an item from quote within quote**
+- Command: `delete i/Chair`
+- Expected: `Deleting item Chair from quote 001`
+
+**Test case: Delete an item from quote from main menu**
+> Ensure you're at the main menu before this step. If not, run the 'nav main' command.
+- Command: `delete i/Chair n/001`
+- Expected: `Deleting item Chair from quote 001`
+
+
+### Delete Quote
+
+**Test case: Delete a quote from main**
+- Command: `unquote n/001`
+- Expected: `Deleting quote: 001`
+
+**Test case: Delete a quote within the particular quote itself**
+> Ensure you're at the particular quote before this test. If not, run the 'nav' command to the quote.
+- Command: `unquote n/001`
+- Expected: `Deleting quote: 001`
+
 
 ## Documentation, logging, testing, configuration, dev-ops
 

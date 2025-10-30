@@ -1,4 +1,7 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 title PDFWriter Class Diagram
 
 package "writer" {

@@ -1,4 +1,7 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 title Command Class Diagram
 
 package "command" {
@@ -49,19 +52,18 @@ package "command" {
     - companyName : String
   }
 
-  class ShowQuotesCommand
-
-  Command <|-- AddItemCommand
-  Command <|-- AddQuoteCommand
-  Command <|-- CalculateTotalCommand
-  Command <|-- DeleteItemCommand
-  Command <|-- DeleteQuoteCommand
   Command <|-- ExitCommand
-  Command <|-- ExportQuoteCommand
   Command <|-- FinishQuoteCommand
-  Command <|-- NavigateCommand
-  Command <|-- RegisterCommand
-  Command <|-- ShowQuotesCommand
+  Command <|-- AddQuoteCommand
+  Command <|-- showQuotesCommand
+
+  AddItemCommand --|> Command
+  CalculateTotalCommand --|> Command
+  DeleteItemCommand --|> Command
+  DeleteQuoteCommand --|> Command
+  ExportQuoteCommand --|> Command
+  NavigateCommand --|> Command
+  RegisterCommand --|> Command
 }
 
 package "data" {
@@ -75,16 +77,17 @@ package "ui" {
   class Ui
 }
 
-AddItemCommand --> Quote
-DeleteItemCommand --> Quote
-DeleteQuoteCommand --> Quote
-CalculateTotalCommand --> Quote
-ExportQuoteCommand --> Quote
-NavigateCommand --> Quote
-RegisterCommand --> CompanyName
-Command --> QuoteList
-Command --> QuotelyState
-Command --> Ui
-Command --> CompanyName
+Quote <-- AddItemCommand
+Quote <-- DeleteItemCommand
+Quote <-- DeleteQuoteCommand
+Quote <-- CalculateTotalCommand
+Quote <-- ExportQuoteCommand
+Quote <-- NavigateCommand
+
+RegisterCommand -> CompanyName
+Command .> QuoteList
+Command .> QuotelyState
+Command .> Ui
+Command .> CompanyName
 
 @enduml
