@@ -1,0 +1,36 @@
+@startuml
+title Ui Class Diagram
+top to bottom direction
+
+package "ui" {
+  class Ui {
+    - static ui : Ui
+    - scanner : Scanner
+
+    + Ui()
+    + getInstance() : Ui
+    + showWelcome() : void
+    + showLine() : void
+    + showExitMessage() : void
+    + readCommand(state : QuotelyState) : String
+    + showError(message : String) : void
+    + showMessage(message : String) : void
+    + promptCompanyName() : void
+    + showQuote(companyName : CompanyName, q : Quote, gstRate : double) : void
+  }
+}
+
+package "data" {
+  class CompanyName
+  class Item
+  class Quote
+  class QuotelyState
+}
+
+Ui --> CompanyName
+Ui --> Quote
+Ui --> Item
+Ui --> QuotelyState
+Ui --> Scanner
+
+@enduml

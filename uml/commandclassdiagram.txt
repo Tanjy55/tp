@@ -1,0 +1,90 @@
+@startuml
+title Command Class Diagram
+
+package "command" {
+  abstract class Command {
+    + execute(ui : Ui, quoteList : QuoteList, companyName : CompanyName, state : QuotelyState) : void
+  }
+
+  class AddItemCommand {
+    - itemName : String
+    - quote : Quote
+    - price : double
+    - quantity : int
+    - taxRate : double
+  }
+
+  class AddQuoteCommand {
+    - quoteName : String
+    - customerName : String
+  }
+
+  class CalculateTotalCommand {
+    - quote : Quote
+  }
+
+  class DeleteItemCommand {
+    - itemName : String
+    - quote : Quote
+  }
+
+  class DeleteQuoteCommand {
+    - quote : Quote
+  }
+
+  class ExitCommand
+
+  class ExportQuoteCommand {
+    - quote : Quote
+    - filename : String
+  }
+
+  class FinishQuoteCommand
+
+  class NavigateCommand {
+    - targetQuote : Quote
+  }
+
+  class RegisterCommand {
+    - companyName : String
+  }
+
+  class ShowQuotesCommand
+
+  Command <|-- AddItemCommand
+  Command <|-- AddQuoteCommand
+  Command <|-- CalculateTotalCommand
+  Command <|-- DeleteItemCommand
+  Command <|-- DeleteQuoteCommand
+  Command <|-- ExitCommand
+  Command <|-- ExportQuoteCommand
+  Command <|-- FinishQuoteCommand
+  Command <|-- NavigateCommand
+  Command <|-- RegisterCommand
+  Command <|-- ShowQuotesCommand
+}
+
+package "data" {
+  class Quote
+  class QuoteList
+  class CompanyName
+  class QuotelyState
+}
+
+package "ui" {
+  class Ui
+}
+
+AddItemCommand --> Quote
+DeleteItemCommand --> Quote
+DeleteQuoteCommand --> Quote
+CalculateTotalCommand --> Quote
+ExportQuoteCommand --> Quote
+NavigateCommand --> Quote
+RegisterCommand --> CompanyName
+Command --> QuoteList
+Command --> QuotelyState
+Command --> Ui
+Command --> CompanyName
+
+@enduml
