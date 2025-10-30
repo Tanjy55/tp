@@ -25,7 +25,7 @@ public class QuoteList {
         for (int i = 0; i < quotes.size(); i++) {
             Quote currentQuote = quotes.get(i);
 
-            if (currentQuote.getQuoteName().equals(quote.getQuoteName())) {
+            if (currentQuote.getQuoteName().toLowerCase().equals(quote.getQuoteName().toLowerCase())) {
                 quotes.remove(i);
                 logger.info("Successfully removed quote: " + currentQuote.getQuoteName());
                 return;
@@ -38,7 +38,7 @@ public class QuoteList {
 
     public Quote getQuoteByName(String quoteName) throws QuotelyException {
         for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName)) {
+            if (q.getQuoteName().toLowerCase().equals(quoteName.toLowerCase())) {
                 return q;
             }
         }
@@ -58,7 +58,7 @@ public class QuoteList {
 
     public boolean hasQuote(String quoteName) {
         for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName)) {
+            if (q.getQuoteName().toLowerCase().contains(quoteName.toLowerCase())) {
                 return true;
             }
         }

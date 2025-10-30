@@ -133,7 +133,7 @@ public class Parser {
         logger.fine("parseNavigateCommand called with arguments: " + arguments);
 
         String targetName = arguments.trim();
-        if (targetName.equals("main")) {
+        if (targetName.toLowerCase().equals("main")) {
             return new NavigateCommand();
         }
 
