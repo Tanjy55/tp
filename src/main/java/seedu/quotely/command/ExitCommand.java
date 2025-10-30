@@ -7,8 +7,10 @@ import seedu.quotely.data.QuoteList;
 import seedu.quotely.exception.QuotelyException;
 
 public class ExitCommand extends Command {
+    private static final String COMMAND_WORD = "exit";
+
     public ExitCommand() {
-        super("exit");
+        super(COMMAND_WORD);
     }
 
     @Override

@@ -12,12 +12,13 @@ import seedu.quotely.writer.PDFWriter;
 import java.util.logging.Logger;
 
 public class ExportQuoteCommand extends Command {
+    private static final String COMMAND_WORD = "export";
     private static final Logger logger = LoggerConfig.getLogger(ExportQuoteCommand.class);
     private Quote quote;
     private String filename;
 
     public ExportQuoteCommand(Quote quote, String filename) {
-        super("export");
+        super(COMMAND_WORD);
         this.quote = quote;
         this.filename = filename;
     }

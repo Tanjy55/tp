@@ -10,10 +10,11 @@ import seedu.quotely.util.LoggerConfig;
 import java.util.logging.Logger;
 
 public class FinishQuoteCommand extends Command {
+    private static final String COMMAND_WORD = "finish";
     private static final Logger logger = LoggerConfig.getLogger(FinishQuoteCommand.class);
 
     public FinishQuoteCommand() {
-        super("finish");
+        super(COMMAND_WORD);
     }
 
     @Override

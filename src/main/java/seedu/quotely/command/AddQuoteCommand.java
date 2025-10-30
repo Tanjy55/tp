@@ -11,13 +11,14 @@ import seedu.quotely.util.LoggerConfig;
 import java.util.logging.Logger;
 
 public class AddQuoteCommand extends Command {
+    private static final String COMMAND_WORD = "add";
     private static final Logger logger = LoggerConfig.getLogger(AddQuoteCommand.class);
     private String quoteName;
     private String customerName;
 
 
     public AddQuoteCommand(String quoteName, String customerName) {
-        super("add");
+        super(COMMAND_WORD);
         this.quoteName = quoteName;
         this.customerName = customerName;
     }
