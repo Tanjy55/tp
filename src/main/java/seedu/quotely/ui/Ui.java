@@ -62,6 +62,60 @@ public class Ui {
         // to be updated to prompt user if companyName is default String
     }
 
+    private void showInfoLine(StringBuilder stringBuilder, int boxInner, CompanyName companyName, String title) {
+        stringBuilder.append(String.format("| %-" + boxInner + "s |%n", title));
+    }
+
+    private void showInfoLines(StringBuilder stringBuilder, int boxInner, CompanyName companyName, Quote q) {
+        showInfoLine(stringBuilder, boxInner, companyName, "Company name: " + companyName.getCompanyName());
+        showInfoLine(stringBuilder, boxInner, companyName, "Quote ID: " + q.getQuoteName());
+        showInfoLine(stringBuilder, boxInner, companyName, "Customer name: " + q.getCustomerName());
+    }
+
+    private void showTableBody(StringBuilder stringBuilder, int wDesc, int wQty, int wUnit, int wTax, Quote q) {
+        final String headerFmt = "| %-" + 
+                wDesc + "s | %" + 
+                wQty + "s | %" + 
+                wUnit + "s | %" + 
+                wTax + "s |%n";
+        final String itemFmt = "| %-" +
+                wDesc + "s | %" +
+                wQty + "d | $%" +
+                (wUnit - 1) + ".2f | %" +
+                (wTax - 1) + ".2f %%|%n";
+
+        if (q.getItems().isEmpty()) {
+            stringBuilder.append(String.format(headerFmt, "(no items)", "-", "-", "-"));
+        } else {
+            for (Item it : q.getItems()) {
+                String name = it.getItemName();
+                if (name.length() > wDesc) {
+                    name = name.substring(0, wDesc);
+                }
+                stringBuilder.append(String.format(itemFmt, name, it.getQuantity(), it.getPrice(), it.getTaxRate()));
+            }
+        }
+    }
+
+    /**
+     * Formats amount to 2 decimal places
+     * @param amount
+     * @return
+     */
+    private String formatAmount(Double amount) {
+        return String.format("%.2f", amount);
+    }
+
+    private void showSummaryLines(StringBuilder stringBuilder, int indent, int labelW, int amtW, Quote q) {
+        String summaryFmt = "| %" + indent + "s%-" + labelW + "s %" + amtW + "s |%n";
+        stringBuilder.append(String.format(summaryFmt, "", 
+            "Subtotal:", "$" + formatAmount(q.getQuoteTotalPriceWithoutTax())));
+        stringBuilder.append(String.format(summaryFmt, "", 
+            "GST:", "$" + formatAmount(q.getQuoteTotalTax())));
+        stringBuilder.append(String.format(summaryFmt, "", 
+            "Total:", "$" + formatAmount(q.getQuoteTotal())));
+    }
+
     public void showQuote(CompanyName companyName, Quote q) {
         // ===== choose ONE inner width for the whole box =====
         final int boxInner = 60; // chars between the two side pipes
@@ -81,61 +135,33 @@ public class Ui {
         final String dash = "-".repeat(boxInner + 2);
         final String und = "_".repeat(boxInner + 2);
 
-        StringBuilder sb = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         // ===== header (all rows exactly boxInner wide) =====
-        sb.append("______QUOTE").append("_".repeat(Math.max(0, boxInner - 2 - "QUOTE".length()))).append("\n");
-        sb.append(String.format("| %-" + boxInner + "s |%n", "Company name: " + companyName.getCompanyName()));
-        sb.append(String.format("| %-" + boxInner + "s |%n", "Quote ID: " + q.getQuoteName()));
-        sb.append(String.format("| %-" + boxInner + "s |%n", "Customer name: " + q.getCustomerName()));
-        sb.append(String.format("|%s|%n", dash));
+        String title = "QUOTE";
+        int pad = Math.max(0, boxInner+4 - title.length());
+        int left = pad / 2;
+        int right = pad - left;
+        stringBuilder.append(String.format("%s%n", "_".repeat(left) + title + "_".repeat(right)));
 
-        // ===== table header + items (same formats & computed separator) =====
+        showInfoLines(stringBuilder, boxInner, companyName, q);
+        stringBuilder.append(String.format("|%s|%n", dash));
+
+        // ===== table header =====
         final String headerFmt = "| %-" + wDesc + "s | %" + wQty + "s | %" + wUnit + "s | %" + wTax + "s |%n";
-        final String itemFmt = "| %-" +
-                wDesc + "s | %" +
-                wQty + "d | $%" +
-                (wUnit - 1) + ".2f | %" +
-                (wTax - 1) + ".2f %%|%n";
-
         String headerLine = String.format(headerFmt, "Description", "QTY", "Unit cost", "Tax Rate");
-        sb.append(headerLine);
-        sb.append(String.format("|%s|%n", dash));
+        stringBuilder.append(headerLine);
+        stringBuilder.append(String.format("|%s|%n", dash));
 
-        double subtotal = 0.0;
-        if (q.getItems().isEmpty()) {
-            sb.append(String.format(headerFmt, "(no items)", "-", "-", "-"));
-        } else {
-            for (Item it : q.getItems()) {
-                String name = it.getItemName();
-                if (name.length() > wDesc) {
-                    name = name.substring(0, wDesc);
-                }
-                subtotal = q.getQuoteTotalPriceWithoutTax();
-                sb.append(String.format(itemFmt, name, it.getQuantity(), it.getPrice(), it.getTaxRate()));
-            }
-        }
+        // ===== table body =====
+        showTableBody(stringBuilder, wDesc, wQty, wUnit, wTax, q);
+        stringBuilder.append(String.format("|%s|%n", dash));
+        stringBuilder.append(String.format("| %-" + boxInner + "s |%n", "")); // blank spacer row
+        
+        // ===== summary lines(subtotal, tax, total) =====
+        showSummaryLines(stringBuilder, indent, labelW, amtW, q);
+        stringBuilder.append(String.format("|%s|%n", und));
 
-        sb.append(String.format("|%s|%n", dash));
-
-        // ===== totals (left indent + aligned amounts) =====
-        double gst = q.getQuoteTotalTax();
-        double total = subtotal + gst;
-
-        sb.append(String.format("| %-" + boxInner + "s |%n", "")); // blank spacer row
-
-        String subStr = String.format("$%.2f", subtotal);
-        String gstStr = String.format("$%.2f", gst);
-        String totStr = String.format("$%.2f", total);
-
-        // pipe + space + indent + label (labelW left) + space + amount (amtW right) +
-        // pipe
-        sb.append(String.format("| %" + indent + "s%-" + labelW + "s %" + amtW + "s |%n", "", "Subtotal:", subStr));
-        sb.append(String.format("| %" + indent + "s%-" + labelW + "s %" + amtW + "s |%n", "", "GST:", gstStr));
-        sb.append(String.format("| %" + indent + "s%-" + labelW + "s %" + amtW + "s |%n", "", "Total:", totStr));
-
-        sb.append(String.format("|%s|%n", und));
-
-        showMessage(sb.toString());
+        showMessage(stringBuilder.toString());
     }
 }
