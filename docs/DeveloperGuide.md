@@ -829,10 +829,7 @@ existing quotes.
 **Test case: Search for a quote from main menu**
 - Command: `search n/001`
 - Expected:  
-
-
   !['searchQuoteOutput'](./diagrams/searchQuoteOutput.png)
-
   
 ### Delete Item
 
