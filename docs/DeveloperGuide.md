@@ -733,7 +733,105 @@ chat.
 
 ## Instructions for manual testing
 
-{Give instructions on how to do a manual product testing e.g., how to load sample data to be used for testing}
+This section provides instructions for manual testing of Quotely. These test cases can be used to verify the 
+functionality of the application.  
+
+### Initial Setup
+
+1. Download the latest `quotely.jar` file from the releases page.
+2. Copy the jar file into an empty folder designated for testing.
+3. Open a terminal/command prompt and navigate to the folder containing the jar file.
+4. Run the application using `java -jar quotely.jar`.
+5. The application should start and display a welcome message. If a warning `WARNING: Data file not found...` is logged,
+it's perfectly normal. It means that there is no pre-existing `quotely.json` file to load data from as it is the first 
+launch. Subsequent runs after adding data should include the `quotely.json` file on startup.
+
+### Register Company
+
+**Test case: Register a company**
+- Command: `register c/NUS`
+- Expected: `Registering company: NUS`
+
+### Add Quote
+
+**Test case: Add a quote from main**
+- Command: `quote n/001 c/NUS`
+- Expected: `Adding quote: 001 for NUS`
+
+### Navigate
+
+**Test case: Navigating to main menu from quote**
+>You should already be inside the quote n/001 after the 'quote' command.
+- Command: `nav main`
+- Expected: `Navigating to the main menu.`
+
+**Test case: Navigating to quote from main menu**
+>You should already be at the main menu after the previous step.
+- Command: `nav n/001`
+- Expected: `Navigating to quote: 001`
+
+**Test case: Navigating to another quote from a quote**
+> * For this, you have to run another command 'quote n/002 c/NUS'. 
+> * After that, you have to navigate to either one of the
+existing quotes.
+- Command: `nav n/002`
+- Expected: `Navigating to quote: 002`
+
+### Add Item
+
+**Test case: Add an item from main menu without tax**
+- Command: `add i/Chair n/001 p/45.00 q/10`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 0.00%`
+
+**Test case: Add an item from inside quote without tax**  
+> Ensure you have executed the 'nav' command as shown earlier to the quote of choice if at the main menu.  
+
+- Command: `add i/Chair p/45.00 q/10`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 0.00%`
+
+**Test case: Add an item from main menu with tax**
+- Command: `add i/Chair n/001 p/45.00 q/10 t/5.00`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 5.00%`
+
+**Test case: Add an item from inside quote with tax**
+> Ensure you have executed the 'nav' command as shown earlier to the quote 001 if at the main menu.
+
+- Command: `add i/Chair p/45.00 q/10 t/5.00`
+- Expected: `Adding Chair to quote 001 with price 45.00, quantity 10, tax 5.00%`
+
+### Search Quote
+
+**Test case: Search for a quote from main menu**
+- Command: `search n/001`
+- Expected:  
+
+
+  !['searchQuoteOutput'](./src/searchQuoteOutput.png)
+
+  
+### Delete Item
+
+**Test case: Delete an item from quote within quote**
+- Command: `delete i/Chair`
+- Expected: `Deleting item Chair from quote 001`
+
+**Test case: Delete an item from quote from main menu**
+> Ensure you're at the main menu before this step. If not, run the 'nav main' command.
+- Command: `delete i/Chair n/001`
+- Expected: `Deleting item Chair from quote 001`
+
+
+### Delete Quote
+
+**Test case: Delete a quote from main**
+- Command: `unquote n/001`
+- Expected: `Deleting quote: 001`
+
+**Test case: Delete a quote within the particular quote itself**
+> Ensure you're at the particular quote before this test. If not, run the 'nav' command to the quote.
+- Command: `unquote n/001`
+- Expected: `Deleting quote: 001`
+
 
 ## Documentation, logging, testing, configuration, dev-ops
 
