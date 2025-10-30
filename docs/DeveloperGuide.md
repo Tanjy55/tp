@@ -63,44 +63,38 @@ The architecture diagram below shows an overview of the main components.
 
 !['Architecture diagram'](./src/architecturediagram.png)
 
-The class diagram below show a simplified class diagram that represents the primary relationship between all classes.
+The class diagram below show a simplified overview class diagram that represents the primary relationship between all
+classes.
 
 !['Class diagram'](./src/quotelyclassdiagram.png)
-
-Main components of the Architecture
-
-
-
-* At app launch, it initialises the logger, parser and instantiate data objects
 
 The program work is done by the following main components:
 
 * `Quotely`
-  * Launches and Exit.
-  * Serves as the central coordinator across all layers.
-  * Initializes and connects the Parser, Ui, Storage, and LoggerConfig.
-  * Delegates user input to the Parser and executes the resulting Command.
-  * Manages persistence via JsonSerializer and Storage.
-  * Ensure consistent state between memory (QuoteList) and local disk file.
+    * Launches and Exit.
+    * Serves as the central coordinator across all layers.
+    * Initialises and connects the Parser, Ui, Storage, and LoggerConfig.
+    * Delegates user input to the Parser and executes the resulting Command.
+    * Manages persistence via JsonSerializer and Storage.
+    * Ensure consistent state between memory (QuoteList) and local disk file.
 * `Parser`
-  * Parses user CLI input
-  * Identifies command type and extracts arguments.
-  * Instantiates the appropriate Command subclass.
-  * Handles input validation and formatting errors.
-  * Throw QuotelyException for invalid commands.
+    * Parses user CLI input
+    * Identifies command type and extracts arguments.
+    * Instantiates the appropriate Command subclass.
+    * Handles input validation and formatting errors.
+    * Throw QuotelyException for invalid commands.
 * `Command`: Perform data mutation, Ui navigation.
-  * Executes specific application task based on user command.
-    * Mutation on Quote, QuoteList, or Item.
-    * Interact with external modules like PDFWriter for PDF Export.
-    * Update QuotelyState to manage workflow context.
-    * Uses Ui to print results or feedback to the user.
+    * Executes specific application task based on user command.
+        * Mutation on Quote, QuoteList, or Item.
+        * Interact with external modules like PDFWriter for PDF Export.
+        * Update QuotelyState to manage workflow context.
+        * Uses Ui to print results or feedback to the user.
 * `Ui`:
-  * Displays text-based output to the user.
-  * Receive user input and return to Quotely.
+    * Displays text-based output to the user.
+    * Receive user input and return to Quotely.
 * `Data`: Store quote and item data.
 * `File storage`: Handle persistence of application data.
 * `Util`: Logger configuration
-
 
 The sequence diagram below shows the main loop which runs continuously in Quotely until an `exit` command is given by
 the user.
@@ -117,23 +111,26 @@ Loop sequence explanation:
 
 The above process runs until `Exit` is read from the user.
 
-
 Sequence diagram example of component interaction when the user adds one quote, and then add one item
 to that quote:
 
 !['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
 
-
 ### Parser Component
 
-Here’s a (partial) class diagram of the `Parser` component:
+The Parser acts as the command dispatcher for all user inputs.
 
-!['Parser diagram'](./src/ParserDiagram.png)
+* It begins by examining the first keyword in the input (e.g., add, delete, quote, register).
+* Once the command word is recognised, the Parser extracts and validates additional arguments using predefined regular
+  expression patterns.
+* Each parsed command is then transformed into a specific Command subclass (such as AddItemCommand or NavigateCommand),
+  with arguments passed during new Command initialisation.
+* Responsible for allowing/disallowing commands which are not valid in the current state.
+    * For example, "finish" a quote is not allowed in main menu (as there is no quote being edited!)
 
-The sequence diagram below illustrates the interactions within the Logic component, taking user input "add n/01
-c/joe" as an example.
+The class diagram of the `Parser` component is shown below:
 
-[Sequence diagram (to be implemented)]
+!['Parser diagram'](./src/parserclassdiagram.png)
 
 How the `Parser` component works:
 
@@ -150,23 +147,36 @@ How the `Parser` component works:
 
 ### Command Component
 
-Here’s a (partial) class diagram of the `Command` component:
+The Commands define the executable actions that form the logic of Quotely.
 
-!['Command diagram'](./src/CommandDiagram.png)
+* Each user operation is a distinct subclass of the abstract Command class.
+* Each subclass (such as AddQuoteCommand, DeleteItemCommand, or ExportQuoteCommand) implements the execute() method to
+  perform a specific function, such as adding a quote, deleting an item, or exporting data to PDF.
+* The base Command class defines `execute()` to handle all commands polymorphically.
 
-All `Command` subtypes inherit from the abstract `Command` class which defines a command word and execute method
+The class diagram of the `Command` component is shown below:
 
-The `Command` component,
-
-> Implements the Command design pattern and is central to the application's execution logic,
-> allowing the user input to trigger specific actions.
+!['Command diagram'](./src/commandclassdiagram.png)
 
 How the `Command` component works:
 
-1) At it's core is the abstract class, `Command.java`, which all specific subtypes must
-   extend. It enforces the execution of the `execute()` method.
-
-(Further explanation)
+* After Parser finishes interpreting a user’s input, it returns an appropriate Command subclass object to Quotely.
+* Quotely then invokes the execute() method on that Command object.
+* Each command performs a single, well-defined operation.
+    * AddQuoteCommand — Creates a new Quote object and adds it to the QuoteList.
+    * AddItemCommand — Adds a new Item (with price, quantity, and tax rate) to a specific Quote.
+    * DeleteItemCommand — Removes a specified Item from a Quote.
+    * DeleteQuoteCommand — Deletes an entire Quote from the QuoteList.
+    * CalculateTotalCommand — Calculates the total cost of all items in a quote, including taxes, and displays it via
+      the Ui.
+    * ExportQuoteCommand — Uses PDFWriter to generate a PDF quotation, saved to local disk.
+    * RegisterCommand — Updates the CompanyName.
+    * NavigateCommand — Switches between editing contexts (e.g., main menu vs. a specific quote) by
+      updating QuotelyState.
+    * FinishQuoteCommand — Finalises a quote, and return to main menu (update QuotelyState).
+    * SearchQouoteCommand - Uses a keyword, finds all quotes which name contains keyword, and prints in CLI.
+    * ShowQuotesCommand — Retrieves all quotes from QuoteList and prints in CLI.
+    * ExitCommand — Signals the application to terminate safely.
 
 ### Ui Component
 
@@ -349,7 +359,7 @@ Preview of the generated PDF:
 - Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method
   `writeQuoteToPDF(Quote, CompanyName, String filename)` accepts a filename base (the method will append `.pdf`) and
   writes the file into the current working directory. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
-- Logging: the command logs via the centralized `LoggerConfig` utility.
+- Logging: the command logs via the centralised `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
 
