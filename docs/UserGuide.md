@@ -3,23 +3,24 @@
 ## Table of Content
 
 - [User Guide](#user-guide)
-    - [Table of Content](#table-of-content)
-    - [Introduction](#introduction)
-    - [Quick Start](#quick-start)
-    - [Features](#features)
-        - [Register Company Name: `register`](#register-company-name-register)
-        - [Creating a Quote: `quote`](#creating-a-quote-quote)
-        - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
-        - [Adding an item: `add`](#adding-an-item-add)
-        - [Delete an item `delete`](#delete-an-item-delete)
-        - [Calculate the total `total`](#calculate-the-total-total)
-        - [Export a quote: `export`](#export-a-quote-export)
-        - [Finish the Quote `finish`](#finish-the-quote-finish)
-        - [Navigate: `nav`](#navigate-nav)
-        - [Show all Quotes: `show`](#show-all-quotes-show)
-        - [Exit `exit`](#exit-exit)
-    - [FAQ](#faq)
-    - [Command Summary](#command-summary)
+  - [Table of Content](#table-of-content)
+  - [Introduction](#introduction)
+  - [Quick Start](#quick-start)
+  - [Features](#features)
+    - [Register Company Name: `register`](#register-company-name-register)
+    - [Creating a Quote: `quote`](#creating-a-quote-quote)
+    - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
+    - [Adding an item: `add`](#adding-an-item-add)
+    - [Delete an item `delete`](#delete-an-item-delete)
+    - [Calculate the total `total`](#calculate-the-total-total)
+    - [Export a quote: `export`](#export-a-quote-export)
+    - [Finish the Quote `finish`](#finish-the-quote-finish)
+    - [Navigate: `nav`](#navigate-nav)
+    - [Searching for Quotes: `search`](#searching-for-quotes-search)
+    - [Show all Quotes: `show`](#show-all-quotes-show)
+    - [Exit `exit`](#exit-exit)
+  - [FAQ](#faq)
+  - [Command Summary](#command-summary)
 
 ## Introduction
 
@@ -358,6 +359,51 @@ ____________________________________________________________
 quote1 > 
 ```
 
+### Searching for Quotes: `search`
+
+Searches for and displays all quotes whose names contain the provided search term.
+
+
+
+Command is available **only in the main menu**.
+
+**Format:**
+
+```
+search n/QUOTE_NAME
+```
+
+* The `QUOTE_NAME` is the text to search for within quote names.
+* This command will display the full details for all quotes where the quote **contains** the `QUOTE_NAME`.
+* This command cannot be used while you are inside a quote (editing a quote).
+* Essentially similar to the `show` but instead of all Quotes it just shows the `QUOTE_NAME` quotes.
+
+**Example:**
+
+```
+search n/NUS
+```
+**Expected output:**
+
+```
+______QUOTE_____________________________________________________
+| Company name: NUS                                            |
+| Quote ID: quote_100                                          |
+| Customer name: company                                       |
+|--------------------------------------------------------------|
+| Description                               | QTY |  Unit cost |
+|--------------------------------------------------------------|
+| book                                      | 100 | $    12.40 |
+|--------------------------------------------------------------|
+|                                                              |
+|                             Subtotal:               $1240.00 |
+|                             GST:                     $111.60 |
+|                             Total:                  $1351.60 |
+|______________________________________________________________|
+
+Successfully found quotes containing: NUS
+```
+
 ### Show all Quotes: `show`
 
 Show the current state of all quotes.
@@ -421,5 +467,6 @@ Bye. Hope to see you again soon!
 * Add an item `add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY`
 * Delete an item `delete i/ITEM_NAME n/QUOTE_NAME`
 * Finish the Quote `finish`
+* Search for Quotes `search n/QUOTE_NAME`
 * Show all quotes `show`
 * Exit the program `exit`
