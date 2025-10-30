@@ -29,7 +29,11 @@
       - [User-facing behaviour](#user-facing-behaviour-2)
       - [Example (full workflow of File Storage)](#example-full-workflow-of-file-storage)
       - [Developers note (Implementation of File Storage)](#developers-note-implementation-of-file-storage)
-      - [Implementation considerations \& TODOs](#implementation-considerations--todos-1)
+      - [#### Implementation considerations \& TODOs](#-implementation-considerations--todos)
+    - [Proposed implementations of future features](#Proposed-implementations-of-future-features)
+       - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
+       - [Multi currency support](#multi-currency-support)
+       - [Installment calculator](#installment-calculator)
   - [Notes](#notes)
     - [Proposed implementations of future features](#proposed-implementations-of-future-features)
       - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
@@ -51,6 +55,7 @@
     - [Delete Item](#delete-item)
     - [Delete Quote](#delete-quote)
   - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
+
 
 ## Acknowledgements
 
