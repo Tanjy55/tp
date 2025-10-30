@@ -2,8 +2,8 @@
 hide circle
 skinparam classAttributeIconSize 0
 
-' Define the main 'seedu.quotely' package
-package "seedu.quotely" {
+' Define the main package
+package "quotely" {
 
   class Quotely {
      - storage: Storage
