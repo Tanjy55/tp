@@ -1,0 +1,27 @@
+@startuml
+title Quotely Architecture Overview
+
+actor User as user
+
+rectangle "User Interface (UI)" as UI
+rectangle "Parser" as Parser
+rectangle "Command" as Command
+rectangle "Data" as Data
+rectangle "File Storage" as FileStorage
+rectangle "PDF Export" as PDFExport
+
+file "Data File" as DataFile
+file "PDF File" as PDFFile
+
+user --> UI : Input actions
+UI --> Parser : Sends input text
+Parser --> Command : Creates Command object
+Command --> Data : Reads/Writes data
+Command --> FileStorage : Saves/loads data
+FileStorage <--> DataFile : Read/Write
+Command --> PDFExport : Generates PDF
+PDFExport --> PDFFile : Save exported PDF
+Command --> UI : Sends output/response
+UI --> user : Displays output
+
+@enduml

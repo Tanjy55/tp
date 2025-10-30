@@ -1,0 +1,87 @@
+@startuml
+title Quotely Class Diagram
+top to bottom direction
+
+rectangle "Command Component" as Cmd {
+  abstract class Command
+  class AddItemCommand
+  class AddQuoteCommand
+  class CalculateTotalCommand
+  class DeleteItemCommand
+  class DeleteQuoteCommand
+  class ExitCommand
+  class ExportQuoteCommand
+  class FinishQuoteCommand
+  class NavigateCommand
+  class RegisterCommand
+  class ShowQuotesCommand
+
+  Command <|-- AddItemCommand
+  Command <|-- AddQuoteCommand
+  Command <|-- CalculateTotalCommand
+  Command <|-- DeleteItemCommand
+  Command <|-- DeleteQuoteCommand
+  Command <|-- ExitCommand
+  Command <|-- ExportQuoteCommand
+  Command <|-- FinishQuoteCommand
+  Command <|-- NavigateCommand
+  Command <|-- RegisterCommand
+  Command <|-- ShowQuotesCommand
+}
+
+rectangle "Data Component" as Data {
+  class CompanyName
+  class Item
+  class Quote
+  class QuoteList
+  class QuotelyState
+
+  Quote --> Item
+  QuoteList --> Quote
+}
+
+rectangle "Parser Component" as ParserComp {
+  class Parser
+}
+
+rectangle "Storage Component" as StorageComp {
+  class JsonSerializer
+  class Storage
+}
+
+rectangle "UI Component" as UIComp {
+  class Ui
+}
+
+rectangle "PDF Export Component" as PdfComp {
+  class PDFWriter
+}
+
+rectangle "Util" as Util {
+  class LoggerConfig
+}
+
+rectangle "Main Class" as Main {
+  class Quotely
+}
+
+Quotely --> Parser
+Quotely --> LoggerConfig
+Quotely --> JsonSerializer
+Quotely --> CompanyName
+Quotely --> QuoteList
+Quotely --> QuotelyState
+AddItemCommand --> Quote
+AddQuoteCommand --> QuoteList
+CalculateTotalCommand --> QuoteList
+DeleteItemCommand --> Quote
+DeleteQuoteCommand --> QuoteList
+ExportQuoteCommand --> PDFWriter
+FinishQuoteCommand --> QuotelyState
+NavigateCommand --> QuotelyState
+RegisterCommand --> CompanyName
+ShowQuotesCommand --> Ui
+Parser --> Command
+
+Cmd -[hidden]-> Data
+@enduml
