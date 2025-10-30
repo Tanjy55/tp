@@ -69,20 +69,38 @@ The class diagram below show a simplified class diagram that represents the prim
 
 Main components of the Architecture
 
-`Quotely` is in charge of program launch.
+
 
 * At app launch, it initialises the logger, parser and instantiate data objects
 
 The program work is done by the following main components:
 
-* `Parser`: Parse user CLI inputs.
+* `Quotely`
+  * Launches and Exit.
+  * Serves as the central coordinator across all layers.
+  * Initializes and connects the Parser, Ui, Storage, and LoggerConfig.
+  * Delegates user input to the Parser and executes the resulting Command.
+  * Manages persistence via JsonSerializer and Storage.
+  * Ensure consistent state between memory (QuoteList) and local disk file.
+* `Parser`
+  * Parses user CLI input
+  * Identifies command type and extracts arguments.
+  * Instantiates the appropriate Command subclass.
+  * Handles input validation and formatting errors.
+  * Throw QuotelyException for invalid commands.
 * `Command`: Perform data mutation, Ui navigation.
-* `Ui`: Print CLI text for user.
+  * Executes specific application task based on user command.
+    * Mutation on Quote, QuoteList, or Item.
+    * Interact with external modules like PDFWriter for PDF Export.
+    * Update QuotelyState to manage workflow context.
+    * Uses Ui to print results or feedback to the user.
+* `Ui`:
+  * Displays text-based output to the user.
+  * Receive user input and return to Quotely.
 * `Data`: Store quote and item data.
 * `File storage`: Handle persistence of application data.
 * `Util`: Logger configuration
 
-User input and corresponding work done by the program is run in a loop using the `run()` method
 
 The sequence diagram below shows the main loop which runs continuously in Quotely until an `exit` command is given by
 the user.
@@ -99,8 +117,9 @@ Loop sequence explanation:
 
 The above process runs until `Exit` is read from the user.
 
-An example of component interaction when the user adds one quote, and then add one item
-to that quote is given in the sequence diagram below:
+
+Sequence diagram example of component interaction when the user adds one quote, and then add one item
+to that quote:
 
 !['taxSequenceDiagram'](./src/taxSequenceDiagram.png)
 
