@@ -5,9 +5,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import seedu.quotely.exception.QuotelyException;
+import seedu.quotely.util.LoggerConfig;
 
 public class QuoteList {
-    private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+    private static final Logger logger = LoggerConfig.getLogger(QuoteList.class);
     private List<Quote> quotes = new ArrayList<>();
 
     public QuoteList() {
@@ -25,7 +26,7 @@ public class QuoteList {
         for (int i = 0; i < quotes.size(); i++) {
             Quote currentQuote = quotes.get(i);
 
-            if (currentQuote.getQuoteName().equals(quote.getQuoteName())) {
+            if (currentQuote.getQuoteName().equalsIgnoreCase(quote.getQuoteName())) {
                 quotes.remove(i);
                 logger.info("Successfully removed quote: " + currentQuote.getQuoteName());
                 return;
@@ -38,7 +39,7 @@ public class QuoteList {
 
     public Quote getQuoteByName(String quoteName) throws QuotelyException {
         for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName)) {
+            if (q.getQuoteName().equalsIgnoreCase(quoteName)) {
                 return q;
             }
         }
@@ -58,10 +59,24 @@ public class QuoteList {
 
     public boolean hasQuote(String quoteName) {
         for (Quote q : quotes) {
-            if (q.getQuoteName().equals(quoteName)) {
+            if (q.getQuoteName().equalsIgnoreCase(quoteName)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public void validate() {
+        List<Quote> validQuotes = new ArrayList<>();
+        for (Quote q : quotes) {
+            q.ensureValid();
+            if (q.isValid()) {
+                validQuotes.add(q);
+            } else {
+                logger.warning("Invalid quote found and removed during validation: " + 
+                    (q.getQuoteName() != null ? q.getQuoteName() : "<null>"));
+            }
+        }
+        this.quotes = validQuotes;
     }
 }

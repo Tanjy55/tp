@@ -25,4 +25,5 @@ quotation.pdf
 invoice.pdf
 
 # Data
-data/
+data/*.json
+./data
