@@ -1,4 +1,7 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 title Parser Class Diagram
 
 package "parser" {
@@ -27,29 +30,6 @@ package "parser" {
 
 package "command" {
     abstract class Command
-    class AddQuoteCommand
-    class RegisterCommand
-    class DeleteQuoteCommand
-    class ShowQuotesCommand
-    class FinishQuoteCommand
-    class AddItemCommand
-    class DeleteItemCommand
-    class CalculateTotalCommand
-    class NavigateCommand
-    class ExitCommand
-    class ExportQuoteCommand
-
-    Command <|-- AddQuoteCommand
-    Command <|-- RegisterCommand
-    Command <|-- DeleteQuoteCommand
-    Command <|-- ShowQuotesCommand
-    Command <|-- FinishQuoteCommand
-    Command <|-- AddItemCommand
-    Command <|-- DeleteItemCommand
-    Command <|-- CalculateTotalCommand
-    Command <|-- NavigateCommand
-    Command <|-- ExitCommand
-    Command <|-- ExportQuoteCommand
 }
 
 package "data" {
@@ -66,11 +46,12 @@ package "exception" {
     class QuotelyException
 }
 
-Parser --> LoggerConfig : uses for logging
-Parser --> Command : returns
+LoggerConfig <-- Parser: uses for logging
+QuotelyException <- Parser: throws
+
+Parser -> Command : returns
 Parser --> QuotelyState : reads
 Parser --> QuoteList : accesses
 Parser --> Quote : retrieves
-Parser --> QuotelyException : throws
 
 @enduml
