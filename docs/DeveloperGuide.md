@@ -12,7 +12,9 @@
         - [PDF export Component](#pdf-export-component)
     - [Implementation](#implementation)
         - [QuotelyState feature](#quotelystate-feature)
-        - [export feature](#export-feature)
+            - [Design Considerations](#Design-Considerations)
+            - [Implementation of state](#Implementation-of-state)
+        - [Export feature](#export-feature)
             - [Overview](#overview)
             - [User-facing behaviour](#user-facing-behaviour)
             - [Example (full workflow)](#example-full-workflow)
@@ -35,19 +37,18 @@
 
 Many thanks to the CS2113 teaching team: Prof Akshay and our TA Luo Yu!
 
-AddressBook Level 3 [(AB3)](https://github.com/se-edu/addressbook-level3) was used as reference for the Developer Guide
-and User Guide.
+* AddressBook Level 3 [(AB3)](https://github.com/se-edu/addressbook-level3) was used as reference for the Developer
+  Guide
+  and User Guide.
 
-Course website [(CS2113 AY25/26)](https://nus-cs2113-ay2526s1.github.io/website/schedule/timeline.html) was used as
-reference for diagram construction and design principles.
+* Course website [(CS2113 AY25/26)](https://nus-cs2113-ay2526s1.github.io/website/schedule/timeline.html) was used as
+  reference for diagram construction and design principles.
 
-PlantUML [Guide](https://se-education.org/guides/tutorials/plantUml.html) was used for generating diagrams.
+* PlantUML [Guide](https://se-education.org/guides/tutorials/plantUml.html) was used for generating diagrams.
 
 ## Design
 
 ### Architecture
-
-The Architecture Diagram given below explains the high-level design of the App.
 
 Our Quotely application uses a layered architecture approach where each layer of the architecture are represented by a
 component. Each component uses the sole responsibility principle (SRP), focusing on specific areas of work in the code.
@@ -227,17 +228,30 @@ How the `Data` component works:
       active (quoteReference).
     * Implemented as a singleton pattern
 
-
 ### File storage Component
 
-![StorageDiagram.png](StorageDiagram.png)
+The Storage component is responsible for loading data from local disk at initialisation of Quotely and save changes to
+Data back to local disk after user inputs have been successfully executed.
 
-The `Storage` component,
+* Handles the persistence of application data (the `QuoteList`) between sessions.
+* Loads the `QuoteList` from a local JSON file (data/quotely.json) when the application starts.
+* Saves the `QuoteList` back to the JSON file after each successful command.
+* Comprised of a Storage class (for raw file I/O) and a JsonSerializer (for object-to-JSON conversion).
 
-* handles the persistence of application data (the `QuoteList`) between sessions
-* loads the `QuoteList` from a local JSON file (data/quotely.json) when the application starts
-* saves the `QuoteList` back to the JSON file after each successful command
-* comprised of a Storage class (for raw file I/O) and a JsonSerializer (for object-to-JSON conversion)
+The class diagram of the `File storage` component is shown below:
+
+!['File storage diagram'](./src/StorageDiagram.png)
+
+How the `File storage` component works:
+* When Quotely starts, it initializes a Storage object with a file path.
+* The Storage constructor ensures the directory exists and prepares the file for reading or writing.
+* To load data, the application calls Storage.loadData(), whereby:
+  * Reads JSON text from the file (if it exists).
+  * Passes the text to JsonSerializer.deserialize().
+  * Converts the JSON string into a QuoteList object containing all saved Quote and Item data.
+* To save data after user commands, the application calls Storage.saveData(String data), whereby:
+  * Uses JsonSerializer.serialize(quoteList) to convert the in-memory QuoteList into a JSON string.
+  * Writes that string back into the data file, replacing any previous content.
 
 The JSON storage format used by the `Storage` component (persisted in `data/quotely.json`) is shown below.
 Each quote object contains `quoteName`, `customerName`, and an `items` array; each item object includes `itemName`,
@@ -270,16 +284,34 @@ Each quote object contains `quoteName`, `customerName`, and an `items` array; ea
 
 ### PDF export Component
 
-[To be implemented]
+The PDF export component handles the creation and formatting of quotation PDFs based on data in a quote.
+
+* It is implemented as a singleton
+* It acts as the final step in the quotation workflow, transforming in-memory data (Quote, Item, and CompanyName) into a
+  formatted and exportable file.
+
+The class diagram of the `PDF export` component is shown below:
+
+!['pdfwriterclass diagram'](./src/pdfwriterclass.png)
+
+How the `PDF export` component works:
+
+* When a command sis given by user, writeQuoteToPDF(quote, companyName, filename) is called.
+* It retrieves all Item objects within the given Quote and computing subtotal, tax, and grand total values.
+* A new PDF document is created using Document and PdfWriter from the iText library, configured with A4 page dimensions and margins.
+* Once all data is written, the document is closed and automatically saved as a .pdf file using the provided filename (e.g., Invoice.pdf).
+
+More details can be found in [Export feature](#export-feature).
 
 ## Implementation
 
-This section describes some noteworthy details on how certain features are implemented.
+This section highlights certain features of Quotely and delves into details on the implementations.
 
 ### QuotelyState feature
 
-The QuotelyState feature is a helper for user interaction, implemented using a simple class. The application and
-explanation is covered below.
+The QuotelyState feature is a helper for user interaction, implemented using a class within the Data component.
+
+#### Design Considerations
 
 The purpose of this feature is to fix the anticipated issue of user confusion by facilitating Ui elements for the user
 to navigate between the `main menu` and`quote` state.
@@ -288,6 +320,8 @@ to navigate between the `main menu` and`quote` state.
   current situation is indeed "editing quote 1".
 * The user may be in no quotes, or a different quote.
 * This may become extremely messy and almost unusable if the number of quotes are large.
+
+#### Implementation of state
 
 To solve this problem, QuotelyState was introduced to allow additional Ui elements for the user to distinguish the
 current situation.
@@ -315,7 +349,7 @@ The commands depend on QuotelyState in this manner:
 * `nav` : available in all states, but need to specify target location e.g. 'main' or quoteName
 * `exit` : available in all state as of v1.0
 
-### export feature
+### Export feature
 
 The export feature generates a PDF quotation from a Quote object. It is intended to let users produce a printable,
 shareable PDF of the quote they have composed in the CLI.
@@ -516,7 +550,7 @@ Expected: Parser fails with WRONG_COMMAND_FORMAT; show the correct command forma
 ### Gson implementation in File Storage
 
 The file storage feature ensures all data is saved to local file preventing data
-loss between `Quotley` uses. This is accomplished using the Gson library to serialize data into 
+loss between `Quotley` uses. This is accomplished using the Gson library to serialize data into
 a JSON format.
 
 #### Overview
@@ -524,36 +558,35 @@ a JSON format.
 - The feature is built around com.google.code.gson, a library that handles data-to-JSON conversion.
 
 - Gson is used to automatically convert the `QuoteList` object (and all its nested `Quote` and `Item` objects)
-into a JSON string, and vice-versa.
+  into a JSON string, and vice versa.
 
 #### Trigger
 
 - **Load**: The application reads and deserializes the JSON file on startup, loading the `QuoteList` into memory.
 
-- **Save**: The application serializes and overwrites the JSON file after every successful command, 
-ensuring data is always in sync.
-
+- **Save**: The application serializes and overwrites the JSON file after every successful command,
+  ensuring data is always in sync.
 
 #### User-facing behaviour
 
 - The feature is almost entirely transparent to the user.
-- On first launch, **if the data file is not found**, the app logs a warning (`WARNING: Data file not found...`) 
-and starts with a fresh, empty `QuoteList`.
-- After the first data-modifying command (`e.g., quote ...`), 
-the data file (`e.g., data/quotely.json`) is created.
+- On first launch, **if the data file is not found**, the app logs a warning (`WARNING: Data file not found...`)
+  and starts with a fresh, empty `QuoteList`.
+- After the first data-modifying command (`e.g., quote ...`),
+  the data file (`e.g., data/quotely.json`) is created.
 - On all subsequent launches, the user's previous data is loaded, and no warning is shown.
-
 
 #### Example (full workflow of File Storage)
 
 1. User starts `Quotely` for the first time. The console logs a warning that the data file was not found.
-  (If the `data/quotley.json` file is not inside) 
+   (If the `data/quotley.json` file is not inside)
 2. User adds a new quote: `quote n/Project A c/Client X`
 3. The application saves the new `QuoteList` (containing "Project A") to `data/quotely.json`.
 4. User `exits`
 5. User starts `Quotely` again.
-6. This time, no warning is logged (Since the file is already created). The `Storage` component finds and reads the file. 
-The `JsonSerializer` (using Gson) parses the data.
+6. This time, no warning is logged (Since the file is already created). The `Storage` component finds and reads the
+   file.
+   The `JsonSerializer` (using Gson) parses the data.
 7. User runs `show`
 8. The UI displays "Project A", confirming the data was successfully loaded.
 
@@ -563,23 +596,26 @@ The sequence diagram below illustrates the loading process at startup and the sa
 
 #### Developers note (Implementation of File Storage)
 
-- **Core Library (Gson)**: This feature is powered by Google's Gson library `com.google.code.gson:gson:2.10.1`. 
-- **Serialization** : Gson's primary role is **serialization** , automatically converting the live Java `QuoteList` object (and all its nested
-`Quote` and `Item` objects) into a structured JSON string. 
-- **Deserialization** : It also handles **deserialization** which parses the JSON string from the file back into a fully functional `QuoteList` object when `Quotley` starts
-- **Why Gson ?** : Gson was used because it automates this complex conversion. Instead of creating a parser for convertion, `gson.toJson(quoteList)`
-method is called to save data and `gson.fromJson(json, QuoteList.class)` to load data. This logic is encapsulated in 
-the `seedu.quotely.storage.JsonSerializer` class.
+- **Core Library (Gson)**: This feature is powered by Google's Gson library `com.google.code.gson:gson:2.10.1`.
+- **Serialization** : Gson's primary role is **serialization** , automatically converting the live Java `QuoteList`
+  object (and all its nested
+  `Quote` and `Item` objects) into a structured JSON string.
+- **Deserialization** : It also handles **deserialization** which parses the JSON string from the file back into a fully
+  functional `QuoteList` object when `Quotley` starts
+- **Why Gson ?** : Gson was used because it automates this complex conversion. Instead of creating a parser for
+  convertion, `gson.toJson(quoteList)`
+  method is called to save data and `gson.fromJson(json, QuoteList.class)` to load data. This logic is encapsulated in
+  the `seedu.quotely.storage.JsonSerializer` class.
 - **File I/O** : The `seedu.quotely.storage.Storage` class handles all raw file I/O operations (Read and Write).
 - The `GsonBuilder().setPrettyPrinting().create()` method is used to make the to make the saved quotely.json file
-human-readable, which aids in debugging.
+  human-readable, which aids in debugging.
 
 #### #### Implementation considerations & TODOs
 
 - **Efficency** : The current "save-on-every-command" strategy is simple and robust but could become inefficient if
-`QuoteList` grows to thousands entries.
-- **Error Handling** : If the `quotely.json` file becomes corrupted (e.g., manual edit breaks the JSON syntax), 
-the app will log an error and start with a fresh `QuoteList`, overwriting the corrupted file on the next save.
+  `QuoteList` grows to thousands entries.
+- **Error Handling** : If the `quotely.json` file becomes corrupted (e.g., manual edit breaks the JSON syntax),
+  the app will log an error and start with a fresh `QuoteList`, overwriting the corrupted file on the next save.
 
 Notes
 -----
