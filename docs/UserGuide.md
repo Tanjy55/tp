@@ -23,7 +23,6 @@
   - [Command Summary](#command-summary)
   - [Coming soon](#coming-soon)
 
-
 ## Introduction
 
 This user guide provides step-by-step instructions with examples on how to use Quotely, a CLI based application to help
