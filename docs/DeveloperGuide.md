@@ -9,7 +9,7 @@
     - [Ui Component](#ui-component)
     - [Data Component](#data-component)
     - [File storage Component](#file-storage-component)
-    - [Writer Component (PDF export)](#writer-component-pdf-export)
+    - [PDF export Component](#pdf-export-component)
   - [Implementation](#implementation)
     - [QuotelyState feature](#quotelystate-feature)
       - [Design Considerations](#design-considerations)
@@ -29,8 +29,12 @@
       - [User-facing behaviour](#user-facing-behaviour-2)
       - [Example (full workflow of File Storage)](#example-full-workflow-of-file-storage)
       - [Developers note (Implementation of File Storage)](#developers-note-implementation-of-file-storage)
-      - [#### Implementation considerations \& TODOs](#-implementation-considerations--todos)
+      - [Implementation considerations \& TODOs](#implementation-considerations--todos-1)
   - [Notes](#notes)
+    - [Proposed implementations of future features](#proposed-implementations-of-future-features)
+      - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
+      - [Multi currency support](#multi-currency-support)
+      - [Installment calculator](#installment-calculator)
   - [Product scope](#product-scope)
     - [Target user profile](#target-user-profile)
     - [Value proposition](#value-proposition)
@@ -258,15 +262,16 @@ The class diagram of the `File storage` component is shown below:
 !['File storage diagram'](./src/StorageDiagram.png)
 
 How the `File storage` component works:
+
 * When Quotely starts, it initializes a Storage object with a file path.
 * The Storage constructor ensures the directory exists and prepares the file for reading or writing.
 * To load data, the application calls Storage.loadData(), whereby:
-  * Reads JSON text from the file (if it exists).
-  * Passes the text to JsonSerializer.deserialize().
-  * Converts the JSON string into a QuoteList object containing all saved Quote and Item data.
+    * Reads JSON text from the file (if it exists).
+    * Passes the text to JsonSerializer.deserialize().
+    * Converts the JSON string into a QuoteList object containing all saved Quote and Item data.
 * To save data after user commands, the application calls Storage.saveData(String data), whereby:
-  * Uses JsonSerializer.serialize(quoteList) to convert the in-memory QuoteList into a JSON string.
-  * Writes that string back into the data file, replacing any previous content.
+    * Uses JsonSerializer.serialize(quoteList) to convert the in-memory QuoteList into a JSON string.
+    * Writes that string back into the data file, replacing any previous content.
 
 The JSON storage format used by the `Storage` component (persisted in `data/quotely.json`) is shown below.
 Each quote object contains `quoteName`, `customerName`, and an `items` array; each item object includes `itemName`,
@@ -297,45 +302,28 @@ Each quote object contains `quoteName`, `customerName`, and an `items` array; ea
 }
 ```
 
-### Writer Component (PDF export)
+### PDF export Component
 
-The Writer component (PDF export) transforms an in-memory `Quote` and related metadata (for example, `CompanyName`) into a printable PDF file. It is intentionally small and focused: callers supply the quote and an optional filename and receive a completed PDF on disk (or a clear error).
+The PDF export component handles the creation and formatting of quotation PDFs based on data in a quote.
 
-Responsibilities
+* It is implemented as a singleton
+* It acts as the final step in the quotation workflow, transforming in-memory data (Quote, Item, and CompanyName) into a
+  formatted and exportable file.
 
-- Produce a readable invoice/quotation layout (header, customer details, itemised table, subtotals, tax lines, footer).
-- Accept a requested output filename (base name) and write a `.pdf` file to the target location.
-- Sanitize filenames and paths to avoid path traversal and filesystem errors.
-- Perform writes atomically where possible, and report failures to `Ui` while logging full details.
+The class diagram of the `PDF export` component is shown below:
 
-API and implementation notes
+!['pdfwriterclass diagram'](./src/pdfwriterclass.png)
 
-- Public API: a single writer class exposes a concise method such as `PDFWriter.writeQuoteToPDF(Quote quote, CompanyName company, String filename)` (the current implementation follows this pattern).
-- Implementation style: the project currently uses a singleton-style `PDFWriter` implemented with iText/lowagie. The design intentionally keeps formatting code separate from parsing/command logic.
+How the `PDF export` component works:
 
-Filename rules (recommended)
+* When a command sis given by user, writeQuoteToPDF(quote, companyName, filename) is called.
+* It retrieves all Item objects within the given Quote and computing subtotal, tax, and grand total values.
+* A new PDF document is created using Document and PdfWriter from the iText library, configured with A4 page dimensions
+  and margins.
+* Once all data is written, the document is closed and automatically saved as a .pdf file using the provided filename (
+  e.g., Invoice.pdf).
 
-- Input: the CLI accepts an optional `f/FILE_NAME` token. The command forwards the supplied base name to the writer.
-- Normalisation steps the writer should perform:
-  1. Trim whitespace from the supplied name.
-  2. If the name ends with `.pdf` (any case), remove the extension so the writer can consistently append `.pdf`.
-  3. Reject or strip path traversal segments (`..`) and disallow path separators (`/` or `\`) unless the writer explicitly supports writing to paths. If we accept a path, validate it carefully and document the behaviour. (future work)
-  4. Replace or remove characters that are illegal on common filesystems. A practical whitelist is: letters, digits, space, hyphen (-), underscore (_), and dot (.). Example safe regex: `^[A-Za-z0-9 _\-\.]+$` (apply trimming and fallback for empty names). (future work)
-- Final name: append `.pdf` and write to the destination. By default the current working directory is used; existing files are overwritten.
-
-Developer TODOs (prioritised)
-
-1. Implement and test filename sanitisation using the whitelist strategy above.
-2. Decide on font strategy (bundle TTFs and register at runtime, or document required system fonts) and implement a font registration helper if needed.
-3. Add an integration test that verifies `ExportQuoteCommand` produces a file in a temporary directory.
-
-This writer component is intentionally small and replaceable: contributors can swap the underlying PDF production mechanism while preserving CLI behaviour (`ExportQuoteCommand`) and the `Ui` contract.
-
-Here is the class diagram of `PDFWriter`:
-
-![pdfwriterclass.png](./src/pdfwriterclass.png)
-
-For more detail, refer to the [export feature](#export-feature).
+More details can be found in [Export feature](#export-feature).
 
 ## Implementation
 
@@ -644,7 +632,7 @@ The sequence diagram below illustrates the loading process at startup and the sa
 - The `GsonBuilder().setPrettyPrinting().create()` method is used to make the to make the saved quotely.json file
   human-readable, which aids in debugging.
 
-#### #### Implementation considerations & TODOs
+#### Implementation considerations & TODOs
 
 - **Efficency** : The current "save-on-every-command" strategy is simple and robust but could become inefficient if
   `QuoteList` grows to thousands entries.
@@ -659,6 +647,39 @@ Notes
   invalid).
 - For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the Ui shows the
   intended help/error messages.
+
+### Proposed implementations of future features
+
+To enhance the functionality, flexibility, and business applicability of Quotely, several feature improvements are
+planned for future releases.
+
+#### Multiple PDF Generation Templates
+
+Currently, PDF export using the Document and PdfWriter classes from the iText (OpenPDF) library is implemented.
+
+Future updates will introduce multiple PDF layout templates to support different use cases (e.g., formal quotations,
+casual). Users will be able to select from a list in CLI of predefined templates.
+
+This feature may be further expanded to support user configurable PDF templates.
+
+#### Multi currency support
+
+To serve international users, the application will support different currencies (e.g., USD, EUR, SGD).
+
+* This will involve storing currency data
+* Updating execute() operations in CalculateTotalCommand
+
+This feature may be further expanded to fetch the latest currency exchange rate from online.
+
+#### Installment calculator
+
+Installment calculation is useful for sales workers handling quotation to clients who wish to make scheduled payments.
+
+A new state using QuotelyState shall be used for implementation, to allow users to navigate from main menu to the
+installment calculator tool. Parser and command components will be modified to execute calculation in a similar manner
+to existing commands.
+
+This feature may be further expanded to include installment details in CLI and PDF quotations.
 
 ## Product scope
 

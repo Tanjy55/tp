@@ -21,6 +21,7 @@
     - [Exit `exit`](#exit-exit)
   - [FAQ](#faq)
   - [Command Summary](#command-summary)
+  - [Coming soon](#coming-soon)
 
 ## Introduction
 
@@ -470,3 +471,17 @@ Bye. Hope to see you again soon!
 * Search for Quotes `search n/QUOTE_NAME`
 * Show all quotes `show`
 * Exit the program `exit`
+
+## Coming soon
+
+We are working on exciting improvements to make Quotely more powerful and flexible for your business needs!
+
+* Custom PDF Templates
+    * Soon, you’ll be able to choose from multiple PDF layouts when exporting your quotes. This will allow you to choose
+      the appropriate PDF template for any situation.
+* Multi-Currency Support
+    * Quotely will support different currencies. This means you can create quotes for clients anywhere in the world.
+* Installment Calculator
+    * Manage flexible billing for larger projects or long-term clients with ease. You will soon be able to break down
+      totals into monthly or custom payments.
+
