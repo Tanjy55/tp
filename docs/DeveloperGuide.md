@@ -331,9 +331,11 @@ Developer TODOs (prioritised)
 
 This writer component is intentionally small and replaceable: contributors can swap the underlying PDF production mechanism while preserving CLI behaviour (`ExportQuoteCommand`) and the `Ui` contract.
 
-Here is the class diagram of `writer`:
+Here is the class diagram of `PDFWriter`:
 
 ![pdfwriterclass.png](./src/pdfwriterclass.png)
+
+For more detail, refer to the [export feature](#export-feature).
 
 ## Implementation
 
