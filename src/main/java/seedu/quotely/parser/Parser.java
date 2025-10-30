@@ -34,6 +34,20 @@ public class Parser {
             = "^i/(.+?)(?:\\s+n/(.+?))?\\s+p/(.+?)\\s+q/(.+?)(?:\\s+t/(.+))?$";
     private static final String DELETE_ITEM_COMMAND_PATTERN = "i/(.+?)(?:\s+n/(.+))?$";
 
+    // command keywords
+    private static final String ADD_QUOTE_COMMAND_KEYWORD = "quote";
+    private static final String DELETE_QUOTE_COMMAND_KEYWORD = "unquote";
+    private static final String SHOW_QUOTES_COMMAND_KEYWORD = "show";
+    private static final String FINISH_QUOTE_COMMAND_KEYWORD = "finish";
+    private static final String DELETE_ITEM_COMMAND_KEYWORD = "delete";
+    private static final String EXPORT_QUOTE_COMMAND_KEYWORD = "export";
+    private static final String ADD_ITEM_COMMAND_KEYWORD = "add";
+    private static final String CALCULATE_TOTAL_COMMAND_KEYWORD = "total";
+    private static final String NAVIGATE_COMMAND_KEYWORD = "nav";
+    private static final String SEARCH_QUOTE_COMMAND_KEYWORD = "search";
+    private static final String REGISTER_COMMAND_KEYWORD = "register";
+    private static final String EXIT_COMMAND_KEYWORD = "exit";
+
     public static Command parse(String fullCommand, QuotelyState state, QuoteList quoteList)
             throws QuotelyException {
 
@@ -62,40 +76,40 @@ public class Parser {
             logger.fine("Extracted arguments: '" + arguments + "'");
         }
         switch (command) {
-        case "register":
+        case REGISTER_COMMAND_KEYWORD:
             // available in all state
             return parseRegisterCommand(arguments);
-        case "quote":
+        case ADD_QUOTE_COMMAND_KEYWORD:
             // main menu only
             return parseAddQuoteCommand(arguments, state);
-        case "unquote":
+        case DELETE_QUOTE_COMMAND_KEYWORD:
             // can use no quote name if inside a quote
             return parseDeleteQuoteCommand(arguments, state, quoteList);
-        case "show":
+        case SHOW_QUOTES_COMMAND_KEYWORD:
             // available in all state, for now?
             return new ShowQuotesCommand();
-        case "finish":
+        case FINISH_QUOTE_COMMAND_KEYWORD:
             // inside quote only
             return parseFinishQuoteCommand(state);
-        case "delete":
+        case DELETE_ITEM_COMMAND_KEYWORD:
             // can use without quote name if inside a quote
             return parseDeleteItemCommand(arguments, state, quoteList);
-        case "export":
+        case EXPORT_QUOTE_COMMAND_KEYWORD:
             // can use without quote name if inside a quote
             return parseExportCommand(arguments, state, quoteList);
-        case "add":
+        case ADD_ITEM_COMMAND_KEYWORD:
             // can use without quote name if inside a quote
             return parseAddItemCommand(arguments, state, quoteList);
-        case "total":
+        case CALCULATE_TOTAL_COMMAND_KEYWORD:
             // can use without quote name if inside a quote
             return parseCalculateTotalCommand(arguments, state, quoteList);
-        case "nav":
+        case NAVIGATE_COMMAND_KEYWORD:
             // available in all states, but need to specify target location e.g. 'main' or quoteName
             return parseNavigateCommand(arguments, state, quoteList);
-        case "search":
+        case SEARCH_QUOTE_COMMAND_KEYWORD:
             // available in main menu only
             return parseSearchCommand(arguments, state);
-        case "exit":
+        case EXIT_COMMAND_KEYWORD:
             // available in all state, for now
             return new ExitCommand();
         default:

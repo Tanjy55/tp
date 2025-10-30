@@ -92,11 +92,11 @@ public class Quotely {
                 ui.showLine();
                 logger.finer("Read successful, parsing command: ...");
                 // parser throws QuotelyException if parse invalid
-                Command c = Parser.parse(fullCommand, state, quoteList);
+                Command command = Parser.parse(fullCommand, state, quoteList);
                 logger.finer("Parse successful, executing command...");
                 // execute throws QuotelyException if data mutation fails
-                c.execute(ui, quoteList, companyName, state);
-                isExit = c.isExit();
+                command.execute(ui, quoteList, companyName, state);
+                isExit = command.isExit();
 
                 // Save data after every successful command that doesn't exit
                 if (!isExit) {
