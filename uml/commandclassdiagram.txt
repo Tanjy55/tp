@@ -1,7 +1,7 @@
 @startuml
 title Command Class Diagram
 
-package "seedu.quotely.command" {
+package "command" {
   abstract class Command {
     + execute(ui : Ui, quoteList : QuoteList, companyName : CompanyName, state : QuotelyState) : void
   }
@@ -64,14 +64,14 @@ package "seedu.quotely.command" {
   Command <|-- ShowQuotesCommand
 }
 
-package "seedu.quotely.data" {
+package "data" {
   class Quote
   class QuoteList
   class CompanyName
   class QuotelyState
 }
 
-package "seedu.quotely.ui" {
+package "ui" {
   class Ui
 }
 

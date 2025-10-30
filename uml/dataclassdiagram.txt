@@ -1,0 +1,75 @@
+@startuml
+title Data Component Class Diagram
+
+package "data" {
+  class CompanyName {
+    - companyName : String
+    + CompanyName(companyName : String)
+    + getCompanyName() : String
+    + setCompanyName(companyName : String) : void
+  }
+
+  class Item {
+    - itemName : String
+    - price : double
+    - quantity : int
+    - taxRate : double
+    + Item(itemName : String, price : double, quantity : int, taxRate : double)
+    + getItemName() : String
+    + setItemName(itemName : String) : void
+    + getPrice() : double
+    + setPrice(price : double) : void
+    + getQuantity() : int
+    + setQuantity(quantity : int) : void
+    + hasTax() : boolean
+    + getTaxRate() : double
+    + setTax(taxRate : double) : void
+    + getItemTotalPriceWithoutTax() : double
+    + getItemTotalTax() : double
+  }
+
+  class Quote {
+    - quoteName : String
+    - customerName : String
+    - items : List<Item>
+    + Quote(quoteName : String, customerName : String)
+    + getQuoteName() : String
+    + getCustomerName() : String
+    + getItems() : List<Item>
+    + getQuoteTotalPriceWithoutTax() : double
+    + getQuoteTotalTax() : double
+    + getQuoteTotal() : double
+    + removeItem(itemName : String) : void
+    + addItem(itemName : String, price : double, quantity : int, taxRate : double) : void
+    + hasItem(itemName : String) : boolean
+    + toString() : String
+  }
+
+  class QuoteList {
+    - quotes : List<Quote>
+    + QuoteList()
+    + getQuotes() : List<Quote>
+    + addQuote(quote : Quote) : void
+    + removeQuote(quote : Quote) : void
+    + getQuoteByName(quoteName : String) : Quote
+    + hasQuote(quoteName : String) : boolean
+  }
+
+  class QuotelyState {
+    - static state : QuotelyState
+    - isInsideQuote : boolean
+    - quoteReference : Quote
+    + getInstance() : QuotelyState
+    + isInsideQuote() : boolean
+    + setQuoteReference(quoteReference : Quote) : void
+    + setInsideQuote(quoteReference : Quote) : void
+    + setOutsideQuote() : void
+    + getQuoteReference() : Quote
+  }
+
+  Quote "1" --> "*" Item : contains
+  QuoteList "1" --> "*" Quote : manages
+  QuotelyState --> Quote : holds reference
+}
+
+@enduml

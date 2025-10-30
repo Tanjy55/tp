@@ -1,7 +1,7 @@
 @startuml
 title Parser Class Diagram
 
-package "seedu.quotely.parser" {
+package "parser" {
     class Parser {
         - logger : Logger
         - ADD_QUOTE_COMMAND_PATTERN : String
@@ -25,7 +25,7 @@ package "seedu.quotely.parser" {
     }
 }
 
-package "seedu.quotely.command" {
+package "command" {
     abstract class Command
     class AddQuoteCommand
     class RegisterCommand
@@ -52,17 +52,17 @@ package "seedu.quotely.command" {
     Command <|-- ExportQuoteCommand
 }
 
-package "seedu.quotely.data" {
+package "data" {
     class Quote
     class QuoteList
     class QuotelyState
 }
 
-package "seedu.quotely.util" {
+package "util" {
     class LoggerConfig
 }
 
-package "seedu.quotely.exception" {
+package "exception" {
     class QuotelyException
 }
 
@@ -72,17 +72,5 @@ Parser --> QuotelyState : reads
 Parser --> QuoteList : accesses
 Parser --> Quote : retrieves
 Parser --> QuotelyException : throws
-
-Command <|-- ExitCommand
-Command <|-- AddQuoteCommand
-Command <|-- RegisterCommand
-Command <|-- DeleteQuoteCommand
-Command <|-- ShowQuotesCommand
-Command <|-- FinishQuoteCommand
-Command <|-- AddItemCommand
-Command <|-- DeleteItemCommand
-Command <|-- CalculateTotalCommand
-Command <|-- NavigateCommand
-Command <|-- ExportQuoteCommand
 
 @enduml

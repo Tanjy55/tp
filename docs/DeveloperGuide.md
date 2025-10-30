@@ -180,27 +180,53 @@ How the `Command` component works:
 
 ### Ui Component
 
-!['Ui diagram'](./src/UiDiagram.png)
+The Ui is responsible for all user-facing interactions (input and output)
 
-The `Ui` component consists of
+* It is a singleton pattern, ensuring only one instance handles all console input and output.
+* Handles all reading of user input via its private `Scanner` instance
+* Defines methods for CLI output such as formatting complex data, like a Quote, into a readable, table-like format for
+  the user like in `showQuote()`
+* `Ui` is state-aware, changing its prompt in `readCommand()` (e.g., main > or quote_name > ) based on the QuotelyState
 
-* a Singleton to ensure only one instance handles all console input and output.
-* is responsible for printing all text to the command line, from welcome messages `showWelcome()` and separators
-  `showLine()` to errors `showError()`
-* handles all reading of user input via its private `Scanner` instance
-* is state-aware, changing its prompt in `readCommand()` (e.g., main > or quote_name > ) based on the QuotelyState
-* formats complex data, like a Quote, into a readable, table-like format for the user like in `showQuote()`
+The class diagram of the `Ui` component is shown below:
+
+!['Ui diagram'](./src/uiclassdiagram.png)
+
+How the `Ui` component works:
+
+* When the program starts, Ui displays a welcome banner and prompts the user for input.
+* The user enters a command through the console, readCommand() reads the input string.
+* The input is then passed to the Parser component, which interprets it and returns a Command object.
+* During Command execution, Ui methods are called to display result or any relevant messages to the user using
+  showMessage() or showError().
+* When the user exits the application, Ui.showExitMessage() prints a closing message before termination.
 
 ### Data Component
 
-!['Data diagram'](./src/DataDiagram.png)
+The Data component is responsible for storing program data (Quote, Item, CompanyName, QuotelyState) on memory while
+Quotely is running. Each class provides the getters and setters for its attributes.
 
-The `Data` component,
+The class diagram of the `Data` component is shown below:
 
-* stores the quote data i.e., all Quote objects (which are contained in a QuoteList object).
-* stores the item data i.e., all Item objects (which are contained in a Quote object).
-* stores the company name in a CompanyName object
-* stores the state using a QuotelyState object (e.g., inside quote + quote reference)
+!['Data diagram'](./src/dataclassdiagram.png)
+
+How the `Data` component works:
+
+* CompanyName represents the registered company name of the user.
+    * Used by showQuote() to print the business name on the generated quotation.
+* Item represents an individual product or service in a quote
+    * Each Item stores a description (itemName), a unit price, quantity, and an optional tax rate (can be left at 0.0%).
+* Quote acts as a container for a single customer quotation.
+    * It contains a list of Item objects, implemented using Arraylist
+* QuoteList manages a collection of multiple Quote objects
+    * QuoteList is referenced by both the Parser and Command components whenever user actions require accessing or
+      modifying existing quotes.
+    * Not implemented as a singleton pattern, so future updates may utilise multiple QuoteLists.
+* QuotelyState represents the current program state.
+    * It tracks whether the user is inside a quote or in the main menu (isInsideQuote()), and which quote is currently
+      active (quoteReference).
+    * Implemented as a singleton pattern
+
 
 ### File storage Component
 
@@ -243,6 +269,8 @@ Each quote object contains `quoteName`, `customerName`, and an `items` array; ea
 ```
 
 ### PDF export Component
+
+[To be implemented]
 
 ## Implementation
 
