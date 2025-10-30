@@ -69,7 +69,8 @@ public class Ui {
         // items table columns (these MUST sum to boxInner - 8)
         final int wQty = 3;
         final int wUnit = 10;
-        final int wDesc = boxInner - wQty - wUnit - 6; // 6 accounts for " | ", " | "
+        final int wTax = 8;
+        final int wDesc = boxInner - wQty - wUnit - wTax - 9; // 9 accounts for " | ", " | "
 
         // totals block (left margin + label + space + amount = boxInner)
         final int amtW = 10; // width for "$xx.xx" (right aligned)
@@ -90,31 +91,35 @@ public class Ui {
         sb.append(String.format("|%s|%n", dash));
 
         // ===== table header + items (same formats & computed separator) =====
-        final String headerFmt = "| %-" + wDesc + "s | %" + wQty + "s | %" + wUnit + "s |%n";
-        final String itemFmt = "| %-" + wDesc + "s | %" + wQty + "d | $%" + (wUnit - 1) + ".2f |%n";
+        final String headerFmt = "| %-" + wDesc + "s | %" + wQty + "s | %" + wUnit + "s | %" + wTax + "s |%n";
+        final String itemFmt = "| %-" +
+                wDesc + "s | %" +
+                wQty + "d | $%" +
+                (wUnit - 1) + ".2f | %" +
+                (wTax - 1) + ".2f %%|%n";
 
-        String headerLine = String.format(headerFmt, "Description", "QTY", "Unit cost");
+        String headerLine = String.format(headerFmt, "Description", "QTY", "Unit cost", "Tax Rate");
         sb.append(headerLine);
         sb.append(String.format("|%s|%n", dash));
 
         double subtotal = 0.0;
         if (q.getItems().isEmpty()) {
-            sb.append(String.format(headerFmt, "(no items)", "-", "-"));
+            sb.append(String.format(headerFmt, "(no items)", "-", "-", "-"));
         } else {
             for (Item it : q.getItems()) {
                 String name = it.getItemName();
                 if (name.length() > wDesc) {
                     name = name.substring(0, wDesc);
                 }
-                subtotal += it.getQuantity() * it.getPrice();
-                sb.append(String.format(itemFmt, name, it.getQuantity(), it.getPrice()));
+                subtotal = q.getQuoteTotalPriceWithoutTax();
+                sb.append(String.format(itemFmt, name, it.getQuantity(), it.getPrice(), it.getTaxRate()));
             }
         }
 
         sb.append(String.format("|%s|%n", dash));
 
         // ===== totals (left indent + aligned amounts) =====
-        double gst = subtotal;
+        double gst = q.getQuoteTotalTax();
         double total = subtotal + gst;
 
         sb.append(String.format("| %-" + boxInner + "s |%n", "")); // blank spacer row
