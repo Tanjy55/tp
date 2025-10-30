@@ -30,6 +30,10 @@
       - [Example (full workflow of File Storage)](#example-full-workflow-of-file-storage)
       - [Developers note (Implementation of File Storage)](#developers-note-implementation-of-file-storage)
       - [#### Implementation considerations \& TODOs](#-implementation-considerations--todos)
+    - [Proposed implementations of future features](#Proposed-implementations-of-future-features)
+       - [Multiple PDF Generation Templates](#multiple-pdf-generation-templates)
+       - [Multi currency support](#multi-currency-support)
+       - [Installment calculator](#installment-calculator)
   - [Notes](#notes)
   - [Product scope](#product-scope)
     - [Target user profile](#target-user-profile)
@@ -39,6 +43,7 @@
   - [Glossary](#glossary)
   - [Instructions for manual testing](#instructions-for-manual-testing)
   - [Documentation, logging, testing, configuration, dev-ops](#documentation-logging-testing-configuration-dev-ops)
+
 
 ## Acknowledgements
 
@@ -258,15 +263,16 @@ The class diagram of the `File storage` component is shown below:
 !['File storage diagram'](./src/StorageDiagram.png)
 
 How the `File storage` component works:
+
 * When Quotely starts, it initializes a Storage object with a file path.
 * The Storage constructor ensures the directory exists and prepares the file for reading or writing.
 * To load data, the application calls Storage.loadData(), whereby:
-  * Reads JSON text from the file (if it exists).
-  * Passes the text to JsonSerializer.deserialize().
-  * Converts the JSON string into a QuoteList object containing all saved Quote and Item data.
+    * Reads JSON text from the file (if it exists).
+    * Passes the text to JsonSerializer.deserialize().
+    * Converts the JSON string into a QuoteList object containing all saved Quote and Item data.
 * To save data after user commands, the application calls Storage.saveData(String data), whereby:
-  * Uses JsonSerializer.serialize(quoteList) to convert the in-memory QuoteList into a JSON string.
-  * Writes that string back into the data file, replacing any previous content.
+    * Uses JsonSerializer.serialize(quoteList) to convert the in-memory QuoteList into a JSON string.
+    * Writes that string back into the data file, replacing any previous content.
 
 The JSON storage format used by the `Storage` component (persisted in `data/quotely.json`) is shown below.
 Each quote object contains `quoteName`, `customerName`, and an `items` array; each item object includes `itemName`,
@@ -644,7 +650,7 @@ The sequence diagram below illustrates the loading process at startup and the sa
 - The `GsonBuilder().setPrettyPrinting().create()` method is used to make the to make the saved quotely.json file
   human-readable, which aids in debugging.
 
-#### #### Implementation considerations & TODOs
+#### Implementation considerations & TODOs
 
 - **Efficency** : The current "save-on-every-command" strategy is simple and robust but could become inefficient if
   `QuoteList` grows to thousands entries.
@@ -659,6 +665,39 @@ Notes
   invalid).
 - For robust UX, consider adding unit tests that assert the parser rejects these inputs and that the Ui shows the
   intended help/error messages.
+
+### Proposed implementations of future features
+
+To enhance the functionality, flexibility, and business applicability of Quotely, several feature improvements are
+planned for future releases.
+
+#### Multiple PDF Generation Templates
+
+Currently, PDF export using the Document and PdfWriter classes from the iText (OpenPDF) library is implemented.
+
+Future updates will introduce multiple PDF layout templates to support different use cases (e.g., formal quotations,
+casual). Users will be able to select from a list in CLI of predefined templates.
+
+This feature may be further expanded to support user configurable PDF templates.
+
+#### Multi currency support
+
+To serve international users, the application will support different currencies (e.g., USD, EUR, SGD).
+
+* This will involve storing currency data
+* Updating execute() operations in CalculateTotalCommand
+
+This feature may be further expanded to fetch the latest currency exchange rate from online.
+
+#### Installment calculator
+
+Installment calculation is useful for sales workers handling quotation to clients who wish to make scheduled payments.
+
+A new state using QuotelyState shall be used for implementation, to allow users to navigate from main menu to the
+installment calculator tool. Parser and command components will be modified to execute calculation in a similar manner
+to existing commands.
+
+This feature may be further expanded to include installment details in CLI and PDF quotations.
 
 ## Product scope
 
