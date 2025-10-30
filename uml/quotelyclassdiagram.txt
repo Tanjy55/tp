@@ -1,8 +1,11 @@
 @startuml
+hide circle
+skinparam classAttributeIconSize 0
+
 title Quotely Class Diagram
 top to bottom direction
 
-rectangle "Command Component" as Cmd {
+package command as Cmd {
   abstract class Command
   class AddItemCommand
   class AddQuoteCommand
@@ -29,47 +32,47 @@ rectangle "Command Component" as Cmd {
   Command <|-- ShowQuotesCommand
 }
 
-rectangle "Data Component" as Data {
+package data as Data {
   class CompanyName
   class Item
   class Quote
   class QuoteList
   class QuotelyState
 
-  Quote --> Item
+  Itm <- Quote
   QuoteList --> Quote
 }
 
-rectangle "Parser Component" as ParserComp {
+package parser as ParserComp {
   class Parser
 }
 
-rectangle "Storage Component" as StorageComp {
+package storage as StorageComp {
   class JsonSerializer
   class Storage
 }
 
-rectangle "UI Component" as UIComp {
+package ui as UIComp {
   class Ui
 }
 
-rectangle "PDF Export Component" as PdfComp {
+package writer as PdfComp {
   class PDFWriter
 }
 
-rectangle "Util" as Util {
+package util as Util {
   class LoggerConfig
 }
 
-rectangle "Main Class" as Main {
+package main as Main {
   class Quotely
 }
 
-Quotely --> Parser
-Quotely --> LoggerConfig
-Quotely --> JsonSerializer
+Quotely -> Parser
+Quotely -> LoggerConfig
+Quotely -> JsonSerializer
 Quotely --> CompanyName
-Quotely --> QuoteList
+Quotely -> QuoteList
 Quotely --> QuotelyState
 AddItemCommand --> Quote
 AddQuoteCommand --> QuoteList
