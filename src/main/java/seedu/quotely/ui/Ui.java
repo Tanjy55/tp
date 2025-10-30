@@ -62,18 +62,18 @@ public class Ui {
         // to be updated to prompt user if companyName is default String
     }
 
-    private void showInfoLine(StringBuilder stringBuilder, int boxInner, CompanyName companyName, String title) {
+    private void showInfoLine(StringBuilder stringBuilder, int boxInner, String title) {
         stringBuilder.append(String.format("| %-" + boxInner + "s |%n", title));
     }
 
     private void showInfoLines(StringBuilder stringBuilder, int boxInner, CompanyName companyName, Quote q) {
-        showInfoLine(stringBuilder, boxInner, companyName, "Company name: " + companyName.getCompanyName());
-        showInfoLine(stringBuilder, boxInner, companyName, "Quote ID: " + q.getQuoteName());
-        showInfoLine(stringBuilder, boxInner, companyName, "Customer name: " + q.getCustomerName());
+        showInfoLine(stringBuilder, boxInner, "Company name: " + companyName.getCompanyName());
+        showInfoLine(stringBuilder, boxInner, "Quote ID: " + q.getQuoteName());
+        showInfoLine(stringBuilder, boxInner, "Customer name: " + q.getCustomerName());
     }
 
     private void showTableBody(StringBuilder stringBuilder, int wDesc, int wQty, int wUnit, int wTax, Quote q) {
-        final String headerFmt = "| %-" + 
+        final String emptyRowFmt = "| %-" + 
                 wDesc + "s | %" + 
                 wQty + "s | %" + 
                 wUnit + "s | %" + 
@@ -85,7 +85,7 @@ public class Ui {
                 (wTax - 1) + ".2f %%|%n";
 
         if (q.getItems().isEmpty()) {
-            stringBuilder.append(String.format(headerFmt, "(no items)", "-", "-", "-"));
+            stringBuilder.append(String.format(emptyRowFmt, "(no items)", "-", "-", "-"));
         } else {
             for (Item it : q.getItems()) {
                 String name = it.getItemName();
@@ -98,9 +98,9 @@ public class Ui {
     }
 
     /**
-     * Formats amount to 2 decimal places
-     * @param amount
-     * @return
+     * Formats amount to 2 decimal places.
+     * @param amount the amount to format
+     * @return the formatted amount as a string with 2 decimal places
      */
     private String formatAmount(Double amount) {
         return String.format("%.2f", amount);
@@ -158,7 +158,7 @@ public class Ui {
         stringBuilder.append(String.format("|%s|%n", dash));
         stringBuilder.append(String.format("| %-" + boxInner + "s |%n", "")); // blank spacer row
         
-        // ===== summary lines(subtotal, tax, total) =====
+        // ===== summary lines (subtotal, tax, total) =====
         showSummaryLines(stringBuilder, indent, labelW, amtW, q);
         stringBuilder.append(String.format("|%s|%n", und));
 
