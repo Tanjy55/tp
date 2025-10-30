@@ -11,12 +11,13 @@ import seedu.quotely.util.LoggerConfig;
 import java.util.logging.Logger;
 
 public class DeleteItemCommand extends Command {
+    private static final String COMMAND_WORD = "deleteItem";
     private static final Logger logger = LoggerConfig.getLogger(DeleteItemCommand.class);
     private String itemName;
     private Quote quote;
 
     public DeleteItemCommand(String itemName, Quote quote) {
-        super("deleteItem");
+        super(COMMAND_WORD);
         this.itemName = itemName;
         this.quote = quote;
     }

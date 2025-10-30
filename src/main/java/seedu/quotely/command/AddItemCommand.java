@@ -11,6 +11,7 @@ import seedu.quotely.util.LoggerConfig;
 import java.util.logging.Logger;
 
 public class AddItemCommand extends Command {
+    private static final String COMMAND_WORD = "addItem";
     private static final Logger logger = LoggerConfig.getLogger(AddItemCommand.class);
     private Quote quote;
     private String itemName;
@@ -19,7 +20,7 @@ public class AddItemCommand extends Command {
     private double taxRate;
 
     public AddItemCommand(String itemName, Quote quote, Double price, int quantity, double taxRate) {
-        super("addItem");
+        super(COMMAND_WORD);
         this.itemName = itemName;
         this.quote = quote;
         this.price = price;
