@@ -28,7 +28,7 @@
 This user guide provides step-by-step instructions with examples on how to use Quotely, a CLI based application to help
 you create quotes efficiently and cleanly.
 
-V1.0 usage starts from the main menu, and enters the quotation menu when creating or editing a quote. The user may
+Usage starts from the main menu, and enters the quotation menu when creating or editing a quote. The user may
 return to the main menu by finishing or deleting the quote.
 
 ## Quick Start
