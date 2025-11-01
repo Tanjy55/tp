@@ -31,16 +31,16 @@ package "external libraries" {
 }
 
 ' Relationships
-PDFWriter --> Quote : reads from
-PDFWriter --> CompanyName : reads from
-PDFWriter --> Item : iterates over
-PDFWriter --> Document : creates
-PDFWriter --> PdfWriter : writes to
-PDFWriter --> PdfPTable : formats table
-PDFWriter --> PdfPCell : formats cells
-PDFWriter --> Font : styles text
-PDFWriter --> Phrase : builds phrases
-PDFWriter --> Paragraph : builds paragraphs
-PDFWriter --> Color : sets background
+PDFWriter --> Quote : reads from >
+PDFWriter --> CompanyName : reads from >
+PDFWriter --> Item : iterates over >
+PDFWriter --> Document : creates >
+PDFWriter --> PdfWriter : writes to >
+PDFWriter --> PdfPTable : formats table >
+PDFWriter --> PdfPCell : formats cells >
+PDFWriter --> Font : styles text >
+PDFWriter --> Phrase : builds phrases >
+PDFWriter --> Paragraph : builds paragraphs >
+PDFWriter --> Color : sets background >
 
 @enduml

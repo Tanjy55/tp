@@ -82,12 +82,12 @@ levels of detail.
 
 The architecture diagram below shows an overview of the main components.
 
-!['Architecture diagram'](./diagrams/architecturediagram.png)
+!['Architecture diagram'](./diagrams/ArchitectureDiagram.png)
 
 The class diagram below show a simplified overview class diagram that represents the primary relationship between all
 classes.
 
-!['Class diagram'](./diagrams/quotelyclassdiagram.png)
+!['Class diagram'](./diagrams/class/quotely.png)
 
 The program work is done by the following main components:
 
@@ -120,7 +120,7 @@ The program work is done by the following main components:
 The sequence diagram below shows the main loop which runs continuously in Quotely until an `exit` command is given by
 the user.
 
-!['sequence diagram'](./diagrams/sequenceDiagram.png)
+!['sequence diagram'](./diagrams/sequence/quotely.png)
 
 Loop sequence explanation:
 
@@ -135,7 +135,7 @@ The above process runs until `Exit` is read from the user.
 Sequence diagram example of component interaction when the user adds one quote, and then add one item
 to that quote:
 
-!['taxSequenceDiagram'](./diagrams/taxSequenceDiagram.png)
+!['taxSequenceDiagram'](./diagrams/sequence/tax.png)
 
 ### Parser Component
 
@@ -151,7 +151,7 @@ The Parser acts as the command dispatcher for all user inputs.
 
 The class diagram of the `Parser` component is shown below:
 
-!['Parser diagram'](./diagrams/parserclassdiagram.png)
+!['Parser diagram'](./diagrams/class/parser.png)
 
 How the `Parser` component works:
 
@@ -177,7 +177,7 @@ The Commands define the executable actions that form the logic of Quotely.
 
 The class diagram of the `Command` component is shown below:
 
-!['Command diagram'](./diagrams/commandclassdiagram.png)
+!['Command diagram'](./diagrams/class/command.png)
 
 How the `Command` component works:
 
@@ -211,7 +211,7 @@ The Ui is responsible for all user-facing interactions (input and output)
 
 The class diagram of the `Ui` component is shown below:
 
-!['Ui diagram'](./diagrams/uiclassdiagram.png)
+!['Ui diagram'](./diagrams/class/ui.png)
 
 How the `Ui` component works:
 
@@ -229,7 +229,7 @@ Quotely is running. Each class provides the getters and setters for its attribut
 
 The class diagram of the `Data` component is shown below:
 
-!['Data diagram'](./diagrams/dataclassdiagram.png)
+!['Data diagram'](./diagrams/class/data.png)
 
 How the `Data` component works:
 
@@ -250,8 +250,6 @@ How the `Data` component works:
 
 ### File storage Component
 
-![Storage Diagram](./diagrams/StorageDiagram.png)
-
 The `Storage` component,
 
 * handles the persistence of application data (the `QuoteList`) between sessions
@@ -268,7 +266,7 @@ Data back to local disk after user inputs have been successfully executed.
 
 The class diagram of the `File storage` component is shown below:
 
-!['File storage diagram'](./diagrams/StorageDiagram.png)
+!['File storage diagram'](./diagrams/class/storage.png)
 
 How the `File storage` component works:
 
@@ -347,7 +345,7 @@ This writer component is intentionally small and replaceable: contributors can s
 
 Here is the class diagram of `PDFWriter`:
 
-![pdfwriterclass.png](./diagrams/pdfwriterclass.png)
+![pdfwriterclass.png](./diagrams/class/pdfwriter.png)
 
 For more detail, refer to the [export feature](#export-feature).
 
@@ -382,7 +380,7 @@ current situation.
 
 The following sequence diagram shows how an `add` operation uses the QuotelyState
 
-!['quotelystate-implementation'](./diagrams/quotelystate-implementation.png)
+!['quotelystate sequence diagram'](./diagrams/sequence/state.png)
 
 The commands depend on QuotelyState in this manner:
 
@@ -451,7 +449,7 @@ export n/office chairs
 
 The sequence diagram below illustrates the steps taken when the `export` command is executed.
 
-!['export-feature'](./diagrams/ExportFeature.png)
+!['export-feature'](./diagrams/sequence/export.png)
 
 When the export completes, the application generates a PDF file named `quotation.pdf` in the working directory. The PDF
 uses an quotation-style layout that includes header information and an itemised table showing each item's description,
@@ -465,10 +463,10 @@ Preview of the generated PDF:
 
 - Command: `seedu.quotely.command.ExportQuoteCommand` (parses the `export` command and constructs the command object).
   The command accepts an optional filename parameter and passes it to the writer. See
-  `diagrams/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
+  `src/main/java/seedu/quotely/command/ExportQuoteCommand.java`.
 - Writer: `seedu.quotely.writer.PDFWriter` handles PDF generation. The current method
   `writeQuoteToPDF(Quote, CompanyName, String filename)` accepts a filename base (the method will append `.pdf`) and
-  writes the file into the current working directory. See `diagrams/main/java/seedu/quotely/writer/PDFWriter.java`.
+  writes the file into the current working directory. See `src/main/java/seedu/quotely/writer/PDFWriter.java`.
 - Logging: the command logs via the centralised `LoggerConfig` utility.
 
 #### Implementation considerations & TODOs
@@ -528,7 +526,7 @@ This sets `taxRate` to a value of `5.00%`.
 The sequence diagram below shows what happens when a user executes the `add` command with the tax rate of `5.00%` as
 shown in the example right above (zoom in if necessary):
 
-!['taxSequenceDiagram'](./diagrams/taxSequenceDiagram.png)
+!['taxSequenceDiagram'](./diagrams/sequence/tax.png)
 
 This features allows to calculate installments based on the Principal (amount of loan), interest rate and number of
 payments.
@@ -640,7 +638,7 @@ a JSON format.
 
 The sequence diagram below illustrates the loading process at startup and the saving process after a command.
 
-!['gson-sequence-diagram'](./diagrams/gson-sequence-diagram.png)
+!['gson-sequence-diagram'](./diagrams/sequence/gson.png)
 
 #### Developers note (Implementation of File Storage)
 
@@ -711,10 +709,10 @@ This feature may be further expanded to include installment details in CLI and P
 
 ### Target user profile
 
-1) a user who can accomplish most tasks faster via a command line interface (CLI)
-2) sales worker who handles quotation and invoicing
-3) small business owner starting out and does not use paid quotation software yet
-4) wants to send quotation as text or PDF, instead of using chat text
+1. a user who can accomplish most tasks faster via a command line interface (CLI)
+2. sales worker who handles quotation and invoicing
+3. small business owner starting out and does not use paid quotation software yet
+4. wants to send quotation as text or PDF, instead of using chat text
 
 ### Value proposition
 
