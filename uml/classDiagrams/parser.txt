@@ -46,12 +46,12 @@ package "exception" {
     class QuotelyException
 }
 
-LoggerConfig <-- Parser: uses for logging
-QuotelyException <- Parser: throws
+LoggerConfig <-- Parser: uses for logging <
+QuotelyException <- Parser: throws <
 
-Parser -> Command : returns
-Parser --> QuotelyState : reads
-Parser --> QuoteList : accesses
-Parser --> Quote : retrieves
+Parser -> Command : returns >
+Parser --> QuotelyState : reads >
+Parser --> QuoteList : accesses >
+Parser --> Quote : retrieves >
 
 @enduml

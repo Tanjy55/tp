@@ -157,9 +157,9 @@ add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY {t/TAX_RATE}
 * The `ITEM_NAME` and `QUOTE_NAME` can be in a natural language format.
 * `{n/QUOTE_NAME}` - Quote name (optional when inside a quote; if specified, item will be added to that quote instead of
   the current one)
-* The `PRICE` should be decimal.
-* The `QUANTITY` should be integer.
-* The `TAX_RATE` should be decimal and between 0, 100.
+* The `PRICE` should be decimal and not negative(0 is allowed).
+* The `QUANTITY` should be integer and postive.
+* The `TAX_RATE` should be decimal and not negative.
 
 **Example:**
 
@@ -471,14 +471,17 @@ any deletion commands before running them as once executed, they are permanent.
 
 ## Command Summary
 
-* Register company name `register c/CUSTOMER_NAME`
+* Register company name `register c/COMPANY_NAME`
 * Create a quote `quote n/QUOTE_NAME c/CUSTOMER_NAME`
 * Delete a quote `unquote n/QUOTE_NAME`
-* Add an item `add i/ITEM_NAME n/QUOTE_NAME p/PRICE q/QUANTITY`
-* Delete an item `delete i/ITEM_NAME n/QUOTE_NAME`
+* Add an item `add i/ITEM_NAME {n/QUOTE_NAME} p/PRICE q/QUANTITY`
+* Delete an item `delete i/ITEM_NAME {n/QUOTE_NAME}`
+* Export a quote to pdf file `export {n/QUOTE_NAME} f/FILE_NAME`
+* Calculate the total of a quote `total {n/QUOTE_NAME}`
+* Navigate to a quote or main menu `nav n/QUOTE_NAME/ nav main`
 * Finish the Quote `finish`
-* Search for Quotes `search n/QUOTE_NAME`
 * Show all quotes `show`
+* Search for Quotes `search n/QUOTE_NAME`
 * Exit the program `exit`
 
 ## Coming soon

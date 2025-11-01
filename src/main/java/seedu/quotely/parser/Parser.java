@@ -138,7 +138,7 @@ public class Parser {
             logger.warning("Invalid format for add quote command: " + arguments);
             throw new QuotelyException(
                     QuotelyException.ErrorType.WRONG_COMMAND_FORMAT,
-                    "quote n/QUOTE_NAME c/COMPANY_NAME");
+                    "quote n/QUOTE_NAME c/CUSTOMER_NAME");
         }
     }
 

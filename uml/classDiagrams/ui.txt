@@ -8,7 +8,6 @@ top to bottom direction
 package "ui" {
   class Ui {
     - static ui : Ui
-    - scanner : Scanner
 
     + Ui()
     + getInstance() : Ui

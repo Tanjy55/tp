@@ -52,7 +52,7 @@ public class PDFWriter {
             Font infoFont = new Font(Font.HELVETICA, 12);
             Paragraph invoiceInfo = new Paragraph(
                 "Quotation Name: " + quote.getQuoteName() + "\n" + 
-                "Compnay Name: " + companyName.getCompanyName() + "\n" + 
+                "Company Name: " + companyName.getCompanyName() + "\n" + 
                 "Customer Name: " + quote.getCustomerName() + "\n" +
                 "Date: " + java.time.LocalDate.now().toString(), infoFont
             );

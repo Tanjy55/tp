@@ -59,7 +59,7 @@ package "data" {
   }
 
   class QuotelyState {
-    - static state : QuotelyState
+    - {static} state : QuotelyState
     - isInsideQuote : boolean
     - quoteReference : Quote
     + getInstance() : QuotelyState
@@ -70,9 +70,9 @@ package "data" {
     + getQuoteReference() : Quote
   }
 
-  Quote "1" --> "*" Item : contains
-  QuoteList "1" --> "*" Quote : manages
-  QuotelyState --> Quote : holds reference
+  Item "*" <- "1" Quote: conatins <
+  QuoteList "1" --> "*" Quote : manages >
+  QuotelyState --> "0..1" Quote : holds reference >
 }
 
 @enduml
