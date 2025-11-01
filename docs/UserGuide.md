@@ -3,25 +3,25 @@
 ## Table of Content
 
 - [User Guide](#user-guide)
-  - [Table of Content](#table-of-content)
-  - [Introduction](#introduction)
-  - [Quick Start](#quick-start)
-  - [Features](#features)
-    - [Register Company Name: `register`](#register-company-name-register)
-    - [Creating a Quote: `quote`](#creating-a-quote-quote)
-    - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
-    - [Adding an item: `add`](#adding-an-item-add)
-    - [Delete an item `delete`](#delete-an-item-delete)
-    - [Calculate the total `total`](#calculate-the-total-total)
-    - [Export a quote: `export`](#export-a-quote-export)
-    - [Finish the Quote `finish`](#finish-the-quote-finish)
-    - [Navigate: `nav`](#navigate-nav)
-    - [Searching for Quotes: `search`](#searching-for-quotes-search)
-    - [Show all Quotes: `show`](#show-all-quotes-show)
-    - [Exit `exit`](#exit-exit)
-  - [FAQ](#faq)
-  - [Command Summary](#command-summary)
-  - [Coming soon](#coming-soon)
+    - [Table of Content](#table-of-content)
+    - [Introduction](#introduction)
+    - [Quick Start](#quick-start)
+    - [Features](#features)
+        - [Register Company Name: `register`](#register-company-name-register)
+        - [Creating a Quote: `quote`](#creating-a-quote-quote)
+        - [Deleting a Quote: `unquote`](#deleting-a-quote-unquote)
+        - [Adding an item: `add`](#adding-an-item-add)
+        - [Delete an item `delete`](#delete-an-item-delete)
+        - [Calculate the total `total`](#calculate-the-total-total)
+        - [Export a quote: `export`](#export-a-quote-export)
+        - [Finish the Quote `finish`](#finish-the-quote-finish)
+        - [Navigate: `nav`](#navigate-nav)
+        - [Searching for Quotes: `search`](#searching-for-quotes-search)
+        - [Show all Quotes: `show`](#show-all-quotes-show)
+        - [Exit `exit`](#exit-exit)
+    - [FAQ](#faq)
+    - [Command Summary](#command-summary)
+    - [Coming soon](#coming-soon)
 
 ## Introduction
 
@@ -364,8 +364,6 @@ quote1 >
 
 Searches for and displays all quotes whose names contain the provided search term.
 
-
-
 Command is available **only in the main menu**.
 
 **Format:**
@@ -384,6 +382,7 @@ search n/QUOTE_NAME
 ```
 search n/NUS
 ```
+
 **Expected output:**
 
 ```
@@ -458,11 +457,13 @@ Bye. Hope to see you again soon!
 
 **Q**: Will I be able to access my past quote records after exiting the program?
 
-**A**: Yes, from V2.0 onwards, every run saves a `quotely.json` file in the same folder as the `quotely.jar` file.
+**A**: Yes, from V2.0 onwards, every run saves a `quotely.json` file in a data subfolder. The data subfolder exists in
+the same directory as the `quotely.jar` file.
 
 **Q**: What happens if I accidentally deleted a quote/item? Can I retrieve that quote/item back?
 
-**A**: Unfortunately, the app is not able to restore deleted quotes or items. Therefore, we suggest that you thoroughly review
+**A**: Unfortunately, the app is not able to restore deleted quotes or items. Therefore, we suggest that you thoroughly
+review
 any deletion commands before running them as once executed, they are permanent.
 
 **Q**: How do I transfer my data to another computer?
